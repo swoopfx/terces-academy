@@ -13,4 +13,34 @@ class IndexController extends AbstractActionController
     {
         return new ViewModel();
     }
+
+    public function aboutAction()
+    {
+        $viewModel = new ViewModel();
+        return $viewModel;
+    }
+
+    public function courseListAction()
+    {
+        $viewModel = new ViewModel();
+        return $viewModel;
+    }
+
+    public function courseDetailsAction()
+    {
+        $viewModel = new ViewModel();
+        return $viewModel;
+    }
+
+    public function contactAction()
+    {
+        $viewModel = new ViewModel();
+        return $viewModel;
+    }
+
+    public function mentorsAction()
+    {
+        $viewModel = new ViewModel();
+        return $viewModel;
+    }
 }
