@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Application;
+namespace Authentication;
 
-use Application\Controller\Factory\IndexControllerFactory;
+use General\Service\Factory\GeneralServiceFactory;
+use General\Service\GeneralService;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
 use Laminas\ServiceManager\Factory\InvokableFactory;
@@ -34,11 +35,6 @@ return [
             ],
         ],
     ],
-    'controllers' => [
-        'factories' => [
-            Controller\IndexController::class => IndexControllerFactory::class
-        ],
-    ],
     'doctrine' => [
         'driver' => [
             __NAMESPACE__ . '_driver' => array(
@@ -53,6 +49,16 @@ return [
                     __NAMESPACE__ . '\Entity' => __NAMESPACE__ . '_driver'
                 )
             )
+        ]
+    ],
+    'controllers' => [
+        'factories' => [
+            Controller\IndexController::class => InvokableFactory::class,
+        ],
+    ],
+    "service_manager" => [
+        "factories" => [
+            GeneralService::class => GeneralServiceFactory::class
         ]
     ],
     'view_manager' => [
