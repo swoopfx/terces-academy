@@ -1,4 +1,4 @@
-# laminas-mvc-skeleton
+# Terces Academy
 
 ## Introduction
 
