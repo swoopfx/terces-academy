@@ -6,17 +6,15 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Authentication\Entity\User;
 
-
 /**
- * This is is an instance of the wallet at any given time 
+ * This is is an instance of the wallet at any given time
  * @ORM\Entity(repositoryClass="Wallet\Entity\Repository\WalletRepository")
  * @ORM\Table(name="wallet")
  * @author otaba
- *        
+ *
  */
 class Wallet
 {
-
     /**
      *
      * @var integer @ORM\Column(name="id", type="integer", nullable=false)
@@ -88,7 +86,7 @@ class Wallet
 
     /**
      * @ORM\OneToMany(targetEntity="WalletActivity", mappedBy="wallet")
-     * @var Collection 
+     * @var Collection
      */
     private $walletActivity;
 

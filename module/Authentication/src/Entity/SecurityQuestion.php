@@ -9,7 +9,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="security_question")
  */
 
-class SecurityQuestion {
+class SecurityQuestion
+{
      /**
      *
      * @var integer @ORM\Column(name="id", type="integer")
@@ -30,7 +31,7 @@ class SecurityQuestion {
      * Get @ORM\Column(name="id", type="integer")
      *
      * @return  integer
-     */ 
+     */
     public function getId()
     {
         return $this->id;
@@ -40,7 +41,7 @@ class SecurityQuestion {
      * Get questions for security reasons
      *
      * @return  string
-     */ 
+     */
     public function getQuestion()
     {
         return $this->question;
@@ -52,7 +53,7 @@ class SecurityQuestion {
      * @param  string  $question  Questions for security reasons
      *
      * @return  self
-     */ 
+     */
     public function setQuestion(string $question)
     {
         $this->question = $question;

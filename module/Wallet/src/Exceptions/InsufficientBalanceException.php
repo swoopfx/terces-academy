@@ -4,6 +4,6 @@ namespace Wallet\Exceptions;
 
 use Exception;
 
-class InsufficientBalanceException extends Exception{
-    
+class InsufficientBalanceException extends Exception
+{
 }

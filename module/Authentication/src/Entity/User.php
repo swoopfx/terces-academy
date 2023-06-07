@@ -48,7 +48,7 @@ class User
 
     /**
      * @ORM\ManyToOne(targetEntity="Authentication\Entity\Roles")
-     * 
+     *
      * @var Roles
      */
     private $role;
@@ -70,7 +70,7 @@ class User
     private $question;
 
     /**
-     * @var string 
+     * @var string
      * @ORM\Column(name="answer", type="string", nullable=true)
      */
     private $answer;
@@ -103,16 +103,16 @@ class User
      */
     private $isProfiled;
 
-    /* 
+    /*
     * @ORM\Column(name="updated_on", type="datetime", nullable=true)
-    * 
+    *
     * @var \DateTime
     */
     private $updatedOn;
 
-    /* 
+    /*
     * @ORM\Column(name="created_on", type="datetime", nullable=true)
-    * 
+    *
     * @var \DateTime
     */
     private $createdOn;
@@ -128,13 +128,13 @@ class User
     private $uid;
 
     /**
-     * Unique Identifer 
+     * Unique Identifer
      * @ORM\Column(name="uuid", type="string", nullable=false)
      * @var string
      */
     private $uuid;
 
-   
+
 
     /**
      * Undocumented variable
@@ -542,7 +542,7 @@ class User
      * Get undocumented variable
      *
      * @return  string
-     */ 
+     */
     public function getMobileActivateCode()
     {
         return $this->mobileActivateCode;
@@ -554,7 +554,7 @@ class User
      * @param  string  $mobileActivateCode  Undocumented variable
      *
      * @return  self
-     */ 
+     */
     public function setMobileActivateCode(string $mobileActivateCode)
     {
         $this->mobileActivateCode = $mobileActivateCode;

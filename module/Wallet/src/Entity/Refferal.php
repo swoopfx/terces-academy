@@ -1,4 +1,5 @@
 <?php
+
 namespace Wallet\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -9,13 +10,12 @@ use Authentication\Entity\User;
  * @ORM\Table(name="referal_program", indexes={@ORM\index(name="id", columns={"referal_uid", "referal_code"})})
  *
  * @author otaba
- *        
+ *
  */
 class Refferal
 {
-
     // TODO - Insert your code here
-    
+
     /**
      *
      * @var integer @ORM\Column(name="id", type="integer", nullable=false)
@@ -23,88 +23,77 @@ class Refferal
      *      @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
-
-    /**
+/**
      * This is for internal use only, Auto generated code
      * @ORM\Column(name="referal_uid", type="string", nullable=true)
      *
      * @var string
      */
     private $referalUid;
-
-    /**
-     * The user who made the refeeral 
+/**
+     * The user who made the refeeral
      * @ORM\ManyToOne(targetEntity="Authentication\Entity\User")
      *
      * @var User
      */
     private $user;
-
-    /**
+/**
      * Referal code mainly for external code
      * @ORM\Column(name="referal_code", type="string", nullable=true)
      *
      * @var string
      */
     private $referalCode;
-
-    /**
+/**
      * @ORM\Column(name="referal_email", type="string", nullable=true)
      *
      * @var string
      */
     private $referalEmail;
-
-    /**
+/**
      * @ORM\Column(name="referal_phone", type="string", nullable=true)
      *
      * @var phone
      */
     private $referalPhone;
-
-    /**
-     * Identfies if the refered has registerd 
-     * This is an indication that 
+/**
+     * Identfies if the refered has registerd
+     * This is an indication that
      * @ORM\Column(name="is_registered", type="boolean", nullable=true)
      *
      * @var boolean
      */
     private $isRegistered;
-
-    /**
+/**
      * The account of the refered ( if registered)
      * @ORM\ManyToOne(targetEntity="Authentication\Entity\User")
      *
      * @var User
      */
     private $referedAccount;
-
-    /**
+/**
      * @ORM\Column(name="registered_on", type="datetime", nullable=true)
      *
      * @var \DateTime
      */
     private $registeredOn;
-
-    /**
+/**
      * @ORM\Column(name="created_on", type="datetime", nullable=true)
      *
      * @var \DateTime
      */
     private $createdOn;
-
-    /**
+/**
      * @ORM\Column(name="updated_on", type="datetime", nullable=true)
      *
      * @var \DateTime
      */
     private $updatedOn;
-
-    /**
+/**
      */
     public function __construct()
     {
-        
+
         // TODO - Insert your code here
     }
     /**
@@ -294,6 +283,4 @@ class Refferal
         $this->updatedOn = $updatedOn;
         return $this;
     }
-
 }
-

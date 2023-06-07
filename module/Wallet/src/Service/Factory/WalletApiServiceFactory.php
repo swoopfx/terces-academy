@@ -13,7 +13,6 @@ use Wallet\Service\WalletApiService;
 
 class WalletApiServiceFactory implements FactoryInterface
 {
-
     public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
     {
         $xserv = new WalletApiService();
@@ -28,8 +27,8 @@ class WalletApiServiceFactory implements FactoryInterface
             "uuid" => $activeUser["uuid"]
         ]);
         $walletEntity = $userEntity->getWallet();
-        if ($userEntity->getWallet() == NULL) {
-            $walletEntity =  new Wallet();
+        if ($userEntity->getWallet() == null) {
+            $walletEntity = new Wallet();
             $walletEntity->setCreatedOn(new \Datetime())
                 ->setBalance("0")
                 ->setUser($userEntity)

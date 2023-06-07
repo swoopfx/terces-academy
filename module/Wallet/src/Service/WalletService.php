@@ -2,9 +2,8 @@
 
 namespace Wallet\Service;
 
-
-class WalletService{
-
+class WalletService
+{
     private $entityManager;
 
     private $generalService;
@@ -12,19 +11,16 @@ class WalletService{
     private $transactionService;
 
 
-    public function createWallet(){
-
+    public function createWallet()
+    {
     }
 
-    public function getWalletBalance(){
-
+    public function getWalletBalance()
+    {
     }
 
 
-    public function generateWalletUid(){
-
+    public function generateWalletUid()
+    {
     }
-
-     
-
 }

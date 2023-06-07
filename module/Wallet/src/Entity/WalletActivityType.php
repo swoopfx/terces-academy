@@ -1,4 +1,5 @@
 <?php
+
 namespace Wallet\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -8,9 +9,9 @@ use Doctrine\ORM\Mapping as ORM;
  * balance activity
  * Credit
  * Debit
- * Password Creation 
- * Password  Edit 
- * 
+ * Password Creation
+ * Password  Edit
+ *
  * @ORM\Entity
  * @ORM\Table(name="wallet_activity_type")
  * @author otaba
@@ -18,7 +19,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class WalletActivityType
 {
-    
     /**
      *
      * @var integer @ORM\Column(name="id", type="integer", nullable=false)
@@ -26,14 +26,12 @@ class WalletActivityType
      *      @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
-    
-    /**
+/**
      * @ORM\Column(name="type", type="string", nullable=true)
      * @var string
      */
     private $type;
-
-    // TODO - Insert your code here
+// TODO - Insert your code here
     public function __construct()
     {
 
@@ -71,6 +69,4 @@ class WalletActivityType
         $this->type = $type;
         return $this;
     }
-
 }
-

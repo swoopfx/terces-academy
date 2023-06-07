@@ -7,15 +7,14 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  * @ORM\Table(name="user_state")
- * 
+ *
  */
 
 class UserState
 {
-
     /**
      *
-     * @var integer 
+     * @var integer
      * @ORM\Column(name="id", type="integer")
      *      @ORM\Id
      *      @ORM\GeneratedValue(strategy="IDENTITY")
@@ -33,7 +32,7 @@ class UserState
      * Get the value of id
      *
      * @return  integer
-     */ 
+     */
     public function getId()
     {
         return $this->id;
@@ -43,7 +42,7 @@ class UserState
      * Get status of the user
      *
      * @return  string
-     */ 
+     */
     public function getState()
     {
         return $this->state;
@@ -55,7 +54,7 @@ class UserState
      * @param  string  $state  Status of the user
      *
      * @return  self
-     */ 
+     */
     public function setState(string $state)
     {
         $this->state = $state;

@@ -1,4 +1,5 @@
 <?php
+
 namespace Wallet\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -9,11 +10,10 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="wallet_passcode")
  *
  * @author otaba
- *        
+ *
  */
 class WalletPasscode
 {
-
     /**
      *
      * @var integer @ORM\Column(name="id", type="integer", nullable=false)
@@ -21,22 +21,19 @@ class WalletPasscode
      *      @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
-
-    /**
+/**
      *
      * @ORM\OneToOne(targetEntity="Wallet", inversedBy="passcode")
      * @var Wallet
      */
     private $wallet;
-
-    /**
+/**
      *
      * @ORM\Column(name="password", type="string", length=60, nullable=false)
      * @var string
      */
     private $passcode;
-
-    // TODO - Insert your code here
+// TODO - Insert your code here
     public function __construct()
     {
 
@@ -92,6 +89,4 @@ class WalletPasscode
         $this->passcode = $passcode;
         return $this;
     }
-
 }
-

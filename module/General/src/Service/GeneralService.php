@@ -4,9 +4,8 @@ namespace General\Service;
 
 use Doctrine\ORM\EntityManager;
 
-class GeneralService {
-
-
+class GeneralService
+{
     /**
      * Undocumented variable
      *
@@ -14,13 +13,13 @@ class GeneralService {
      */
     private $entityManager;
 
-    
+
 
     /**
      * Get undocumented variable
      *
      * @return  EntityManager
-     */ 
+     */
     public function getEntityManager()
     {
         return $this->entityManager;
@@ -32,7 +31,7 @@ class GeneralService {
      * @param  EntityManager  $entityManager  Undocumented variable
      *
      * @return  self
-     */ 
+     */
     public function setEntityManager(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;

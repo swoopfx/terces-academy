@@ -1,18 +1,18 @@
 <?php
+
 namespace Wallet\Entity;
+
 use Doctrine\ORM\Mapping as ORM;
 use Shop\Entity\CartOrders;
-
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="wallet_order_transaction")
  * @author
- *        
+ *
  */
 class WalletOrderTransaction
 {
-
     /**
      *
      * @var integer @ORM\Column(name="id", type="integer", nullable=false)
@@ -20,41 +20,41 @@ class WalletOrderTransaction
      *      @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
-    
+
     /**
      * @ORM\Column(name="wallet_order_uid", type="string", nullable=true)
      * @var string
      */
     private $walletOrderUid;
-    
+
     // /**
     //  * @ORM\ManyToOne(targetEntity="Shop\Entity\CartOrders")
     //  * @var CartOrders
     //  */
     // private $cartOrder;
-    
+
     /**
      * @ORM\ManyToOne(targetEntity="Wallet")
      * @var Wallet
      */
     private $wallet;
-    
+
     /**
      * @ORM\Column(name="created_on", type="datetime", nullable=true)
      * @var \DateTime
      */
     private $createdOn;
-    
+
     /**
      * @ORM\Column(name="amount", type="string", nullable=true)
      * @var string
      */
     private $amount;
-    
-    
+
+
     public function __construct()
     {
-        
+
         // TODO - Insert your code here
     }
     /**
@@ -158,6 +158,4 @@ class WalletOrderTransaction
         $this->amount = $amount;
         return $this;
     }
-
 }
-

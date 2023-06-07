@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Wallet\Service;
 
 use Doctrine\ORM\EntityManager;
@@ -12,8 +11,6 @@ use Wallet\Exceptions\InsufficientBalanceException;
 
 class WalletApiService
 {
-
-
     /**
      * Undocumented variable
      *
@@ -77,7 +74,7 @@ class WalletApiService
     public static function createWalletUuid()
     {
 
-        $var =  Uuid::uuid4();
+        $var = Uuid::uuid4();
         return $var->toString();
     }
 

@@ -1,13 +1,11 @@
 <?php
 
-
 namespace General\Service;
 
 use General\Service\GeneralService;
 
 class ActiveCampaignService
 {
-
     /**
      * Undocumented variable
      *

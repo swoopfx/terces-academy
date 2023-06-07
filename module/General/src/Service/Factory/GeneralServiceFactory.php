@@ -7,8 +7,8 @@ use General\Service\GeneralService;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Psr\Container\ContainerInterface;
 
-class GeneralServiceFactory implements FactoryInterface{
-
+class GeneralServiceFactory implements FactoryInterface
+{
     public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
     {
         $ctr = new GeneralService();

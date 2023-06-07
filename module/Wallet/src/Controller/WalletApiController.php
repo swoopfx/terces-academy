@@ -12,7 +12,6 @@ use Wallet\Service\WalletApiService;
 
 class WalletApiController extends AbstractActionController
 {
-
     /**
      * Undocumented variable
      *
@@ -32,7 +31,7 @@ class WalletApiController extends AbstractActionController
     /**
      * Undocumented variable
      *
-     * @var WalletApiService 
+     * @var WalletApiService
      */
     private $walletApiService;
 
@@ -45,7 +44,7 @@ class WalletApiController extends AbstractActionController
     /**
      * Used to retrieve list of gender
      * @OA\GET( path="/wallet/api/get-wallet", tags={"Wallet"}, description="retrives wallet",
-     * 
+     *
      * @OA\Response(response="200", description="Success"),
      * @OA\Response(response="400", description="Bad Request"),
      * @OA\Response(response="401", description="Not Authorized"),
@@ -74,9 +73,9 @@ class WalletApiController extends AbstractActionController
     }
 
     /**
-     * Gets the balance of an active user 
+     * Gets the balance of an active user
      * @OA\GET( path="/wallet/api/get-balance", tags={"Wallet"}, description="retrives wallet",
-     * 
+     *
      * @OA\Response(response="200", description="Success"),
      * @OA\Response(response="400", description="Bad Request"),
      * @OA\Response(response="401", description="Not Authorized"),

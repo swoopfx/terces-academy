@@ -1,4 +1,5 @@
 <?php
+
 namespace Wallet\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -17,11 +18,10 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="wallet_activity")
  * @author otaba
- *        
+ *
  */
 class WalletActivity
 {
-
     /**
      *
      * @var integer @ORM\Column(name="id", type="integer", nullable=false)
@@ -29,42 +29,36 @@ class WalletActivity
      *      @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
-
-    /**
+/**
      *
      * @ORM\Column(name="name", type="string", nullable=true)
      * @var string
      */
     private $name;
-
-    /**
+/**
      *
      * @ORM\ManyToOne(targetEntity="WalletActivityType")
      * @var WalletActivityType
      */
     private $type;
-
-    /**
+/**
      *
      * @ORM\Column(name="descriptions", type="text", nullable=true)
      * @var string
      */
     private $desc;
-
-    /**
+/**
      *
      * @ORM\Column(name="created_on", type="datetime", nullable=true)
      * @var \DateTime
      */
     private $createdOn;
-    
-    /**
+/**
      * @ORM\ManyToOne(targetEntity="Wallet", inversedBy="walletActivity")
      * @var Wallet
      */
     private $wallet;
-
-    // TODO - Insert your code here
+// TODO - Insert your code here
     public function __construct()
     {
 
@@ -178,6 +172,4 @@ class WalletActivity
         $this->wallet = $wallet;
         return $this;
     }
-
 }
-

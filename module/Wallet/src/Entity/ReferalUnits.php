@@ -1,4 +1,5 @@
 <?php
+
 namespace Wallet\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -7,13 +8,12 @@ use Authentication\Entity\User;
 /**
  * @ORM\Entity
  * @ORM\Table(name="referal_unit")
- * 
+ *
  * @author otaba
- *        
+ *
  */
 class ReferalUnits
 {
-
     /**
      *
      * @var integer @ORM\Column(name="id", type="integer", nullable=false)
@@ -21,40 +21,35 @@ class ReferalUnits
      *      @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
-
-    /**
+/**
      * @ORM\OneToOne(targetEntity="Authentication\Entity\User", inversedBy="referalUnit")
-     * 
+     *
      * @var User
      */
     private $user;
-
-    /**
+/**
      * @ORM\Column(name="runits", type="string", nullable=true)
-     * 
+     *
      * @var string
      */
     private $runits;
-
-    /**
+/**
      * @ORM\Column(name="created_on", type="datetime", nullable=true)
-     * 
+     *
      * @var \DateTime
      */
     private $createdOn;
-
-    /**
+/**
      * @ORM\Column(name="updated_on", type="datetime", nullable=true)
-     * 
+     *
      * @var unknown
      */
     private $updatedOn;
-
-    /**
+/**
      */
     public function __construct()
     {
-        
+
         // TODO - Insert your code here
     }
     /**
@@ -141,6 +136,4 @@ class ReferalUnits
         $this->updatedOn = $updatedOn;
         return $this;
     }
-
 }
-

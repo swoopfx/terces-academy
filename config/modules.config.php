@@ -5,6 +5,7 @@
  *
  * This should be an array of module namespaces used in the application.
  */
+
 return [
     'Laminas\Mvc\Plugin\FilePrg',
     'Laminas\Mvc\Plugin\FlashMessenger',
@@ -23,7 +24,10 @@ return [
     'Laminas\Db',
     'Laminas\Router',
     'Laminas\Validator',
-    'Laminas\ZendFrameworkBridge',
     'Laminas\Diactoros',
+    'DoctrineModule',
+    'DoctrineORMModule',
     'Application',
+    'General',
+    'Authentication'
 ];

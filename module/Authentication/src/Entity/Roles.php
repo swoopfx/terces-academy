@@ -5,7 +5,6 @@ namespace Authentication\Entity;
 use Doctrine\Common\Collections\ArrayCollection as ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
-
 /**
  * @ORM\Entity
  * @ORM\Table(name="roles")
@@ -13,7 +12,6 @@ use Doctrine\ORM\Mapping as ORM;
 
 class Roles
 {
-
     /**
      *
      * @var integer @ORM\Column(name="id", type="integer")
@@ -28,7 +26,7 @@ class Roles
     protected $name;
 
     /**
-     * This is the default page name to user redirect to 
+     * This is the default page name to user redirect to
      * If a referer login does not exist e.g /broker or /brokerchild
      * @ORM\Column(nullable=true)
      */
@@ -36,7 +34,7 @@ class Roles
 
     /**
      * @var Array
-     * 
+     *
      * @ORM\ManyToMany(targetEntity="Roles", cascade={"persist"})
      * @ORM\JoinTable(name="roles_parents",
      *      joinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")},
