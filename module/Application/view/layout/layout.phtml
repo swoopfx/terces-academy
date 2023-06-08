@@ -31,7 +31,7 @@
         ->prependStylesheet($this->basePath('/assets/css/magnific-popup.css'))
         ->prependStylesheet($this->basePath('/assets/css/fontawesome.css'))
         ->prependStylesheet($this->basePath('/assets/css/bootstrap.min.css'))
-?>
+    ?>
 
     <!-- Scripts -->
     <?= $this->headScript() ?>
@@ -57,7 +57,7 @@
                     <div class="col col-lg-3 col-5">
                         <div class="site_logo">
                             <a class="site_link" href="<?= $this->url("home") ?>">
-                                <img width="143" height="42" src="assets/images/oie_3QNUOMetbJh7.png" alt="Collab - Online Learning Platform">
+                                <img width="143" height="42" src="assets/images/oie_3QNUOMetbJh7.png" alt="Terces - Online Learning Platform">
                             </a>
                         </div>
                     </div>
@@ -85,7 +85,7 @@
                                     <li><a class="nav-link" href="<?= $this->url("application", ["action" => "about"]) . "#faq" ?>">FAQ</a></li>
 
 
-                                    <li><a class="nav-link" href="contact.html">Contact</a></li>
+                                    <li><a class="nav-link" href="<?= $this->url("application", ["action" => "contact"]) ?>">Contact</a></li>
                                 </ul>
                             </div>
                         </nav>
@@ -135,11 +135,11 @@
             <div class="footer_widget_area">
                 <div class="container">
                     <div class="row">
-                        <div class="col col-lg-3 col-md-6 col-sm-6">
+                        <div class="col col-lg-4 col-md-6 col-sm-6">
                             <div class="footer_widget">
                                 <div class="site_logo">
                                     <a class="site_link" href="index.html">
-                                        <img src="assets/images/logo/site_logo_2.svg" alt="Collab - Online Learning Platform">
+                                        <img src="assets/images/oie_3QNUOMetbJh7.png" alt="Terces - Online Learning Platform">
                                     </a>
                                 </div>
                                 <p>
@@ -200,7 +200,7 @@
                                         </ul>
                                     </div>
                                 </div>
-                                <div class="col col-md-4 col-sm-4">
+                                <div class="col-4 col-md-4 col-sm-4">
                                     <div class="footer_widget">
                                         <h3 class="footer_widget_title">Program</h3>
                                         <ul class="page_list unordered_list_block">

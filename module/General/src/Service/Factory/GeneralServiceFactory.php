@@ -13,6 +13,7 @@ class GeneralServiceFactory implements FactoryInterface
     {
         $ctr = new GeneralService();
         $entityManager = $container->get(EntityManager::class);
+        $ctr->setEntityManager($entityManager);
         return $ctr;
     }
 }
