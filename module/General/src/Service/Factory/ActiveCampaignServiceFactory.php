@@ -14,9 +14,12 @@ class ActiveCampaignServiceFactory implements FactoryInterface
     {
         $xserv = new ActiveCampaignService();
         $generalService = $container->get(GeneralService::class);
-        $header["Api-Token"] = "d91e86140f20426178a8b1d48263e2f09a64104a2d79501f01b788a7e8ccfba74ab38cea";
+
         $client = new Client();
-        $client->setHeaders($header);
+        $client->setHeaders([
+            "Api-Token" => "d91e86140f20426178a8b1d48263e2f09a64104a2d79501f01b788a7e8ccfba74ab38cea"
+        ]);
+        // $client->setUri("https://tercesjobs.api-us1.com");
         $xserv->setActiveInstance($client)->setGeneralService($generalService);
         return $xserv;
     }

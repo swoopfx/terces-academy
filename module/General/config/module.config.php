@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace General;
 
+use General\Service\ActiveCampaignService;
+use General\Service\Factory\ActiveCampaignServiceFactory;
 use General\Service\Factory\GeneralServiceFactory;
 use General\Service\GeneralService;
 use Laminas\Router\Http\Literal;
@@ -58,15 +60,12 @@ return [
     ],
     "service_manager" => [
         "factories" => [
-            GeneralService::class => GeneralServiceFactory::class
+            GeneralService::class => GeneralServiceFactory::class,
+            ActiveCampaignService::class => ActiveCampaignServiceFactory::class
         ]
     ],
     'view_manager' => [
-        // 'display_not_found_reason' => true,
-        // 'display_exceptions'       => true,
-        // 'doctype'                  => 'HTML5',
-        // 'not_found_template'       => 'error/404',
-        // 'exception_template'       => 'error/index',
+      
         'template_map' => [
             // 'layout/layout'           => __DIR__ . '/../view/layout/layout.phtml',
             // 'application/index/index' => __DIR__ . '/../view/application/index/index.phtml',

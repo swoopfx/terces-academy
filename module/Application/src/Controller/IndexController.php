@@ -69,6 +69,11 @@ class IndexController extends AbstractActionController
         return $viewModel;
     }
 
+    public function businessAnalysisMasterclassAction(){
+        $viewModel = new ViewModel();
+        return $viewModel;
+    }
+
     // public function 
 
     /**

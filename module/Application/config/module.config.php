@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Application;
 
+use Application\Controller\AppController;
+use Application\Controller\Factory\AppControllerFactory;
 use Application\Controller\Factory\IndexControllerFactory;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
@@ -36,11 +38,28 @@ return [
                     ],
                 ],
             ],
+
+            'app' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/app[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[a-zA-Z0-9_-]*'
+                    ],
+                    'defaults' => [
+                        'controller' => AppController::class,
+                        'action'     => 'index',
+                    ],
+                ],
+            ],
         ],
     ],
     'controllers' => [
         'factories' => [
-            Controller\IndexController::class => IndexControllerFactory::class
+            // Controller\IndexController::class => IndexControllerFactory::class,
+            Controller\IndexController::class => IndexControllerFactory::class,
+            AppController::class => AppControllerFactory::class,
         ],
     ],
     'doctrine' => [

@@ -33,6 +33,18 @@
         ->prependStylesheet($this->basePath('/assets/css/bootstrap.min.css'))
     ?>
 
+    
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue-toast-notification@3"></script>
+    <link href="https://cdn.jsdelivr.net/npm/vue-toast-notification@3/dist/theme-sugar.css" rel="stylesheet">
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
     <!-- Scripts -->
     <?= $this->headScript() ?>
 </head>
@@ -81,7 +93,7 @@
 
                                         </ul>
                                     </li>
-                                    <li><a class="nav-link" href="contact.html">Free Training</a></li>
+                                    <li><a class="nav-link" href="<?php echo $this->url("application", ["action" => "business-analysis-masterclass"]) ?>">Free Training</a></li>
                                     <li><a class="nav-link" href="<?= $this->url("application", ["action" => "about"]) . "#faq" ?>">FAQ</a></li>
 
 
