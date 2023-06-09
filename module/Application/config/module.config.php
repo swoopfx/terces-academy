@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Application;
 
+use Application\Controller\AppController;
+use Application\Controller\Factory\AppControllerFactory;
 use Application\Controller\Factory\IndexControllerFactory;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
@@ -25,9 +27,28 @@ return [
             'application' => [
                 'type'    => Segment::class,
                 'options' => [
-                    'route'    => '/application[/:action]',
+                    'route'    => '[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[a-zA-Z0-9_-]*'
+                    ],
                     'defaults' => [
                         'controller' => Controller\IndexController::class,
+                        'action'     => 'index',
+                    ],
+                ],
+            ],
+
+            'app' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/app[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[a-zA-Z0-9_-]*'
+                    ],
+                    'defaults' => [
+                        'controller' => AppController::class,
                         'action'     => 'index',
                     ],
                 ],
@@ -36,8 +57,26 @@ return [
     ],
     'controllers' => [
         'factories' => [
-            Controller\IndexController::class => IndexControllerFactory::class
+            // Controller\IndexController::class => IndexControllerFactory::class,
+            Controller\IndexController::class => IndexControllerFactory::class,
+            AppController::class => AppControllerFactory::class,
         ],
+    ],
+    'doctrine' => [
+        'driver' => [
+            __NAMESPACE__ . '_driver' => [
+                'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
+                'cache' => 'array',
+                'paths' => [
+                    __DIR__ . '/../src/Entity'
+                ]
+            ],
+            'orm_default' => [
+                'drivers' => [
+                    __NAMESPACE__ . '\Entity' => __NAMESPACE__ . '_driver'
+                ]
+            ]
+        ]
     ],
     'view_manager' => [
         'display_not_found_reason' => true,
@@ -50,9 +89,17 @@ return [
             'application/index/index' => __DIR__ . '/../view/application/index/index.phtml',
             'error/404'               => __DIR__ . '/../view/error/404.phtml',
             'error/index'             => __DIR__ . '/../view/error/index.phtml',
+
+            // partials
+            "partials_newsletter" => __DIR__ . '/../view/partials/newsletter.phtml',
+            "partials_faq" => __DIR__ . '/../view/partials/faq.phtml',
+            "partials_courselist" => __DIR__ . '/../view/partials/course_list.phtml',
         ],
         'template_path_stack' => [
             __DIR__ . '/../view',
         ],
+        'strategies' => [
+            'ViewJsonStrategy'
+        ]
     ],
 ];
