@@ -71,7 +71,7 @@ class CourseContent
     private $updatedOn;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Application\Entity\Courses")
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Courses", inversedBy="courseContent")
      *
      * @var Courses
      */

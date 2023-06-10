@@ -2,7 +2,9 @@
 
 namespace Application\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * @ORM\Entity
@@ -82,6 +84,18 @@ class Programs
      * @var boolean
      */
     private $isActive;
+
+    /**
+     * Undocumented variable
+     * @ORM\OneToMany(targetEntity="Courses", mappedBy="programs" , cascade={"remove"})
+     * @var Collection
+     */
+    private $courses;
+
+    public function __construct()
+    {
+        $this->courses = new ArrayCollection();
+    }
 
     /**
      * Get @ORM\Column(name="id", type="integer")

@@ -1,0 +1,60 @@
+<?php
+
+/**
+ * @var Laminas\View\Renderer\PhpRenderer $this
+ */
+?>
+<?= $this->doctype() ?>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <?= $this->headTitle('Laminas MVC Skeleton')->setSeparator(' - ')->setAutoEscape(false) ?>
+
+    <?= $this->headMeta()
+        ->appendName('viewport', 'width=device-width, initial-scale=1.0')
+        ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
+    ?>
+
+    <!-- Le styles -->
+    <?= $this->headLink([
+        'rel' => 'shortcut icon',
+        'type' => 'image/vnd.microsoft.icon',
+        'href' => $this->basePath() . '/img/favicon.ico'
+    ])
+        // ->prependStylesheet($this->basePath('css/style.css'))
+        ->prependStylesheet($this->basePath('assets/css/style.css'))
+        ->prependStylesheet($this->basePath('/assets/css/vanilla-calendar.min.css'))
+        ->prependStylesheet($this->basePath('/assets/css/magnific-popup.css'))
+        ->prependStylesheet($this->basePath('/assets/css/slick-theme.css'))
+        ->prependStylesheet($this->basePath('/assets/css/slick.css'))
+        ->prependStylesheet($this->basePath('/assets/css/cursor.css'))
+        ->prependStylesheet($this->basePath('/assets/css/animate.css'))
+        ->prependStylesheet($this->basePath('/assets/css/fontawesome.css'))
+        ->prependStylesheet($this->basePath('/assets/css/bootstrap.min.css'))
+    ?>
+
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue-toast-notification@3"></script>
+    <link href="https://cdn.jsdelivr.net/npm/vue-toast-notification@3/dist/theme-sugar.css" rel="stylesheet">
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Scripts -->
+    <?= $this->headScript() ?>
+</head>
+
+<body>
+    <main class="page_content">
+        <?= $this->content ?>
+    </main>
+    <?= $this->inlineScript()
+        ->prependFile($this->basePath('js/bootstrap.min.js'))
+        ->prependFile($this->basePath('js/jquery-3.5.1.min.js')) ?>
+</body>
+
+</html>

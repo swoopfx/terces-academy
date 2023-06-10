@@ -1,0 +1,70 @@
+<!-- Course Deals Section - Start
+        ================================================== -->
+<section id="comingEvent" class="course_deals_section section_space_lg bg_light decoration_wrap overflow-hidden">
+    <div class="container">
+        <div class="row align-items-center justify-content-lg-between">
+            <div class="col col-lg-5 order-lg-last">
+                <div class="image_widget">
+                    <img src="/assets/images/33.png" alt="Terces – Online Learning Platform">
+                </div>
+            </div>
+            <div class="col col-lg-6">
+                <div class="content_wrap">
+                    <div class="section_heading">
+                        <h2 class="heading_text">
+                            Next Upcoming Free training
+                        </h2>
+                        <p class="heading_description mb-0">
+                            <!-- Tincidunt praesent semper feugiat nibh sed pulvinar proin gravida hendrerit. Consectetur purus ut faucibus pulvinar elementum -->
+                        </p>
+                    </div>
+                    <div class="deals_countdown">
+                        <ul class="countdown_timer unordered_list" :data-countdown="upcomingDate"></ul>
+                        <!--<div class="discount_value">
+              <strong>40%</strong>
+              <span>Sale</span>
+            </div> -->
+                    </div>
+
+
+                    <div class="btn_wrap pb-0">
+                        <a class="btn border_dark" href="">
+                            <span>
+                                <small>Join Class</small>
+                                <small>Join Class</small>
+                            </span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="deco_item shape_img_1" data-parallax='{"y" : 130, "smoothness": 6}'>
+        <img src="assets/images/shape/shape_img_7.png" alt="Terces – Online Learning Platform">
+    </div>
+    <div class="deco_item shape_img_2" data-parallax='{"x" : -130, "smoothness": 6}'>
+        <img src="assets/images/shape/shape_img_7.png" alt="Terces – Online Learning Platform">
+    </div>
+    <div class="deco_item shape_img_3" data-parallax='{"y" : -130, "smoothness": 6}'>
+        <img src="assets/images/shape/shape_img_7.png" alt="Terces – Online Learning Platform">
+    </div>
+</section>
+<!-- Course Deals Section - End
+        ================================================== -->
+
+<script>
+    const comingEvent = Vue.createApp({
+        data() {
+            return {
+                upcomingDate: "2023/12/12"
+            }
+        },
+
+        methods: {
+            getUpcomingEventDate() {
+
+            }
+        },
+    });
+    comingEvent.mount("#comingEvent")
+</script>

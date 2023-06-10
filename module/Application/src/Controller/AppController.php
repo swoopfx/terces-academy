@@ -3,6 +3,7 @@
 namespace Application\Controller;
 
 use Application\Entity\NewsLetter;
+use Application\Entity\Programs;
 use General\Service\ActiveCampaignService;
 use Laminas\InputFilter\InputFilter;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -119,6 +120,27 @@ class AppController extends  AbstractActionController
             }
         }
         return $jsonModel;
+    }
+
+
+    public function getAllProgramsAction()
+    {
+        $entityManager = $this->entityManager;
+        $request = $this->getRequest();
+
+        $response = $this->getResponse();
+        $data = $entityManager->getRepository(Programs::class)
+            ->createQueryBuilder("p")->select(["p as program", "c as courses", "cc as course_content"])
+            ->where("p.isActive = :active")
+            ->leftJoin("p.courses", "c")
+            ->leftJoin("c.courseContent", "cc")
+            ->setParameters([
+                "active" => true
+            ])->getQuery()->getArrayResult();
+
+        return new JsonModel([
+            "data" => $data,
+        ]);
     }
 
     /**
