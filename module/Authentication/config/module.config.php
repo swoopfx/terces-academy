@@ -21,7 +21,7 @@ return [
                     ],
                 ],
             ],
-            'application' => [
+            'register' => [
                 'type'    => Segment::class,
                 'options' => [
                     'route'    => '/application[/:action]',

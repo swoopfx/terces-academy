@@ -4,6 +4,8 @@ namespace Application\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Application\Entity\Programs;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use General\Entity\Image;
 
 /**
@@ -30,7 +32,7 @@ class Courses
 
     /**
      * Undocumented variable
-     * @ORM\ManyToOne(targetEntity="Application\Entity\Programs")
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Programs", inversedBy="courses")
      * @var Programs
      */
     private $programs;
@@ -69,6 +71,28 @@ class Courses
      * @var Image
      */
     private $banner;
+
+
+    /**
+     * Undocumented variable
+     * @ORM\ManyToOne(targetEntity="General\Entity\Image")
+     * @var Image
+     */
+    private $video;
+
+    /**
+     * Undocumented variable
+     * @ORM\OneToMany(targetEntity="CourseContent", mappedBy="courses" , cascade={"remove"})
+     * @var Collection
+     */
+    private $courseContent;
+
+
+
+    public function __construct()
+    {
+        $this->courseContent = new ArrayCollection();
+    }
 
     /**
      * Get @ORM\Column(name="id", type="integer", nullable=false, options={"unsigned"=true})
@@ -244,6 +268,54 @@ class Courses
     public function setBanner(Image $banner)
     {
         $this->banner = $banner;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  Image
+     */
+    public function getVideo()
+    {
+        return $this->video;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  Image  $video  Undocumented variable
+     *
+     * @return  self
+     */
+    public function setVideo(Image $video)
+    {
+        $this->video = $video;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  Collection
+     */ 
+    public function getCourseContent()
+    {
+        return $this->courseContent;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  Collection  $courseContent  Undocumented variable
+     *
+     * @return  self
+     */ 
+    public function setCourseContent(Collection $courseContent)
+    {
+        $this->courseContent = $courseContent;
 
         return $this;
     }

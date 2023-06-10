@@ -94,6 +94,7 @@ return [
             "partials_newsletter" => __DIR__ . '/../view/partials/newsletter.phtml',
             "partials_faq" => __DIR__ . '/../view/partials/faq.phtml',
             "partials_courselist" => __DIR__ . '/../view/partials/course_list.phtml',
+            "partials_coming_free_training" => __DIR__ . '/../view/partials/coming_free_training.phtml',
         ],
         'template_path_stack' => [
             __DIR__ . '/../view',
