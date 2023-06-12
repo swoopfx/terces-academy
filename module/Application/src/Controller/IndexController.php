@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Application\Controller;
 
+use Application\Entity\Programs;
 use Doctrine\ORM\EntityManager;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
@@ -69,7 +70,45 @@ class IndexController extends AbstractActionController
         return $viewModel;
     }
 
-    public function businessAnalysisMasterclassAction(){
+    public function businessAnalysisMasterclassAction()
+    {
+        $viewModel = new ViewModel();
+        return $viewModel;
+    }
+
+    public function persionalisedInterviewPrepAction()
+    {
+        $viewModel = new ViewModel();
+        return $viewModel;
+    }
+
+    public function businessAnalysisProgramAction()
+    {
+        $viewModel = new ViewModel();
+        $em = $this->entityManager;
+        $data = $em->find(Programs::class, 10);
+        $viewModel->setVariables([
+            "data" => $data
+        ]);
+        return $viewModel;
+    }
+
+    public function buyCourseAction(){
+        $viewModel=  new ViewModel();
+        $request = $this->getRequest();
+        $uuid = $this->params()->fromRoute("id", NULL);
+        if($uuid == NULL){
+            return $this->redirect()->toRoute("home");
+        }
+        
+        return $viewModel;
+    }
+
+
+
+
+    public function careerServiceAction()
+    {
         $viewModel = new ViewModel();
         return $viewModel;
     }
@@ -80,7 +119,7 @@ class IndexController extends AbstractActionController
      * Get the value of entityManager
      *
      * @return  EntityManager
-     */ 
+     */
     public function getEntityManager()
     {
         return $this->entityManager;
@@ -92,7 +131,7 @@ class IndexController extends AbstractActionController
      * @param  EntityManager  $entityManager
      *
      * @return  self
-     */ 
+     */
     public function setEntityManager(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;

@@ -87,6 +87,13 @@ class Programs
 
     /**
      * Undocumented variable
+     * @ORM\Column(nullable=true)
+     * @var string
+     */
+    private $banner;
+
+    /**
+     * Undocumented variable
      * @ORM\OneToMany(targetEntity="Courses", mappedBy="programs" , cascade={"remove"})
      * @var Collection
      */
@@ -321,5 +328,39 @@ class Programs
         $this->isActive = $isActive;
 
         return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  string
+     */ 
+    public function getBanner()
+    {
+        return $this->banner;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  string  $banner  Undocumented variable
+     *
+     * @return  self
+     */ 
+    public function setBanner(string $banner)
+    {
+        $this->banner = $banner;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  Collection
+     */ 
+    public function getCourses()
+    {
+        return $this->courses;
     }
 }
