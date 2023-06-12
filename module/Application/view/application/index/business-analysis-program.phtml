@@ -1,0 +1,566 @@
+   <?= $this->headtitle("Business Analysis Program");
+    $f = new \NumberFormatter("en", NumberFormatter::SPELLOUT);
+    ?>
+   <!-- Page Section - Start
+        ================================================== -->
+   <section class="page_banner">
+       <div class="container">
+           <div class="content_wrapper">
+               <div class="row align-items-center">
+                   <div class="col col-lg-7">
+                       <ul class="breadcrumb_nav unordered_list">
+                           <li><a href="index.html">Home</a></li>
+                           <li><a href="course.html">Program</a></li>
+                           <li>Business Analysis Program</li>
+                       </ul>
+                       <h1 class="page_title">
+                           <?= $data->getTitle(); ?>
+                       </h1>
+                       <ul class="info_list unordered_list_block pb-0">
+                           <?= $data->getDescription(); ?>
+                       </ul>
+                   </div>
+               </div>
+           </div>
+       </div>
+   </section>
+   <!-- Page Section - End
+        ================================================== -->
+
+   <!-- Course Details Section - Start
+        ================================================== -->
+   <section class="details_section course_details_section">
+       <div class="container">
+           <div class="row">
+               <div class="col col-lg-8">
+                   <div class="section_space_lg pb-lg-0">
+                       <div class="pe-lg-5">
+                           <div class="course_info_card d-lg-none">
+                               <div class="details_image">
+                                   <img src="<?= $data->getBanner() ?>" alt="Terces – Online Learning Platform">
+                               </div>
+
+                               <div class="item_price">
+                                   <span class="sale_price"><?= $this->currencyFormat($data->getCost(), "USD") ?></span>
+                               </div>
+                               <a href="<?= $this->url("application", ["action" => "buy-course", "id" => $data->getUuid()]) ?>" class="btn btn_dark">
+                                   <span>
+                                       <small>Get Course</small>
+                                       <small>Get Course</small>
+                                   </span>
+                               </a>
+                               <ul class="course_info_list unordered_list_block">
+
+                                   <li>
+                                       <span><i class="fas fa-chart-user"></i> Pre-requisite</span>
+                                       <strong><a href="<?= $this->url("application", ["action" => "business-analysis-masterclass"]) ?>">Business Analysis Master Class</a></strong>
+                                   </li>
+
+                                   <li>
+                                       <span><i class="fas fa-chart-bar"></i> Level</span>
+                                       <strong>Intermediate</strong>
+                                   </li>
+                                   <li>
+                                       <span><i class="fas fa-clock"></i> Duration</span>
+                                       <strong><?= $data->getDuration() ?></strong>
+                                   </li>
+                                   <li>
+                                       <span><i class="fas fa-video"></i> Lessons</span>
+                                       <strong> Video</strong>
+                                   </li>
+
+
+                               </ul>
+                           </div>
+
+                           <div class="section_heading">
+                               <h2 class="heading_text">
+                                   Course Content
+                               </h2>
+                           </div>
+
+
+                           <?php foreach ($data->getCourses() as $key => $course) : ?>
+                               <div class="accordion_wrap mb-5">
+                                   <h3 class="details_info_title mb-3">Section <?= $key + 1 ?>. <?= $course->getTitle() ?></h3>
+                                   <div class="accordion style_2" id="corse_details_accordion_<?= $key + 1 ?>">
+                                       <?php
+                                        if (count($course->getCourseContent())) :
+                                            foreach ($course->getCourseContent() as $ckey => $content) :
+                                        ?>
+                                               <div class="accordion-item">
+                                                   <div class="checkbox_item accordion_item_checked">
+                                                       <input type="checkbox">
+                                                   </div>
+                                                   <div class="accordion-button collapsed" role="button" data-bs-toggle="collapse" data-bs-target="#collapse_3_<?= $ckey + 1 ?>" aria-expanded="false">
+                                                       Lesson <?php echo ($ckey + 1) . ":  ";
+                                                                echo  $content->getTitle() ?>
+                                                   </div>
+                                                   <div id="collapse_3_<?= $ckey + 1 ?>" class="accordion-collapse collapse" data-bs-parent="#corse_details_accordion_<?= $key + 1 ?>">
+                                                       <div class="accordion-body">
+                                                           <p class="mb-3">
+                                                               <?= $content->getDescription(); ?>
+                                                           </p>
+                                                           <div class="intro_video mb-3">
+                                                               <div class="video_wrap">
+                                                                   <img src="<?= $content->getBanner()->getImageUrl() ?>" alt="Collab – Online Learning Platform">
+                                                                   <a class="video_play_btn popup_video" href="https://www.youtube.com/watch?v=7e90gBu4pas">
+                                                                       <span class="icon"><i class="fas fa-play"></i></span>
+                                                                   </a>
+                                                               </div>
+                                                           </div>
+                                                           <a class="btn border_dark btn_small" href="#!">
+                                                               <span>
+                                                                   <small><img src="assets/images/icon/icon_clip.svg" alt="Collab – Online Learning Platform"> Resources</small>
+                                                                   <small><img src="assets/images/icon/icon_clip_white.svg" alt="Collab – Online Learning Platform"> Resources</small>
+                                                               </span>
+                                                           </a>
+                                                       </div>
+                                                   </div>
+                                               </div>
+
+                                       <?php endforeach;
+                                        endif;
+                                        ?>
+                                   </div>
+                               </div>
+
+                           <?php endforeach; ?>
+                           <!--
+                           <div class="accordion_wrap mb-5">
+                               <h3 class="details_info_title mb-3">Section 2. Algorithms and Programming Concepts</h3>
+                               <div class="accordion style_2" id="corse_details_accordion_2">
+                                   <div class="accordion-item">
+                                       <div class="checkbox_item accordion_item_checked">
+                                           <input type="checkbox">
+                                       </div>
+                                       <div class="accordion-button" role="button" data-bs-toggle="collapse" data-bs-target="#collapse_2_one" aria-expanded="true">
+                                           Lesson 1. Developing an Algorithm
+                                       </div>
+                                       <div id="collapse_2_one" class="accordion-collapse collapse show" data-bs-parent="#corse_details_accordion_2">
+                                           <div class="accordion-body">
+                                               <p class="mb-3">
+                                                   Morbi enim nunc faucibus a pellentesque sit amet porttitor eget. Nunc mattis enim ut tellus elementum sagittis vitae. Nisi lacus sed viverra tellus in hac. Amet dictum sit amet justo donec enim diam. Morbi non arcu risus quis varius quam quisque id. Mi eget mauris pharetra et ultrices neque.
+                                               </p>
+                                               <div class="intro_video mb-3">
+                                                   <div class="video_wrap">
+                                                       <img src="assets/images/video/video_poster_3.jpg" alt="Terces – Online Learning Platform">
+                                                       <a class="video_play_btn popup_video" href="https://www.youtube.com/watch?v=7e90gBu4pas">
+                                                           <span class="icon"><i class="fas fa-play"></i></span>
+                                                       </a>
+                                                   </div>
+                                               </div>
+                                               <a class="btn border_dark btn_small" href="#!">
+                                                   <span>
+                                                       <small><img src="assets/images/icon/icon_clip.svg" alt="Terces – Online Learning Platform"> Resources</small>
+                                                       <small><img src="assets/images/icon/icon_clip_white.svg" alt="Terces – Online Learning Platform"> Resources</small>
+                                                   </span>
+                                               </a>
+                                           </div>
+                                       </div>
+                                   </div>
+                                   <div class="accordion-item">
+                                       <div class="checkbox_item accordion_item_checked">
+                                           <input type="checkbox">
+                                       </div>
+                                       <div class="accordion-button collapsed" role="button" data-bs-toggle="collapse" data-bs-target="#collapse_2_two" aria-expanded="false">
+                                           Lesson 2. A Step Approach to Solving Programming Problems
+                                       </div>
+                                       <div id="collapse_2_two" class="accordion-collapse collapse" data-bs-parent="#corse_details_accordion_2">
+                                           <div class="accordion-body">
+                                               <p class="mb-3">
+                                                   Morbi enim nunc faucibus a pellentesque sit amet porttitor eget. Nunc mattis enim ut tellus elementum sagittis vitae. Nisi lacus sed viverra tellus in hac. Amet dictum sit amet justo donec enim diam. Morbi non arcu risus quis varius quam quisque id. Mi eget mauris pharetra et ultrices neque.
+                                               </p>
+                                               <div class="intro_video mb-3">
+                                                   <div class="video_wrap">
+                                                       <img src="assets/images/video/video_poster_3.jpg" alt="Terces – Online Learning Platform">
+                                                       <a class="video_play_btn popup_video" href="https://www.youtube.com/watch?v=7e90gBu4pas">
+                                                           <span class="icon"><i class="fas fa-play"></i></span>
+                                                       </a>
+                                                   </div>
+                                               </div>
+                                               <a class="btn border_dark btn_small" href="#!">
+                                                   <span>
+                                                       <small><img src="assets/images/icon/icon_clip.svg" alt="Terces – Online Learning Platform"> Resources</small>
+                                                       <small><img src="assets/images/icon/icon_clip_white.svg" alt="Terces – Online Learning Platform"> Resources</small>
+                                                   </span>
+                                               </a>
+                                           </div>
+                                       </div>
+                                   </div>
+                                   <div class="accordion-item">
+                                       <div class="checkbox_item accordion_item_checked">
+                                           <input type="checkbox">
+                                       </div>
+                                       <div class="accordion-button collapsed" role="button" data-bs-toggle="collapse" data-bs-target="#collapse_2_three" aria-expanded="false">
+                                           Lesson 3. Thinking Critically about Your Program
+                                       </div>
+                                       <div id="collapse_2_three" class="accordion-collapse collapse" data-bs-parent="#corse_details_accordion_2">
+                                           <div class="accordion-body">
+                                               <p class="mb-3">
+                                                   Morbi enim nunc faucibus a pellentesque sit amet porttitor eget. Nunc mattis enim ut tellus elementum sagittis vitae. Nisi lacus sed viverra tellus in hac. Amet dictum sit amet justo donec enim diam. Morbi non arcu risus quis varius quam quisque id. Mi eget mauris pharetra et ultrices neque.
+                                               </p>
+                                               <div class="intro_video mb-3">
+                                                   <div class="video_wrap">
+                                                       <img src="assets/images/video/video_poster_3.jpg" alt="Terces – Online Learning Platform">
+                                                       <a class="video_play_btn popup_video" href="https://www.youtube.com/watch?v=7e90gBu4pas">
+                                                           <span class="icon"><i class="fas fa-play"></i></span>
+                                                       </a>
+                                                   </div>
+                                               </div>
+                                               <a class="btn border_dark btn_small" href="#!">
+                                                   <span>
+                                                       <small><img src="assets/images/icon/icon_clip.svg" alt="Terces – Online Learning Platform"> Resources</small>
+                                                       <small><img src="assets/images/icon/icon_clip_white.svg" alt="Terces – Online Learning Platform"> Resources</small>
+                                                   </span>
+                                               </a>
+                                           </div>
+                                       </div>
+                                   </div>
+                               </div>
+                           </div>
+
+                           <div class="accordion_wrap mb-5">
+                               <h3 class="details_info_title mb-3">Section 3. MiniProject: Image Filters on the Web</h3>
+                               <div class="accordion style_2" id="corse_details_accordion_3">
+                                   <div class="accordion-item">
+                                       <div class="checkbox_item accordion_item_checked">
+                                           <input type="checkbox">
+                                       </div>
+                                       <div class="accordion-button collapsed" role="button" data-bs-toggle="collapse" data-bs-target="#collapse_3_one" aria-expanded="false">
+                                           Lesson 1. Developing an Algorithm
+                                       </div>
+                                       <div id="collapse_3_one" class="accordion-collapse collapse" data-bs-parent="#corse_details_accordion_3">
+                                           <div class="accordion-body">
+                                               <p class="mb-3">
+                                                   Morbi enim nunc faucibus a pellentesque sit amet porttitor eget. Nunc mattis enim ut tellus elementum sagittis vitae. Nisi lacus sed viverra tellus in hac. Amet dictum sit amet justo donec enim diam. Morbi non arcu risus quis varius quam quisque id. Mi eget mauris pharetra et ultrices neque.
+                                               </p>
+                                               <div class="intro_video mb-3">
+                                                   <div class="video_wrap">
+                                                       <img src="assets/images/video/video_poster_3.jpg" alt="Terces – Online Learning Platform">
+                                                       <a class="video_play_btn popup_video" href="https://www.youtube.com/watch?v=7e90gBu4pas">
+                                                           <span class="icon"><i class="fas fa-play"></i></span>
+                                                       </a>
+                                                   </div>
+                                               </div>
+                                               <a class="btn border_dark btn_small" href="#!">
+                                                   <span>
+                                                       <small><img src="assets/images/icon/icon_clip.svg" alt="Terces – Online Learning Platform"> Resources</small>
+                                                       <small><img src="assets/images/icon/icon_clip_white.svg" alt="Terces – Online Learning Platform"> Resources</small>
+                                                   </span>
+                                               </a>
+                                           </div>
+                                       </div>
+                                   </div>
+                                   <div class="accordion-item">
+                                       <div class="checkbox_item accordion_item_checked">
+                                           <input type="checkbox">
+                                       </div>
+                                       <div class="accordion-button collapsed" role="button" data-bs-toggle="collapse" data-bs-target="#collapse_3_two" aria-expanded="false">
+                                           Lesson 2. A Step Approach to Solving Programming Problems
+                                       </div>
+                                       <div id="collapse_3_two" class="accordion-collapse collapse" data-bs-parent="#corse_details_accordion_3">
+                                           <div class="accordion-body">
+                                               <p class="mb-3">
+                                                   Morbi enim nunc faucibus a pellentesque sit amet porttitor eget. Nunc mattis enim ut tellus elementum sagittis vitae. Nisi lacus sed viverra tellus in hac. Amet dictum sit amet justo donec enim diam. Morbi non arcu risus quis varius quam quisque id. Mi eget mauris pharetra et ultrices neque.
+                                               </p>
+                                               <div class="intro_video mb-3">
+                                                   <div class="video_wrap">
+                                                       <img src="assets/images/video/video_poster_3.jpg" alt="Terces – Online Learning Platform">
+                                                       <a class="video_play_btn popup_video" href="https://www.youtube.com/watch?v=7e90gBu4pas">
+                                                           <span class="icon"><i class="fas fa-play"></i></span>
+                                                       </a>
+                                                   </div>
+                                               </div>
+                                               <a class="btn border_dark btn_small" href="#!">
+                                                   <span>
+                                                       <small><img src="assets/images/icon/icon_clip.svg" alt="Terces – Online Learning Platform"> Resources</small>
+                                                       <small><img src="assets/images/icon/icon_clip_white.svg" alt="Terces – Online Learning Platform"> Resources</small>
+                                                   </span>
+                                               </a>
+                                           </div>
+                                       </div>
+                                   </div>
+                                   <div class="accordion-item">
+                                       <div class="checkbox_item accordion_item_checked">
+                                           <input type="checkbox">
+                                       </div>
+                                       <div class="accordion-button collapsed" role="button" data-bs-toggle="collapse" data-bs-target="#collapse_3_three" aria-expanded="false">
+                                           Lesson 3. Thinking Critically about Your Program
+                                       </div>
+                                       <div id="collapse_3_three" class="accordion-collapse collapse" data-bs-parent="#corse_details_accordion_3">
+                                           <div class="accordion-body">
+                                               <p class="mb-3">
+                                                   Morbi enim nunc faucibus a pellentesque sit amet porttitor eget. Nunc mattis enim ut tellus elementum sagittis vitae. Nisi lacus sed viverra tellus in hac. Amet dictum sit amet justo donec enim diam. Morbi non arcu risus quis varius quam quisque id. Mi eget mauris pharetra et ultrices neque.
+                                               </p>
+                                               <div class="intro_video mb-3">
+                                                   <div class="video_wrap">
+                                                       <img src="assets/images/video/video_poster_3.jpg" alt="Terces – Online Learning Platform">
+                                                       <a class="video_play_btn popup_video" href="https://www.youtube.com/watch?v=7e90gBu4pas">
+                                                           <span class="icon"><i class="fas fa-play"></i></span>
+                                                       </a>
+                                                   </div>
+                                               </div>
+                                               <a class="btn border_dark btn_small" href="#!">
+                                                   <span>
+                                                       <small><img src="assets/images/icon/icon_clip.svg" alt="Terces – Online Learning Platform"> Resources</small>
+                                                       <small><img src="assets/images/icon/icon_clip_white.svg" alt="Terces – Online Learning Platform"> Resources</small>
+                                                   </span>
+                                               </a>
+                                           </div>
+                                       </div>
+                                   </div>
+                               </div>
+                           </div>
+
+                             <div class="comments_list_wrap mb-5">
+                               <div class="section_heading">
+                                   <h3 class="heading_text">
+                                       Student Feedback
+                                   </h3>
+                               </div>
+                               <ul class="comments_list unordered_list_block">
+                                   <li>
+                                       <div class="comment_item">
+                                           <div class="comment_author">
+                                               <div class="author_thumbnail">
+                                                   <img src="assets/images/meta/student_thumbnail_6.jpg" alt="Terces – Online Learning Platform">
+                                               </div>
+                                               <div class="author_content">
+                                                   <h4 class="author_name">Carolyn Wallace</h4>
+                                                   <span class="comment_date">January 27, 2023</span>
+                                               </div>
+                                           </div>
+                                           <p>
+                                               Platea dictumst vestibulum rhoncus est pellentesque elit ullamcorper dignissim cras. Vitae ultricies leo integer malesuada nunc vel. Nibh cras pulvinar mattis nunc sed. Convallis a cras semper auctor neque vitae tempus. Mattis molestie a iaculis at erat pellentesque adipiscing.
+                                           </p>
+                                           <a class="reply_btn" href="#!"><i class="fas fa-reply"></i> Reply</a>
+                                       </div>
+                                       <ul class="comments_list unordered_list_block">
+                                           <li>
+                                               <div class="comment_item">
+                                                   <div class="comment_author">
+                                                       <div class="author_thumbnail">
+                                                           <img src="assets/images/meta/testimonial_thumbnail_1.jpg" alt="Terces – Online Learning Platform">
+                                                       </div>
+                                                       <div class="author_content">
+                                                           <h4 class="author_name">Ray Cooper</h4>
+                                                           <span class="comment_date">January 27, 2023</span>
+                                                       </div>
+                                                   </div>
+                                                   <p>
+                                                       Platea dictumst vestibulum rhoncus est pellentesque elit ullamcorper dignissim cras. Vitae ultricies leo integer malesuada nunc vel. Nibh cras pulvinar mattis nunc sed. Convallis a cras semper auctor neque vitae tempus. Mattis molestie a iaculis at erat pellentesque adipiscing.
+                                                   </p>
+                                                   <a class="reply_btn" href="#!"><i class="fas fa-reply"></i> Reply</a>
+                                               </div>
+                                           </li>
+                                       </ul>
+                                   </li>
+                                   <li>
+                                       <div class="comment_item">
+                                           <div class="comment_author">
+                                               <div class="author_thumbnail">
+                                                   <img src="assets/images/meta/student_thumbnail_7.jpg" alt="Terces – Online Learning Platform">
+                                               </div>
+                                               <div class="author_content">
+                                                   <h4 class="author_name">Marrion Willsoriam</h4>
+                                                   <span class="comment_date">January 27, 2023</span>
+                                               </div>
+                                           </div>
+                                           <p>
+                                               Platea dictumst vestibulum rhoncus est pellentesque elit ullamcorper dignissim cras. Vitae ultricies leo integer malesuada nunc vel. Nibh cras pulvinar mattis nunc sed. Convallis a cras semper auctor neque vitae tempus. Mattis molestie a iaculis at erat pellentesque adipiscing.
+                                           </p>
+                                           <a class="reply_btn" href="#!"><i class="fas fa-reply"></i> Reply</a>
+                                       </div>
+                                   </li>
+                               </ul>
+                           </div>
+
+                           <div class="comment_form_wrap">
+                               <div class="section_heading">
+                                   <h3 class="heading_text">
+                                       Leave a Reply
+                                   </h3>
+                               </div>
+                               <form action="#">
+                                   <div class="row">
+                                       <div class="col">
+                                           <div class="form_item mb-0">
+                                               <label for="input_message" class="input_title text-uppercase">Message</label>
+                                               <textarea id="input_message" name="comment" placeholder="Message"></textarea>
+                                           </div>
+                                       </div>
+                                       <div class="col col-md-6">
+                                           <div class="form_item mb-0">
+                                               <label for="input_name" class="input_title">Name</label>
+                                               <input id="input_name" type="text" placeholder="Your Name">
+                                           </div>
+                                       </div>
+                                       <div class="col col-md-6">
+                                           <div class="form_item mb-0">
+                                               <label for="input_email" class="input_title">Email</label>
+                                               <input id="input_email" type="email" placeholder="Your Email">
+                                           </div>
+                                       </div>
+                                       <div class="col">
+                                           <div class="checkbox_item">
+                                               <input id="checkbox_remember" type="checkbox">
+                                               <label for="checkbox_remember">Save my name, email, and website in this browser for the next time I comment.</label>
+                                           </div>
+                                           <button type="submit" class="btn btn_dark">
+                                               <span>
+                                                   <small>Submit Comment</small>
+                                                   <small>Submit Comment</small>
+                                               </span>
+                                           </button>
+                                       </div>
+                                   </div>
+                               </form>
+                           </div> -->
+                       </div>
+                   </div>
+               </div>
+
+               <div class="col col-lg-4">
+                   <aside class="sidebar">
+                       <div class="course_info_card d-none d-lg-block">
+                           <div class="details_image">
+                               <img src="<?= $data->getBanner() ?>" alt="Terces – Online Learning Platform">
+                           </div>
+                           <ul class="meta_info_list unordered_list">
+
+                           </ul>
+                           <div class="item_price">
+                               <span class="sale_price"><?= $this->currencyFormat($data->getCost(), "USD") ?></span>
+                           </div>
+                           <a href="<?= $this->url("application", ["action" => "buy-course", "id" => $data->getUuid()]) ?>" class="btn btn_dark">
+                               <span>
+                                   <small>Get Course</small>
+                                   <small>Get Course</small>
+                               </span>
+                           </a>
+                           <ul class="course_info_list unordered_list_block">
+                               <li>
+                                   <span><i class="fas fa-user"></i> Pre-requisite</span>
+                                   <strong><a href="<?= $this->url("application", ["action" => "business-analysis-masterclass"]) ?>">Business Analysis Master Class</a></strong>
+                               </li>
+                               <li>
+                                   <span><i class="fas fa-chart-bar"></i> Level</span>
+                                   <strong>Intermediate</strong>
+                               </li>
+                               <li>
+                                   <span><i class="fas fa-clock"></i> Duration</span>
+                                   <strong><?= $this->data->getDuration() ?></strong>
+                               </li>
+                               <li>
+                                   <span><i class="fas fa-video"></i> Lessons</span>
+                                   <strong>Video</strong>
+                               </li>
+
+                           </ul>
+                       </div>
+
+                       <div class="callbox_wrap">
+                           <h3 class="widget_title">Get More Benefits with Our Plans</h3>
+                           <a class="btn border_dark w-100" href="pricing.html">
+                               <span>
+                                   <small>Our Plans</small>
+                                   <small>Our Plans</small>
+                               </span>
+                           </a>
+                           <a class="btn btn_dark w-100" href="course.html">
+                               <span>
+                                   <small>See Whole Course</small>
+                                   <small>See Whole Course</small>
+                               </span>
+                           </a>
+                       </div>
+
+
+                   </aside>
+               </div>
+           </div>
+       </div>
+   </section>
+   <!-- Course Details Section - End
+        ================================================== -->
+
+   <!-- Policy Section - Start
+        ================================================== -->
+   <section class="policy_section section_space_lg">
+       <div class="container position-relative">
+           <div class="section_heading text-center">
+               <h2 class="heading_text mb-0">
+                   Flexibility in Planning and Teaching
+               </h2>
+           </div>
+           <div class="row">
+               <div class="col col-lg-3">
+                   <div class="iconbox_item">
+                       <div class="title_wrap">
+                           <div class="item_icon bg_dark">
+                               <i class="fas fa-book-open"></i>
+                           </div>
+                           <h3 class="item_title mb-0">
+                               <span class="d-block">Allocate the time </span>
+                               for study
+                           </h3>
+                       </div>
+                       <p class="mb-0">
+                           Etiam sit amet nisl purus in mollis nunc sed. Viverra nibh cras pulvinar mattis nunc sed blandit libero volutpat
+                       </p>
+                   </div>
+               </div>
+               <div class="col col-lg-3">
+                   <div class="iconbox_item">
+                       <div class="title_wrap">
+                           <div class="item_icon bg_dark">
+                               <i class="fas fa-code-branch"></i>
+                           </div>
+                           <h3 class="item_title mb-0">
+                               <span class="d-block">Alternative learning </span>
+                               formats
+                           </h3>
+                       </div>
+                       <p class="mb-0">
+                           Posuere ac ut consequat semper viverra nam libero justo. Semper feugiat nibh sed pulvinar proin gravida hendrerit
+                       </p>
+                   </div>
+               </div>
+               <div class="col col-lg-3">
+                   <div class="iconbox_item">
+                       <div class="title_wrap">
+                           <div class="item_icon bg_dark">
+                               <i class="fas fa-comment-smile"></i>
+                           </div>
+                           <h3 class="item_title mb-0">
+                               <span class="d-block">Mentors with over 5 </span>
+                               years of experience
+                           </h3>
+                       </div>
+                       <p class="mb-0">
+                           Nunc sed velit dignissim sodales ut eu sem. Id faucibus nisl tincidunt eget. Nunc non blandit massa enim
+                       </p>
+                   </div>
+               </div>
+               <div class="col col-lg-3">
+                   <div class="iconbox_item">
+                       <div class="title_wrap">
+                           <div class="item_icon bg_dark">
+                               <i class="fas fa-user-graduate"></i>
+                           </div>
+                           <h3 class="item_title mb-0">
+                               <span class="d-block">Follow the Training </span>
+                               Program
+                           </h3>
+                       </div>
+                       <p class="mb-0">
+                           Tincidunt vitae semper quis lectus nulla at. Eget lorem dolor sed viverra ipsum nunc. Tellus at urna condimentum
+                       </p>
+                   </div>
+               </div>
+           </div>
+       </div>
+   </section>
+   <!-- Policy Section - End
+        ================================================== -->

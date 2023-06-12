@@ -42,6 +42,13 @@ class CourseContent
      */
     private $banner;
 
+     /**
+     * @ORM\Column(type="string", nullable=true)
+     *
+     * @var string
+     */
+    private $snippetVideo;
+
     /**
      * @ORM\Column(name="course_video", type="string", nullable=true)
      *
@@ -76,6 +83,14 @@ class CourseContent
      * @var Courses
      */
     private $courses;
+
+
+    /**
+     * Undocumented variable
+     * @ORM\Column(type="text", nullable=true)
+     * @var string
+     */
+    private $description;
 
 
     /**
@@ -276,6 +291,54 @@ class CourseContent
     public function setCourses(Courses $courses)
     {
         $this->courses = $courses;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  string
+     */ 
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  string  $description  Undocumented variable
+     *
+     * @return  self
+     */ 
+    public function setDescription(string $description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of snippetVideo
+     *
+     * @return  string
+     */ 
+    public function getSnippetVideo()
+    {
+        return $this->snippetVideo;
+    }
+
+    /**
+     * Set the value of snippetVideo
+     *
+     * @param  string  $snippetVideo
+     *
+     * @return  self
+     */ 
+    public function setSnippetVideo(string $snippetVideo)
+    {
+        $this->snippetVideo = $snippetVideo;
 
         return $this;
     }
