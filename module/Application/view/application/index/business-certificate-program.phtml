@@ -1,0 +1,200 @@
+<?= $this->headtitle("Business Analysis Certificate Program");
+?>
+
+<!-- Page Section - Start
+        ================================================== -->
+<section class="page_banner">
+    <div class="container">
+        <div class="content_wrapper">
+            <div class="row align-items-center">
+                <div class="col col-lg-7">
+                    <ul class="breadcrumb_nav unordered_list">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="course.html">Program</a></li>
+                        <li>Business Certificate Program</li>
+                    </ul>
+                    <h1 class="page_title">
+                        <?= $data->getTitle(); ?>
+                    </h1>
+                    <ul class="info_list unordered_list_block pb-0">
+                        <?= $data->getDescription(); ?>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Page Section - End
+        ================================================== -->
+
+<!-- Course Details Section - Start
+        ================================================== -->
+<section class="details_section course_details_section">
+    <div class="container">
+        <div class="row">
+            <div class="col col-lg-8">
+                <div class="section_space_lg pb-lg-0">
+                    <div class="pe-lg-5">
+                        <div class="course_info_card d-lg-none">
+                            <div class="details_image">
+                                <img src="<?= $data->getBanner() ?>" alt="Terces – Online Learning Platform">
+                            </div>
+
+                            <div class="item_price">
+                                <span class="sale_price"><?= $this->currencyFormat($data->getCost(), "USD") ?></span>
+                            </div>
+                            <a href="<?= $this->url("application", ["action" => "buy-course", "id" => $data->getUuid()]) ?>" class="btn btn_dark">
+                                <span>
+                                    <small>Get Course</small>
+                                    <small>Get Course</small>
+                                </span>
+                            </a>
+                            <ul class="course_info_list unordered_list_block">
+
+                                <li>
+                                    <span><i class="fas fa-chart-user"></i> Pre-requisite</span>
+                                    <strong><a href="<?= $this->url("application", ["action" => "business-analysis-masterclass"]) ?>">Business Analysis Master Class</a></strong>
+                                </li>
+
+                                <li>
+                                    <span><i class="fas fa-chart-bar"></i> Level</span>
+                                    <strong>Intermediate</strong>
+                                </li>
+                                <li>
+                                    <span><i class="fas fa-clock"></i> Duration</span>
+                                    <strong><?= $data->getDuration() ?></strong>
+                                </li>
+                                <li>
+                                    <span><i class="fas fa-video"></i> Lessons</span>
+                                    <strong> Video</strong>
+                                </li>
+
+
+                            </ul>
+                        </div>
+
+                        <?php if(count($data->getCourses())): ?>
+                        <div class="section_heading">
+                            <h2 class="heading_text">
+                                Course Content
+                            </h2>
+                        </div>
+
+
+                        <?php foreach ($data->getCourses() as $key => $course) : ?>
+                            <div class="accordion_wrap mb-5">
+                                <h3 class="details_info_title mb-3">Section <?= $key + 1 ?>. <?= $course->getTitle() ?></h3>
+                                <div class="accordion style_2" id="corse_details_accordion_<?= $key + 1 ?>">
+                                    <?php
+                                    if (count($course->getCourseContent())) :
+                                        foreach ($course->getCourseContent() as $ckey => $content) :
+                                    ?>
+                                            <div class="accordion-item">
+                                                <div class="checkbox_item accordion_item_checked">
+                                                    <input type="checkbox">
+                                                </div>
+                                                <div class="accordion-button collapsed" role="button" data-bs-toggle="collapse" data-bs-target="#collapse_3_<?= $ckey + 1 ?>" aria-expanded="false">
+                                                    Lesson <?php echo ($ckey + 1) . ":  ";
+                                                            echo  $content->getTitle() ?>
+                                                </div>
+                                                <div id="collapse_3_<?= $ckey + 1 ?>" class="accordion-collapse collapse" data-bs-parent="#corse_details_accordion_<?= $key + 1 ?>">
+                                                    <div class="accordion-body">
+                                                        <p class="mb-3">
+                                                            <?= $content->getDescription(); ?>
+                                                        </p>
+                                                        <div class="intro_video mb-3">
+                                                            <div class="video_wrap">
+                                                                <img src="<?= $content->getBanner()->getImageUrl() ?>" alt="Collab – Online Learning Platform">
+                                                                <a class="video_play_btn popup_video" href="https://www.youtube.com/watch?v=7e90gBu4pas">
+                                                                    <span class="icon"><i class="fas fa-play"></i></span>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                        <a class="btn border_dark btn_small" href="#!">
+                                                            <span>
+                                                                <small><img src="assets/images/icon/icon_clip.svg" alt="Collab – Online Learning Platform"> Resources</small>
+                                                                <small><img src="assets/images/icon/icon_clip_white.svg" alt="Collab – Online Learning Platform"> Resources</small>
+                                                            </span>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                    <?php endforeach;
+                                    endif;
+                                    ?>
+                                </div>
+                            </div>
+
+                        <?php endforeach; endif; ?>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col col-lg-4">
+                <aside class="sidebar">
+                    <div class="course_info_card d-none d-lg-block">
+                        <div class="details_image">
+                            <img src="<?= $data->getBanner() ?>" alt="Terces – Online Learning Platform">
+                        </div>
+                        <ul class="meta_info_list unordered_list">
+
+                        </ul>
+                        <div class="item_price">
+                            <span class="sale_price"><?= $this->currencyFormat($data->getCost(), "USD") ?></span>
+                        </div>
+                        <a href="<?= $this->url("application", ["action" => "buy-course", "id" => $data->getUuid()]) ?>" class="btn btn_dark">
+                            <span>
+                                <small>Get Course</small>
+                                <small>Get Course</small>
+                            </span>
+                        </a>
+                        <ul class="course_info_list unordered_list_block">
+                            <li>
+                                <span><i class="fas fa-user"></i> Pre-requisite</span>
+                                <strong>
+                                    <ul>
+                                        <li><a href="<?= $this->url("application", ["action" => "business-analysis-masterclass"]) ?>">Business Analysis Master Class</a></li>
+                                        <li><a href="<?= $this->url("application", ["action" => "business-analysis-program"]) ?>">Business Analysis Training</a></li>
+                                    </ul>
+                                </strong>
+                            </li>
+                            <li>
+                                <span><i class="fas fa-chart-bar"></i> Level</span>
+                                <strong>Intermediate - Advanced</strong>
+                            </li>
+                            <li>
+                                <span><i class="fas fa-clock"></i> Duration</span>
+                                <strong><?= $this->data->getDuration() ?></strong>
+                            </li>
+                            <li>
+                                <span><i class="fas fa-video"></i> Lessons</span>
+                                <strong>Video / VoIP</strong>
+                            </li>
+
+                        </ul>
+                    </div>
+
+                    <div class="callbox_wrap">
+                        <h3 class="widget_title">Get More Benefits with Our Plans</h3>
+                        <a class="btn border_dark w-100" href="">
+                            <span>
+                                <small>Our Plans</small>
+                                <small>Our Plans</small>
+                            </span>
+                        </a>
+                        <a class="btn btn_dark w-100" href="">
+                            <span>
+                                <small>See Whole Course</small>
+                                <small>See Whole Course</small>
+                            </span>
+                        </a>
+                    </div>
+
+
+                </aside>
+            </div>
+        </div>
+    </div>
+</section>
