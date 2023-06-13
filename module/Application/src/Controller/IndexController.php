@@ -93,14 +93,38 @@ class IndexController extends AbstractActionController
         return $viewModel;
     }
 
-    public function buyCourseAction(){
-        $viewModel=  new ViewModel();
+
+    public function businessCertificateProgramAction()
+    {
+        $viewModel = new ViewModel();
+        $em = $this->entityManager;
+        $data = $em->find(Programs::class, 20);
+        $viewModel->setVariables([
+            "data" => $data
+        ]);
+        return $viewModel;
+    }
+
+    public function oneOnOneInterviewPrepAction()
+    {
+        $viewModel = new ViewModel();
+        $em = $this->entityManager;
+        $data = $em->find(Programs::class, 30);
+        $viewModel->setVariables([
+            "data" => $data
+        ]);
+        return $viewModel;
+    }
+
+    public function buyCourseAction()
+    {
+        $viewModel =  new ViewModel();
         $request = $this->getRequest();
         $uuid = $this->params()->fromRoute("id", NULL);
-        if($uuid == NULL){
+        if ($uuid == NULL) {
             return $this->redirect()->toRoute("home");
         }
-        
+
         return $viewModel;
     }
 
