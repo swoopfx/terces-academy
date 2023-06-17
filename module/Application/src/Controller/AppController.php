@@ -3,6 +3,7 @@
 namespace Application\Controller;
 
 use Application\Entity\NewsLetter;
+use Application\Entity\PaymentMethod;
 use Application\Entity\Programs;
 use General\Service\ActiveCampaignService;
 use Laminas\InputFilter\InputFilter;
@@ -141,6 +142,21 @@ class AppController extends  AbstractActionController
         return new JsonModel([
             "data" => $data,
         ]);
+    }
+
+    public function getPaymentMethodsAction()
+    {
+        $jsonModel  = new JsonModel();
+        $em = $this->entityManager;
+        $data = $em->getRepository(PaymentMethod::class)->createQueryBuilder("p")
+            ->select(["p"])
+            ->where("p.isActive = :active")->setParameters([
+                "active" => TRUE
+            ])->getQuery()->getArrayResult();
+        $jsonModel->setVariables([
+            "data" => $data
+        ]);
+        return $jsonModel;
     }
 
     /**

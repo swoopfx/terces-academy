@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Application\Controller;
 
+use Application\Entity\PaymentMethod;
 use Application\Entity\Programs;
 use Doctrine\ORM\EntityManager;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -124,7 +125,14 @@ class IndexController extends AbstractActionController
         if ($uuid == NULL) {
             return $this->redirect()->toRoute("home");
         }
+        $em = $this->entityManager;
+        $data =  $em->getRepository(Programs::class)->findOneBy([]);
+        $paymentMethod = $em->getRepository(PaymentMethod::class)->findAll();
 
+        $viewModel->setVariables([
+            "data"=>$data,
+            "method"=>$paymentMethod
+        ]);
         return $viewModel;
     }
 
