@@ -2,47 +2,133 @@
 
   <!-- Call To Action Section - Start
         ================================================== -->
-  <section class="calltoaction_section section_space_lg bg_dark decoration_wrap">
+  <section id="buyc" class="calltoaction_section section_space_lg bg_dark decoration_wrap">
       <div class="container">
           <div class="row align-items-center">
               <div class="col col-lg-7">
-                  <div class="section_heading mb-lg-0">
-                      <h2 class="heading_text text-white">
-                          To Help You Choose the Right Course, You Need to Book a Consultation
-                      </h2>
-                      <p class="heading_description mb-0 text-white">
-                          Varius morbi enim nunc faucibus. Eget nunc lobortis mattis aliquam faucibus purus in massa. Diam sit amet nisl suscipit adipiscing bibendum est.
-                      </p>
+
+                  <h2 class="heading_text text-white">
+                      Select Payment Methods
+                  </h2>
+                  <br>
+                  <div class="widget course_list_wrap">
+
+                      <ul class="course_list unordered_list_block">
+
+                          <li v-for="dat in paymentMethod">
+
+                              <div class="comment_item">
+                                  <div class="comment_author">
+                                      <div class="author_thumbnail">
+                                          <img :src="dat.image" alt="Terces – Online Learning Platform">
+                                      </div>
+                                      <div class="author_content">
+                                          <a href="#" @click="selectMethod(dat.method, dat.id)">
+                                              <h4 class="author_name">{{dat.method}}</h4>
+                                          </a>
+
+                                      </div>
+                                  </div>
+                                  <p>{{dat.decription}}</p>
+
+                              </div>
+
+                              <br>
+                          </li>
+
+                      </ul>
+
+
+
+
+
                   </div>
               </div>
               <div class="col col-lg-5">
-                  <div class="calltoaction_form">
-                      <form action="#">
-                          <h3 class="form_title">Get a Consultation</h3>
-                          <div class="form_item">
-                              <label for="input_name" class="input_title text-uppercase">Name</label>
-                              <input id="input_name" type="text" name="name" placeholder="Input Name">
+                  <div class="col col-lg-12">
+                      <div class="pricing_card text-center tilt">
+                          <h3 class="card_heading">Amount Payable</h3>
+                          <div class="pricing_wrap">
+                              <span class="price_value"><sup><?= $this->currencyFormat($data->getCost(), "USD") ?></span>
+                              <small class="d-block"></small> <?= $data->getTitle(); ?></small>
                           </div>
-                          <div class="form_item">
-                              <label for="input_email" class="input_title text-uppercase">Email</label>
-                              <input id="input_email" type="email" name="email" placeholder="Input Email">
+                          <hr>
+                          <ul class="info_list unordered_list_block text-start">
+                              <li>
+                                  <i class="fas fa-caret-right"></i>
+                                  <span>Pay With: <strong>{{activePaymentMethod}}</strong></span>
+                              </li>
+
+                          </ul>
+                          <div class="btn_wrap pb-0">
+                              <button class="btn border_dark" @click="pay()">
+                                  <span>
+                                      <small>Pay Now</small>
+                                      <small>{{activePaymentMethod}}</small>
+                                  </span>
+                              </button>
                           </div>
-                          <div class="form_item">
-                              <label for="input_question" class="input_title text-uppercase">Message</label>
-                              <textarea id="input_question" name="Message" placeholder="Input Your Question"></textarea>
-                          </div>
-                          <button type="submit" class="btn btn_dark w-100">
-                              <span>
-                                  <small>Get a Consultation</small>
-                                  <small>Get a Consultation</small>
-                              </span>
-                          </button>
-                      </form>
+                      </div>
                   </div>
               </div>
           </div>
       </div>
-     
+
   </section>
   <!-- Call To Action Section - End
         ================================================== -->
+
+  <script>
+      const buycourse = Vue.createApp({
+          data() {
+              return {
+                  paymentMethod: [],
+                  activePaymentMethod: "",
+                  activeMethodId: 0,
+              }
+          },
+
+          mounted() {
+              this.getPaymentMethod();
+          },
+
+          methods: {
+              getPaymentMethod() {
+                  axios.get("/app/get-payment-methods").then(res => {
+                      if (res.status == 200) {
+                          this.paymentMethod = res.data.data;
+                          this.activePaymentMethod = res.data.data[0].method;
+                          this.activeMethodId = res.data.data[0].id;
+                      }
+                  }).catch(err => {
+
+                  });
+              },
+
+              selectMethod(e, r) {
+                  this.activePaymentMethod = e;
+                  this.activeMethodId = r;
+                  console.log(this.actieMethodId);
+              },
+
+              payWithFlutterwave() {
+                  alert("flutterwave");
+              },
+
+              payWithPaypal() {
+                  alert("paypal");
+              },
+
+              pay() {
+
+                  if (this.activeMethodId == 10) {
+
+                      this.payWithFlutterwave()
+                  } else if (this.activeMethodId == 20) {
+                      this.payWithPaypal()
+                  }
+              }
+          },
+      });
+      buycourse.mount("#buyc")
+  </script>

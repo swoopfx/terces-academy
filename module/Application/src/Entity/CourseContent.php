@@ -3,8 +3,10 @@
 namespace Application\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
 use General\Entity\Image;
 use Application\Entity\Courses;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity
@@ -42,7 +44,7 @@ class CourseContent
      */
     private $banner;
 
-     /**
+    /**
      * @ORM\Column(type="string", nullable=true)
      *
      * @var string
@@ -91,6 +93,19 @@ class CourseContent
      * @var string
      */
     private $description;
+
+    /**
+     * Undocumented variable
+     * @ORM\OneToMany(targetEntity="Resources", mappedBy="courseContent")
+     * @var Collection
+     */
+    private $resources;
+
+
+    public function __construct()
+    {
+        $this->resources = new ArrayCollection();
+    }
 
 
     /**
@@ -299,7 +314,7 @@ class CourseContent
      * Get undocumented variable
      *
      * @return  string
-     */ 
+     */
     public function getDescription()
     {
         return $this->description;
@@ -311,7 +326,7 @@ class CourseContent
      * @param  string  $description  Undocumented variable
      *
      * @return  self
-     */ 
+     */
     public function setDescription(string $description)
     {
         $this->description = $description;
@@ -323,7 +338,7 @@ class CourseContent
      * Get the value of snippetVideo
      *
      * @return  string
-     */ 
+     */
     public function getSnippetVideo()
     {
         return $this->snippetVideo;
@@ -335,10 +350,30 @@ class CourseContent
      * @param  string  $snippetVideo
      *
      * @return  self
-     */ 
+     */
     public function setSnippetVideo(string $snippetVideo)
     {
         $this->snippetVideo = $snippetVideo;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  Collection
+     */
+    public function getResources()
+    {
+        return $this->resources;
+    }
+
+    public function addResources(Resources $res)
+    {
+        if (!$this->resources->contains($res)) {
+            $this->resources->add($res);
+            $res->setCourseContent($this);
+        }
 
         return $this;
     }
