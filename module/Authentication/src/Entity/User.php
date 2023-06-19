@@ -136,14 +136,6 @@ class User
 
 
 
-    /**
-     * Undocumented variable
-     * @ORM\Column(type="string", nullable=true)
-     *
-     * @var string
-     */
-    private $mobileActivateCode;
-
     // /**
     //  * Undocumented variable
     //  * @ORM\OneToOne(targetEntity="Wallet\Entity\Wallet", mappedBy="user")

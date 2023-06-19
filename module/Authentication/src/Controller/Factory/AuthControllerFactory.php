@@ -14,7 +14,7 @@ class AuthControllerFactory implements FactoryInterface
     {
         $ctr = new AuthController();
         $generalService = $container->get(GeneralService::class);
-        // $ctr->
+        $ctr->setEntityManager($generalService->getEntityManager())->setAuthService($generalService->getAuth());
         return $ctr;
     }
 }
