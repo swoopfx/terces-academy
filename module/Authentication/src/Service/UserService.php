@@ -19,7 +19,6 @@ class UserService
 
     const USER_STATE_DISABLED = 2;
 
-    const 
 
 
     // const 

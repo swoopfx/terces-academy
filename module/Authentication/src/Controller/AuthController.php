@@ -48,7 +48,7 @@ class AuthController  extends AbstractActionController
         return new ViewModel();
     }
 
-    public function register()
+    public function registerAction()
     {
         $user = $this->identity();
         $jsonModel = new JsonModel();
@@ -238,6 +238,7 @@ class AuthController  extends AbstractActionController
                 $response->setStatusCode(201);
                 $data = [
                     "fullname" => $data["fullname"],
+
                     "email" => $data["email"]
                 ];
                 $jsonModel->setVariables([
@@ -245,6 +246,7 @@ class AuthController  extends AbstractActionController
                     "success" => true
                 ]);
                 $response->setStatusCode(201);
+                return $jsonModel;
             } else {
                 $jsonModel->setVariables([
                     "success" => false,

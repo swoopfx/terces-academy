@@ -31,7 +31,7 @@ class User
     private $fullname;
 
     /**
-     * @ORM\Column(length=30, nullable=false, unique=true)
+     * @ORM\Column(length=30, nullable=true)
      */
     protected $username;
 
@@ -530,27 +530,5 @@ class User
         return $this;
     }
 
-    /**
-     * Get undocumented variable
-     *
-     * @return  string
-     */
-    public function getMobileActivateCode()
-    {
-        return $this->mobileActivateCode;
-    }
-
-    /**
-     * Set undocumented variable
-     *
-     * @param  string  $mobileActivateCode  Undocumented variable
-     *
-     * @return  self
-     */
-    public function setMobileActivateCode(string $mobileActivateCode)
-    {
-        $this->mobileActivateCode = $mobileActivateCode;
-
-        return $this;
-    }
+   
 }
