@@ -4,6 +4,7 @@ namespace General\Service\Factory;
 
 use Doctrine\ORM\EntityManager;
 use General\Service\GeneralService;
+use Laminas\Authentication\AuthenticationService;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Psr\Container\ContainerInterface;
 
@@ -13,7 +14,8 @@ class GeneralServiceFactory implements FactoryInterface
     {
         $ctr = new GeneralService();
         $entityManager = $container->get(EntityManager::class);
-        $ctr->setEntityManager($entityManager);
+        $authService = $container->get(AuthenticationService::class);
+        $ctr->setEntityManager($entityManager)->setAuth($authService);
         return $ctr;
     }
 }

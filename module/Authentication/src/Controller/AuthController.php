@@ -10,15 +10,19 @@ use Laminas\Http\Response;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Session\SessionManager;
 use Laminas\View\Model\ViewModel;
-use Application\Entity\User;
-use Application\Service\UserService;
+use Authentication\Entity\User;
+use Authentication\Service\UserService;
 use Laminas\InputFilter\InputFilter;
 use Laminas\Validator\Identical;
 use Laminas\View\Model\JsonModel;
+use Laminas\Authentication\AuthenticationService;
 use Application\Service\MailService;
 use Application\Service\MailtrapService;
-
-
+use Authentication\Entity\Roles;
+use Authentication\Entity\UserState;
+use DoctrineModule\Validator\NoObjectExists;
+use Laminas\Validator\StringLength;
+use Ramsey\Uuid\Uuid;
 
 class AuthController  extends AbstractActionController
 {
@@ -38,6 +42,222 @@ class AuthController  extends AbstractActionController
      * @var AuthenticationService
      */
     private $authService;
+
+    public function loginAction()
+    {
+        return new ViewModel();
+    }
+
+    public function registerAction()
+    {
+        $user = $this->identity();
+        $jsonModel = new JsonModel();
+        $viewModel = new ViewModel();
+        $entityManager = $this->entityManager;
+        if ($user) {
+            return $this->redirect()->toRoute("home");
+        }
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        if ($request->isPost()) {
+            // validat post 
+            // retrive post 
+            $inputFilter = new InputFilter();
+            $inputFilter->add([
+                'name' => 'email',
+                'break_chain_on_failure' => true,
+                'required' => true,
+                "allow_empty" => false,
+                'filters' => [
+                    [
+                        'name' => 'StripTags'
+                    ],
+                    [
+                        'name' => 'StringTrim'
+                    ]
+                ],
+                'validators' => [
+                    [
+                        'name' => 'NotEmpty',
+                        'options' => [
+                            'messages' => [
+                                'isEmpty' => 'Email is required'
+                            ]
+                        ]
+                    ],
+                    [
+                        "name" => NoObjectExists::class,
+                        "options" => [
+                            "use_context" => true,
+                            "object_repository" => $entityManager->getRepository(User::class),
+                            "objject_manager" => $entityManager,
+                            "fields" => [
+                                "email"
+                            ],
+                            "messages" => [
+                                NoObjectExists::ERROR_OBJECT_FOUND => "please use another email"
+                            ]
+                        ]
+                    ],
+                    [
+                        'name' => StringLength::class,
+                        'options' => [
+                            'messages' => [],
+                            'min' => 6,
+                            'max' => 256,
+                            'messages' => [
+                                StringLength::TOO_SHORT => 'Try Something more longer',
+                                StringLength::TOO_LONG => 'Could you really remember this long identity'
+                            ]
+                        ],
+                    ]
+                ]
+            ]);
+
+            $inputFilter->add([
+                'name' => 'fullname',
+                'break_chain_on_failure' => true,
+                'required' => true,
+                "allow_empty" => false,
+                'filters' => [
+                    [
+                        'name' => 'StripTags'
+                    ],
+                    [
+                        'name' => 'StringTrim'
+                    ]
+                ],
+                'validators' => [
+                    [
+                        'name' => 'NotEmpty',
+                        'options' => [
+                            'messages' => [
+                                'isEmpty' => 'Full Name is required'
+                            ]
+                        ]
+                    ],
+
+                    [
+                        'name' => StringLength::class,
+                        'options' => [
+                            'messages' => [],
+                            'min' => 3,
+                            'max' => 256,
+                            'messages' => [
+                                StringLength::TOO_SHORT => 'Try Something more longer',
+                                StringLength::TOO_LONG => 'Could you really remember this long identity'
+                            ]
+                        ],
+                    ]
+                ]
+            ]);
+
+            $inputFilter->add([
+                "name" => "password",
+                'break_chain_on_failure' => true,
+                "required" => true,
+                "allow_empty" => false,
+                "filters" => [
+                    [
+                        'name' => 'StripTags'
+                    ],
+                    [
+                        'name' => 'StringTrim'
+                    ]
+                ],
+                "validators" => [
+                    [
+                        'name' => 'StringLength',
+                        'options' => [
+                            'encoding' => 'UTF-8',
+                            'min' => 6,
+                            'max' => 50,
+                            "messages" => [
+                                StringLength::TOO_SHORT => "The password must be more than 6 characters",
+                                StringLength::TOO_LONG => "This password is too long to memorize"
+                            ]
+                        ]
+                    ]
+                ]
+
+            ]);
+
+            $inputFilter->add([
+                "name" => "confirm_password",
+                'break_chain_on_failure' => true,
+                "required" => true,
+                "allow_empty" => false,
+                "validators" => [
+                    [
+                        'name' => 'StringLength',
+                        'options' => [
+                            'encoding' => 'UTF-8',
+                            'min' => 6,
+                            'max' => 50,
+                            "messages" => [
+                                StringLength::TOO_SHORT => "The password must be more than 6 characters",
+                                StringLength::TOO_LONG => "This password is too long to memorize"
+                            ]
+                        ]
+                    ],
+                    [
+                        'name' => 'Identical',
+                        'options' => [
+                            'token' => 'password',
+                            "messages" => [
+                                Identical::NOT_SAME => "The passwords are not identical"
+                            ]
+                        ]
+                    ]
+                ]
+
+            ]);
+            $post = $request->getPost();
+            $inputFilter->setData($post);
+            if ($inputFilter->isValid()) {
+                $data = $inputFilter->getValues();
+                $userEntity = new User();
+                $token = md5(uniqid(mt_rand(), true));
+                $userEntity->setCreatedOn(new \Datetime())
+                    ->setRole($entityManager->find(Roles::class, UserService::USER_ROLE_CUSTOMER))
+                    ->setEmail($data["email"])
+                    ->setPassword(UserService::encryptPassword($data["password"]))
+                    ->setEmailConfirmed(False)
+                    ->setFullname($data["fullname"])
+                    ->setRegistrationDate(new \Datetime())->setRegistrationToken($token)
+                    ->setUuid(Uuid::uuid4())
+                    ->setUid(uniqid())
+                    ->setState($entityManager->find(UserState::class, UserService::USER_STATE_ENABLED));
+
+
+                // send email
+
+                $entityManager->persist($userEntity);
+                $entityManager->flush();
+
+                $response->setStatusCode(201);
+                $data = [
+                    "fullname" => $data["fullname"],
+
+                    "email" => $data["email"]
+                ];
+                $jsonModel->setVariables([
+                    "data" => $data,
+                    "success" => true
+                ]);
+                $response->setStatusCode(201);
+                return $jsonModel;
+            } else {
+                $jsonModel->setVariables([
+                    "success" => false,
+                    "message" => $inputFilter->getMessages()
+                ]);
+                $response->setStatusCode(400);
+                return $jsonModel;
+            }
+        }
+        return new ViewModel();
+    }
 
     public function loginjsonAction()
     {
@@ -119,7 +339,7 @@ class AuthController  extends AbstractActionController
                 $email = $data["email"];
 
                 try {
-                    $user = $this->entityManager->createQuery("SELECT u FROM  Application\Entity\User u WHERE u.email = '$email' ")->getResult(\Doctrine\ORM\Query::HYDRATE_OBJECT);
+                    $user = $this->entityManager->createQuery("SELECT u FROM  Authentication\Entity\User u WHERE u.email = '$email' ")->getResult(\Doctrine\ORM\Query::HYDRATE_OBJECT);
 
                     // $user = $this->user->selectUserDQL($phoneOrEmail);
                     if (count($user) == 0) {
@@ -149,13 +369,20 @@ class AuthController  extends AbstractActionController
                     // "messages" => $messages
                     // ]);
                     // }
-                    // if (! $user->getEmailConfirmed() == 1) {
-                    //     $messages = $this->translatorHelper->translate('You are yet to confirm your account, please go to the registered email to confirm your account');
-                    //     $response->setStatusCode(Response::STATUS_CODE_422);
-                    //     return $jsonModel->setVariables([
-                    //         "messages" => $messages
-                    //     ]);
-                    // }
+                    if ($user->getState() == 2) {
+                        $messages = 'This account is disabled';
+                        $response->setStatusCode(Response::STATUS_CODE_422);
+                        return $jsonModel->setVariables([
+                            "messages" => $messages
+                        ]);
+                    }
+                    if (!$user->getEmailConfirmed() == 1) {
+                        $messages = 'You are yet to confirm your account, please go to the registered email to confirm your account';
+                        $response->setStatusCode(Response::STATUS_CODE_422);
+                        return $jsonModel->setVariables([
+                            "messages" => $messages
+                        ]);
+                    }
                     if (!$user->getIsActive()) {
                         $messages = 'Your username is disabled. Please contact an administrator.';
                         $response->setStatusCode(Response::STATUS_CODE_422);
@@ -234,6 +461,8 @@ class AuthController  extends AbstractActionController
 
         // 'navMenu' => $this->options->getNavMenu()
     }
+
+
 
     public function resetPasswordAction()
     {
@@ -544,6 +773,30 @@ class AuthController  extends AbstractActionController
     public function setEntityManager($entityManager)
     {
         $this->entityManager = $entityManager;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  AuthenticationService
+     */
+    public function getAuthService()
+    {
+        return $this->authService;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  AuthenticationService  $authService  Undocumented variable
+     *
+     * @return  self
+     */
+    public function setAuthService(AuthenticationService $authService)
+    {
+        $this->authService = $authService;
 
         return $this;
     }

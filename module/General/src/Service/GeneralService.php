@@ -3,6 +3,7 @@
 namespace General\Service;
 
 use Doctrine\ORM\EntityManager;
+use Laminas\Authentication\AuthenticationService;
 
 class GeneralService
 {
@@ -12,6 +13,13 @@ class GeneralService
      * @var EntityManager
      */
     private $entityManager;
+
+    /**
+     * Undocumented variable
+     *
+     * @var AuthenticationService 
+     */
+    private $auth;
 
 
 
@@ -35,6 +43,30 @@ class GeneralService
     public function setEntityManager(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  AuthenticationService
+     */ 
+    public function getAuth()
+    {
+        return $this->auth;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  AuthenticationService  $auth  Undocumented variable
+     *
+     * @return  self
+     */ 
+    public function setAuth(AuthenticationService $auth)
+    {
+        $this->auth = $auth;
 
         return $this;
     }

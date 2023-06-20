@@ -4,11 +4,22 @@ declare(strict_types=1);
 
 namespace Authentication;
 
+use Authentication\Controller\AuthController;
+use Authentication\Controller\Factory\AuthControllerFactory;
+use Authentication\Entity\User;
+use Authentication\Service\AuthenticationFactory;
+use Doctrine\ORM\EntityManager;
+use Laminas\Authentication\AuthenticationService;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
 use Laminas\ServiceManager\Factory\InvokableFactory;
 
 return [
+    "service_manager" => [
+        "factories" => [
+            AuthenticationService::class => AuthenticationFactory::class,
+        ]
+    ],
     'router' => [
         'routes' => [
             'login' => [
@@ -16,17 +27,35 @@ return [
                 'options' => [
                     'route'    => '/login',
                     'defaults' => [
-                        'controller' => Controller\IndexController::class,
-                        'action'     => 'index',
+                        'controller' => AuthController::class,
+                        'action'     => 'login',
                     ],
                 ],
             ],
             'register' => [
                 'type'    => Segment::class,
                 'options' => [
-                    'route'    => '/application[/:action]',
+                    'route'    => '/register[/:id]',
+                    "constraints" => [
+                        'id' => '[a-zA-Z0-9_-]*'
+                    ],
                     'defaults' => [
-                        'controller' => Controller\IndexController::class,
+                        'controller' => AuthController::class,
+                        'action'     => 'register',
+                    ],
+                ],
+            ],
+
+            'auth' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/auth[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[a-zA-Z0-9_-]*'
+                    ],
+                    'defaults' => [
+                        'controller' => AuthController::class,
                         'action'     => 'index',
                     ],
                 ],
@@ -34,6 +63,20 @@ return [
         ],
     ],
     'doctrine' => [
+        'configuration' => array(
+            'orm_default' => array(
+                'generate_proxies' => true
+            )
+        ),
+        'authentication' => array(
+            'orm_default' => array(
+                'object_manager' => EntityManager::class,
+                'identity_class' => User::class,
+                'identity_property' => 'email',
+                'credential_property' => 'password',
+                'credential_callable' => 'Authentication\Service\UserService::verifyHashedPassword'
+            )
+        ),
         'driver' => [
             __NAMESPACE__ . '_driver' => [
                 'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
@@ -51,7 +94,7 @@ return [
     ],
     'controllers' => [
         'factories' => [
-            // Controller\IndexController::class => InvokableFactory::class,
+            AuthController::class => AuthControllerFactory::class,
         ],
     ],
     'view_manager' => [
