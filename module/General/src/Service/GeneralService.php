@@ -7,6 +7,14 @@ use Laminas\Authentication\AuthenticationService;
 
 class GeneralService
 {
+
+    const GENERAL_TRAINING_FREE = "Business Analysis Free Hands on training";
+
+    const GENERAL_TRAINING_WORK_EXPERIENCE = "Business Analysis Work Experience Program";
+
+    const GENERAL_TRAINING_CERTIFICATE_PROGRAM = "Business Analysis Certification Program";
+
+    const GENERAL_TRAINING_INTERVIEW_PREP = "Business Analysis interview Preparation";
     /**
      * Undocumented variable
      *
@@ -51,7 +59,7 @@ class GeneralService
      * Get undocumented variable
      *
      * @return  AuthenticationService
-     */ 
+     */
     public function getAuth()
     {
         return $this->auth;
@@ -63,7 +71,7 @@ class GeneralService
      * @param  AuthenticationService  $auth  Undocumented variable
      *
      * @return  self
-     */ 
+     */
     public function setAuth(AuthenticationService $auth)
     {
         $this->auth = $auth;

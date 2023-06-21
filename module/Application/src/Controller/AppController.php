@@ -49,6 +49,7 @@ class AppController extends  AbstractActionController
             $inputFilter->add([
                 'name' => 'email',
                 'required' => true,
+                'break_chain_on_failure' => true,
                 'allow_empty' => false,
                 'filters' => [
                     [
@@ -97,12 +98,17 @@ class AppController extends  AbstractActionController
                         "lastname" => "",
                         "phone" => "",
                     ];
+
                     // call active campaign newsletter
                     $activeResponse = $this->activeCampaignService->createContact($activeCampaignData);
                     $newsLetterEntity
                         ->setActiveCampaignId($activeResponse["id"])
                         ->setActiveCampaignResponseData($activeResponse["data"]);
-
+                    $activeCampaignList = [
+                        "list" => 2,
+                        "contact" => $activeResponse["id"]
+                    ];
+                    $this->activeCampaignService->updateContactList($activeCampaignList);
                     $this->entityManager->persist($newsLetterEntity);
                     $this->entityManager->flush();
 

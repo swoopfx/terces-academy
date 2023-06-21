@@ -1,3 +1,7 @@
+<?php
+
+use General\Service\GeneralService;
+?>
 <!-- Page Section - Start
         ================================================== -->
 <section class="page_banner">
@@ -8,7 +12,7 @@
           <ul class="breadcrumb_nav unordered_list">
             <li><a href="index.html">Home</a></li>
             <li><a href="course.html">Course</a></li>
-            <li>Business Analysis Masterclass</li>
+            <li><?= GeneralService::GENERAL_TRAINING_FREE ?></li>
           </ul>
           <h1 class="page_title">
             Begin Your Business Analysis Journey
@@ -35,7 +39,7 @@
               </div>
             </li>
             <li>
-              <a href="pricing.html" class="btn btn_dark">
+              <a href="<?= $this->url("register") ?>" class="btn btn_dark">
                 <span>
                   <small>Register Now</small>
                   <small>Register Now</small>
@@ -124,16 +128,22 @@
             <ul class="info_list unordered_list_block">
               <li>
                 <i class="fas fa-square"></i>
-                <span>Zoom Tutorials</span>
+                <span>Zoom/Video Tutorials</span>
               </li>
               <li>
                 <i class="fas fa-square"></i>
-                <span>30% Voucher</span>
+                <span>20% Voucher</span>
               </li>
               <li>
                 <i class="fas fa-square"></i>
                 <span>Free Resources</span>
               </li>
+
+              <li>
+                <i class="fas fa-square"></i>
+                <span>Self Paced</span>
+              </li>
+
               <li>
                 <i class="fas fa-square"></i>
                 <span>Access to Terces Job portal</span>
@@ -156,7 +166,7 @@
               </li>
               <li>
                 <i class="fas fa-square"></i>
-                <span>Zoom</span>
+                <span>Zoom/Video</span>
               </li>
               <!--<li>
                 <i class="fas fa-square"></i>

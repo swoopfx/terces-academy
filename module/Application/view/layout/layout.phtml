@@ -3,6 +3,9 @@
 /**
  * @var Laminas\View\Renderer\PhpRenderer $this
  */
+
+use General\Service\GeneralService;
+
 ?>
 <?= $this->doctype() ?>
 <html lang="en">
@@ -85,11 +88,11 @@
                                             Programs
                                         </a>
                                         <ul class="dropdown-menu" aria-labelledby="pages_submenu">
-                                            <li><a href="<?= $this->url("application", ["action" => "business-analysis-program"]) ?>">Business Analysis Hands-On Program </a></li>
+                                            <li><a href="<?= $this->url("application", ["action" => "business-analysis-program"]) ?>"><?= GeneralService::GENERAL_TRAINING_WORK_EXPERIENCE?> </a></li>
 
-                                            <li><a href="<?= $this->url("application", ["action" => "business-certificate-program"]) ?>">Business analysis Certification Program</a></li>
+                                            <li><a href="<?= $this->url("application", ["action" => "business-certificate-program"]) ?>"><?= GeneralService::GENERAL_TRAINING_CERTIFICATE_PROGRAM?> </a></li>
 
-                                            <li><a href="<?= $this->url("application", ["action" => "one-on-one-interview-prep"]) ?>">Personalised Interview Prep</a></li>
+                                            <li><a href="<?= $this->url("application", ["action" => "one-on-one-interview-prep"]) ?>"><?= GeneralService::GENERAL_TRAINING_INTERVIEW_PREP?> </a></li>
 
                                             <li><a href="<?= $this->url("application", ["action" => "career-service"]) ?>">Career Service</a></li>
 
