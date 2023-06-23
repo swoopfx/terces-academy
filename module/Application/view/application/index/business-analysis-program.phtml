@@ -1,3 +1,7 @@
+<?php
+
+use General\Service\GeneralService;
+?>
    <?= $this->headtitle("Business Analysis Program");
     $f = new \NumberFormatter("en", NumberFormatter::SPELLOUT);
     ?>
@@ -11,7 +15,7 @@
                        <ul class="breadcrumb_nav unordered_list">
                            <li><a href="index.html">Home</a></li>
                            <li><a href="course.html">Program</a></li>
-                           <li>Business Analysis Program</li>
+                           <li><?= GeneralService::GENERAL_TRAINING_WORK_EXPERIENCE ?></li>
                        </ul>
                        <h1 class="page_title">
                            <?= $data->getTitle(); ?>
@@ -53,7 +57,7 @@
 
                                    <li>
                                        <span><i class="fas fa-chart-user"></i> Pre-requisite</span>
-                                       <strong><a href="<?= $this->url("application", ["action" => "business-analysis-masterclass"]) ?>">Business Analysis Master Class</a></strong>
+                                       <strong><a href="<?= $this->url("application", ["action" => "business-analysis-masterclass"]) ?>"><?= GeneralService::GENERAL_TRAINING_FREE ?></a></strong>
                                    </li>
 
                                    <li>
@@ -442,7 +446,7 @@
                            <ul class="course_info_list unordered_list_block">
                                <li>
                                    <span><i class="fas fa-user"></i> Pre-requisite</span>
-                                   <strong><a href="<?= $this->url("application", ["action" => "business-analysis-masterclass"]) ?>">Business Analysis Master Class</a></strong>
+                                   <strong><a href="<?= $this->url("application", ["action" => "business-analysis-masterclass"]) ?>"><?= GeneralService::GENERAL_TRAINING_FREE ?>s</a></strong>
                                </li>
                                <li>
                                    <span><i class="fas fa-chart-bar"></i> Level</span>

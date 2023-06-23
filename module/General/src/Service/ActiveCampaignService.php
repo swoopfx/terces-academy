@@ -51,6 +51,38 @@ class ActiveCampaignService
 
 
     /**
+     * Undocumented function
+     * @var $data array | list, contact
+     * @param [type] $data
+     * @return void
+     */
+    public function updateContactList($data)
+    {
+        $client = $this->activeInstance;
+        $client->setUri(self::ACTIVE_CAMPAIGN_BASE_URI . "/api/3/contactLists");
+        $client->setMethod("POST");
+        $post = [
+            "contactList" => [
+                "list" => $data["list"],
+                "contact" => $data["contact"],
+                "status" => 1,
+            ]
+        ];
+        $client->setRawBody(json_encode($post));
+        $response = $client->send();
+        if ($response->isSuccess()) {
+            $data = json_decode($response->getBody());
+            return [
+                "id" => $data->contact->id,
+                "data" => json_encode($data),
+            ];
+        } else {
+            throw new \Exception($response->getReasonPhrase());
+        }
+    }
+
+
+    /**
      * Get the value of generalService
      */
     public function getGeneralService()

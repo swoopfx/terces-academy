@@ -1,3 +1,7 @@
+<?php
+
+use General\Service\GeneralService;
+?>
 <!-- Banner Section - Start
   ================================================== -->
 <section class="hero_banner style_1">
@@ -20,7 +24,7 @@
                             </a>
                         </li>
                         <li>
-                            <a class="video_play_btn text-white popup_video" href="https://www.youtube.com/watch?v=7e90gBu4pas">
+                            <a class="video_play_btn text-white popup_video" href="https://www.youtube.com/watch?v=6DOVPrTdTiY">
                                 <span class="icon" data-magnetic><i class="fas fa-play"></i></span>
                                 <span class="text">Watch video</span>
                             </a>
@@ -233,31 +237,31 @@
                         <li>
                             <i class="fas fa-square"></i>
                             <span>
-                                Business Analysis Masterclass (free)
+                            <?= GeneralService::GENERAL_TRAINING_FREE ?> (free) (free)
                             </span>
                         </li>
                         <li>
                             <i class="fas fa-square"></i>
                             <span>
-                                Business Analysis Hands-On Program (Paid)
+                            <?= GeneralService::GENERAL_TRAINING_WORK_EXPERIENCE ?> (Paid)
                             </span>
                         </li>
                         <li>
                             <i class="fas fa-square"></i>
                             <span>
-                                Business analysis Certification Program (Paid)
+                            <?= GeneralService::GENERAL_TRAINING_CERTIFICATE_PROGRAM ?>(Paid)
                             </span>
                         </li>
 
                         <li>
                             <i class="fas fa-square"></i>
                             <span>
-                                Personalized Interview Preparation (Paid)
+                            <?= GeneralService::GENERAL_TRAINING_INTERVIEW_PREP ?>  (Paid)
                             </span>
                         </li>
                     </ul>
                     <div class="btn_wrap pb-0">
-                        <a class="btn btn_dark" href="mentor.html">
+                        <a class="btn btn_dark" href="#">
                             <span>
                                 <small>Register Now</small>
                                 <small>Register Now</small>

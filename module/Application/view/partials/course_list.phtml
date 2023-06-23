@@ -31,43 +31,32 @@
             <div class="tab-content">
                 <div class="tab-pane fade show active" id="teb_hr" role="tabpanel">
                     <div v-if="courses.length" class="row">
-                        <div class="col col-lg-4">
+                        <div v-for="cou in courses " class="col col-lg-4">
                             <div class="course_card">
                                 <div class="item_image">
-                                    <a href="course_details.html" data-cursor-text="View">
-                                        <img src="assets/images/course/course_image_1.jpg" alt="Collab – Online Learning Platform">
+                                    <a href="#" data-cursor-text="View">
+                                        <img :src="cou.program.banner" alt="Collab – Online Learning Platform">
                                     </a>
                                 </div>
                                 <div class="item_content">
                                     <div class="d-flex align-items-center justify-content-between mb-3">
                                         <ul class="item_category_list unordered_list">
-                                            <li><a href="#!">Computer Science</a></li>
+                                            <li><a href="#!">{{cou.program.title}}</a></li>
                                         </ul>
                                         <div class="item_price">
-                                            <span class="sale_price">$29.99</span>
-                                            <del class="remove_price">$39.99</del>
+                                            <span class="sale_price">${{cou.program.cost}}</span>
+
                                         </div>
                                     </div>
                                     <ul class="meta_info_list unordered_list">
-                                        <li>
-                                            <i class="fas fa-chart-bar"></i>
-                                            <span>Beginner</span>
-                                        </li>
-                                        <li>
-                                            <i class="fas fa-clock"></i>
-                                            <span>120 Hours</span>
-                                        </li>
-                                        <li>
-                                            <i class="fas fa-star"></i>
-                                            <span>3.5 (3k reviews)</span>
-                                        </li>
+
                                     </ul>
                                     <h3 class="item_title">
                                         <a href="course_details.html">
-                                            Programming for Everybody (Getting Started with Python)
+                                            {{cou.program.title}}
                                         </a>
                                     </h3>
-                                    <a class="btn_unfill" href="course_details.html">
+                                    <a class="btn_unfill" href="">
                                         <span class="btn_text">View Course</span>
                                         <span class="btn_icon">
                                             <i class="fas fa-long-arrow-right"></i>
@@ -78,97 +67,6 @@
                             </div>
                         </div>
 
-                        <div class="col col-lg-4">
-                            <div class="course_card">
-                                <div class="item_image">
-                                    <a href="course_details.html" data-cursor-text="View">
-                                        <img src="assets/images/course/course_image_2.jpg" alt="Collab – Online Learning Platform">
-                                    </a>
-                                </div>
-                                <div class="item_content">
-                                    <div class="d-flex align-items-center justify-content-between mb-3">
-                                        <ul class="item_category_list unordered_list">
-                                            <li><a href="#!">Photography</a></li>
-                                        </ul>
-                                        <div class="item_price">
-                                            <span class="sale_price">$9.99</span>
-                                        </div>
-                                    </div>
-                                    <ul class="meta_info_list unordered_list">
-                                        <li>
-                                            <i class="fas fa-chart-bar"></i>
-                                            <span>Beginner</span>
-                                        </li>
-                                        <li>
-                                            <i class="fas fa-clock"></i>
-                                            <span>120 Hours</span>
-                                        </li>
-                                        <li>
-                                            <i class="fas fa-star"></i>
-                                            <span>3.5 (3k reviews)</span>
-                                        </li>
-                                    </ul>
-                                    <h3 class="item_title">
-                                        <a href="course_details.html">
-                                            Photography Masterclass: A Complete Guide to Photography
-                                        </a>
-                                    </h3>
-                                    <a class="btn_unfill" href="course_details.html">
-                                        <span class="btn_text">View Course</span>
-                                        <span class="btn_icon">
-                                            <i class="fas fa-long-arrow-right"></i>
-                                            <i class="fas fa-long-arrow-right"></i>
-                                        </span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col col-lg-4">
-                            <div class="course_card">
-                                <div class="item_image">
-                                    <a href="course_details.html" data-cursor-text="View">
-                                        <img src="assets/images/course/course_image_3.jpg" alt="Collab – Online Learning Platform">
-                                    </a>
-                                </div>
-                                <div class="item_content">
-                                    <div class="d-flex align-items-center justify-content-between mb-3">
-                                        <ul class="item_category_list unordered_list">
-                                            <li><a href="#!">Business</a></li>
-                                        </ul>
-                                        <div class="item_price">
-                                            <span class="sale_price">FREE</span>
-                                        </div>
-                                    </div>
-                                    <ul class="meta_info_list unordered_list">
-                                        <li>
-                                            <i class="fas fa-chart-bar"></i>
-                                            <span>Beginner</span>
-                                        </li>
-                                        <li>
-                                            <i class="fas fa-clock"></i>
-                                            <span>120 Hours</span>
-                                        </li>
-                                        <li>
-                                            <i class="fas fa-star"></i>
-                                            <span>3.5 (3k reviews)</span>
-                                        </li>
-                                    </ul>
-                                    <h3 class="item_title">
-                                        <a href="course_details.html">
-                                            Project Management Principles and Practices
-                                        </a>
-                                    </h3>
-                                    <a class="btn_unfill" href="course_details.html">
-                                        <span class="btn_text">View Course</span>
-                                        <span class="btn_icon">
-                                            <i class="fas fa-long-arrow-right"></i>
-                                            <i class="fas fa-long-arrow-right"></i>
-                                        </span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                     <div v-else>
                         <p>
@@ -189,7 +87,7 @@
     const listee = Vue.createApp({
         data() {
             return {
-                courses: []
+                courses: [],
             }
         },
         mounted() {
@@ -198,6 +96,13 @@
         methods: {
             getList() {
 
+                axios.get("/app/get-all-programs").then(res => {
+                    if (res.status = 200) {
+                        this.courses = res.data.data
+                    }
+                }).catch(err => {
+
+                });
             }
         },
     });

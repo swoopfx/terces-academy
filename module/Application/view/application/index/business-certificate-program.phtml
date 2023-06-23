@@ -1,4 +1,6 @@
 <?= $this->headtitle("Business Analysis Certificate Program");
+
+use General\Service\GeneralService;
 ?>
 
 <!-- Page Section - Start
@@ -11,7 +13,7 @@
                     <ul class="breadcrumb_nav unordered_list">
                         <li><a href="index.html">Home</a></li>
                         <li><a href="course.html">Program</a></li>
-                        <li>Business Certificate Program</li>
+                        <li><?= GeneralService::GENERAL_TRAINING_CERTIFICATE_PROGRAM ?></li>
                     </ul>
                     <h1 class="page_title">
                         <?= $data->getTitle(); ?>
@@ -53,7 +55,7 @@
 
                                 <li>
                                     <span><i class="fas fa-chart-user"></i> Pre-requisite</span>
-                                    <strong><a href="<?= $this->url("application", ["action" => "business-analysis-masterclass"]) ?>">Business Analysis Master Class</a></strong>
+                                    <strong><a href="<?= $this->url("application", ["action" => "business-analysis-masterclass"]) ?>"><?= GeneralService::GENERAL_TRAINING_FREE ?></a></strong>
                                 </li>
 
                                 <li>
@@ -73,7 +75,11 @@
                             </ul>
                         </div>
 
-                        <?php if (count($data->getCourses())) : ?>
+                        <?php
+
+
+
+                        if (count($data->getCourses())) : ?>
                             <div class="section_heading">
                                 <h2 class="heading_text">
                                     Course Content
@@ -156,8 +162,8 @@
                                 <span><i class="fas fa-user"></i> Pre-requisite</span>
                                 <strong>
                                     <ul>
-                                        <li><a href="<?= $this->url("application", ["action" => "business-analysis-masterclass"]) ?>">Business Analysis Master Class</a></li>
-                                        <li><a href="<?= $this->url("application", ["action" => "business-analysis-program"]) ?>">Business Analysis Training</a></li>
+                                        <li><a href="<?= $this->url("application", ["action" => "business-analysis-masterclass"]) ?>"><?= GeneralService::GENERAL_TRAINING_FREE ?></a></li>
+                                        <li><a href="<?= $this->url("application", ["action" => "business-analysis-program"]) ?>"><?= GeneralService::GENERAL_TRAINING_WORK_EXPERIENCE ?></a></li>
                                     </ul>
                                 </strong>
                             </li>
