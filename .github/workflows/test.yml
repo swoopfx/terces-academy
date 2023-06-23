@@ -6,4 +6,6 @@ jobs :
      steps: 
        - name: Power House
          run: echo "Power inmy mount"
+       - name: second step
+         run : echo "My intinetrnational day "
      
