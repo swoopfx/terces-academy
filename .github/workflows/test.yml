@@ -1,1 +1,6 @@
-name: Just Trigger
+name: Another One
+on: push
+jobs : 
+   runs-on: ububuntu-latest
+   s
+     
