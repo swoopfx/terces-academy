@@ -1,9 +1,9 @@
 name: Another One
 on: workflow_dispatch
 jobs : 
-   job1:
-     runs-on: ububuntu-latest
-     steps: 
+  job1:
+    runs-on: ububuntu-latest
+    steps: 
        - name: Power House
          run: echo "Power inmy mount"
        - name: second step
