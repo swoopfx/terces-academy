@@ -2,6 +2,8 @@ name: Another One
 on: push
 jobs : 
    job1:
-   runs-on: ububuntu-latest
-   s
+     runs-on: ububuntu-latest
+     steps: 
+       - name: Power House
+         run: echo "Power inmy mount"
      
