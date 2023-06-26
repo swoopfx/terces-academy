@@ -23,6 +23,7 @@ use Authentication\Entity\UserState;
 use DoctrineModule\Validator\NoObjectExists;
 use Laminas\Validator\StringLength;
 use Ramsey\Uuid\Uuid;
+use General\Service\ActiveCampaignService;
 
 class AuthController  extends AbstractActionController
 {
@@ -35,6 +36,13 @@ class AuthController  extends AbstractActionController
      */
     private $entityManager;
 
+    /**
+     * Undocumented variable
+     *
+     * @var ActiveCampaignService
+     */
+    private $activeCampaignService;
+
 
     /**
      * Undocumented variable
@@ -45,11 +53,17 @@ class AuthController  extends AbstractActionController
 
     public function loginAction()
     {
+        if ($this->identity()) {
+            $this->redirect()->toRoute("home");
+        }
         return new ViewModel();
     }
 
     public function registerAction()
     {
+        if ($this->identity()) {
+            $this->redirect()->toRoute("home");
+        }
         $user = $this->identity();
         $jsonModel = new JsonModel();
         $viewModel = new ViewModel();
@@ -231,6 +245,9 @@ class AuthController  extends AbstractActionController
 
 
                 // send email
+                $nameArray = explode(" ", $data["fullname"]);
+                // Register on Active campaign 
+
 
                 $entityManager->persist($userEntity);
                 $entityManager->flush();
@@ -245,6 +262,21 @@ class AuthController  extends AbstractActionController
                     "data" => $data,
                     "success" => true
                 ]);
+                $activeCampaignData = [
+                    "email" => $data["email"],
+                    "firstname" => $nameArray[0],
+                    "lastname" => $nameArray[1],
+                    "phone" => "",
+                ];
+
+                // call active campaign newsletter
+                $activeResponse = $this->activeCampaignService->createContact($activeCampaignData);
+                $activeCampaignList = [
+                    "list" => 5,
+                    "contact" => $activeResponse["id"]
+                ];
+                $this->activeCampaignService->updateContactList($activeCampaignList);
+                
                 $response->setStatusCode(201);
                 return $jsonModel;
             } else {
@@ -369,27 +401,27 @@ class AuthController  extends AbstractActionController
                     // "messages" => $messages
                     // ]);
                     // }
-                    if ($user->getState() == 2) {
+                    if ($user->getState()->getId() == 2) {
                         $messages = 'This account is disabled';
-                        $response->setStatusCode(Response::STATUS_CODE_422);
+                        $response->setStatusCode(400);
                         return $jsonModel->setVariables([
                             "messages" => $messages
                         ]);
                     }
                     if (!$user->getEmailConfirmed() == 1) {
                         $messages = 'You are yet to confirm your account, please go to the registered email to confirm your account';
-                        $response->setStatusCode(Response::STATUS_CODE_422);
+                        $response->setStatusCode(400);
                         return $jsonModel->setVariables([
                             "messages" => $messages
                         ]);
                     }
-                    if (!$user->getIsActive()) {
-                        $messages = 'Your username is disabled. Please contact an administrator.';
-                        $response->setStatusCode(Response::STATUS_CODE_422);
-                        return $jsonModel->setVariables([
-                            "messages" => $messages
-                        ]);
-                    }
+                    // if (!$user->getIsActive()) {
+                    //     $messages = 'Your username is disabled. Please contact an administrator.';
+                    //     $response->setStatusCode(400);
+                    //     return $jsonModel->setVariables([
+                    //         "messages" => $messages
+                    //     ]);
+                    // }
 
                     $adapter->setIdentity($user->getEmail());
                     $adapter->setCredential($data["password"]);
@@ -420,9 +452,10 @@ class AuthController  extends AbstractActionController
                          * to display the required form to fill the profile
                          * if required redirect to the copletinfg profile Page
                          */
-                        $redirect = $fullUrl . "/admin";
+                        // $redirect = $fullUrl . "/admin";
+                        $link =
 
-                        $response->setStatusCode(201);
+                            $response->setStatusCode(201);
                         $jsonModel->setVariables([
                             "redirect" => $redirect
                         ]);
@@ -797,6 +830,30 @@ class AuthController  extends AbstractActionController
     public function setAuthService(AuthenticationService $authService)
     {
         $this->authService = $authService;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  ActiveCampaignService
+     */
+    public function getActiveCampaignService()
+    {
+        return $this->activeCampaignService;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  ActiveCampaignService  $activeCampaignService  Undocumented variable
+     *
+     * @return  self
+     */
+    public function setActiveCampaignService(ActiveCampaignService $activeCampaignService)
+    {
+        $this->activeCampaignService = $activeCampaignService;
 
         return $this;
     }

@@ -14,7 +14,7 @@ class GeneralServiceFactory implements FactoryInterface
     {
         $ctr = new GeneralService();
         $entityManager = $container->get(EntityManager::class);
-        $authService = $container->get(AuthenticationService::class);
+        $authService = $container->get("authentication_service");
         $ctr->setEntityManager($entityManager)->setAuth($authService);
         return $ctr;
     }

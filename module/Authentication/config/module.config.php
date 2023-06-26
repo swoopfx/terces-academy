@@ -7,7 +7,7 @@ namespace Authentication;
 use Authentication\Controller\AuthController;
 use Authentication\Controller\Factory\AuthControllerFactory;
 use Authentication\Entity\User;
-use Authentication\Service\AuthenticationFactory;
+use Authentication\Service\Factory\AuthenticationFactory;
 use Doctrine\ORM\EntityManager;
 use Laminas\Authentication\AuthenticationService;
 use Laminas\Router\Http\Literal;
@@ -17,7 +17,11 @@ use Laminas\ServiceManager\Factory\InvokableFactory;
 return [
     "service_manager" => [
         "factories" => [
-            AuthenticationService::class => AuthenticationFactory::class,
+            "Laminas\Authentication\AuthenticationService" => AuthenticationFactory::class,
+        ],
+        "aliases" => [
+           
+            "authentication_service" => "Laminas\Authentication\AuthenticationService"
         ]
     ],
     'router' => [
@@ -29,6 +33,16 @@ return [
                     'defaults' => [
                         'controller' => AuthController::class,
                         'action'     => 'login',
+                    ],
+                ],
+            ],
+            'logout' => [
+                'type'    => Literal::class,
+                'options' => [
+                    'route'    => '/logout',
+                    'defaults' => [
+                        'controller' => AuthController::class,
+                        'action'     => 'logout',
                     ],
                 ],
             ],

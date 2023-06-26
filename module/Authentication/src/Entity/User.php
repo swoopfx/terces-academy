@@ -143,6 +143,9 @@ class User
     //  */
     // private $wallet;
 
+   
+    private $isActive;
+
 
 
     /**
@@ -531,4 +534,24 @@ class User
     }
 
    
+
+    /**
+     * Get the value of isActive
+     */ 
+    public function getIsActive()
+    {
+        return $this->isActive;
+    }
+
+    /**
+     * Set the value of isActive
+     *
+     * @return  self
+     */ 
+    public function setIsActive($isActive)
+    {
+        $this->isActive = $isActive;
+
+        return $this;
+    }
 }

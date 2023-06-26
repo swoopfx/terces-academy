@@ -1,6 +1,6 @@
 <?php
 
-namespace Authentication\Service;
+namespace Authentication\Service\Factory;
 
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Psr\Container\ContainerInterface;

@@ -88,10 +88,11 @@
                                   dismissible: true
                               });
                               // console.log(res.data.redirect);
-                              window.location = res.data.redirect;
+                              window.location.href = res.data.redirect;
                           }
 
                       }).catch(err => {
+
                           this.$toast.open({
                               message: err.response.data.messages,
                               type: "error",
