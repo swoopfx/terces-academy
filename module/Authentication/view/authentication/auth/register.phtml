@@ -1,3 +1,10 @@
+  <?php
+
+    use Laminas\Session\Container;
+
+    
+    // print_r($cont->refer);
+    ?>
   <!-- Register Section - Start
         ================================================== -->
   <section id="registerApp" class="register_section section_space_lg">
@@ -108,5 +115,6 @@
               }
           },
       });
+      registerApp.use(VueToast.ToastPlugin);
       registerApp.mount("#registerApp");
   </script>

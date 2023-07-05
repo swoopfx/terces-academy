@@ -126,7 +126,9 @@ class IndexController extends AbstractActionController
             return $this->redirect()->toRoute("home");
         }
         $em = $this->entityManager;
-        $data =  $em->getRepository(Programs::class)->findOneBy([]);
+        $data =  $em->getRepository(Programs::class)->findOneBy([
+            "uuid"=>$uuid
+        ]);
         $paymentMethod = $em->getRepository(PaymentMethod::class)->findAll();
 
         $viewModel->setVariables([

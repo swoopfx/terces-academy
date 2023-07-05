@@ -50,7 +50,8 @@
                           <h3 class="card_heading">Amount Payable</h3>
                           <div class="pricing_wrap">
                               <span class="price_value"><sup><?= $this->currencyFormat($data->getCost(), "USD") ?></span>
-                              <small class="d-block"></small> <?= $data->getTitle(); ?></small>
+                              <small class="d-block"></small> <?= $data->getTitle(); ?> <?= $data->getUuid(); ?></small>
+
                           </div>
                           <hr>
                           <ul class="info_list unordered_list_block text-start">
@@ -61,12 +62,22 @@
 
                           </ul>
                           <div class="btn_wrap pb-0">
-                              <button class="btn border_dark" @click="pay()">
-                                  <span>
-                                      <small>Pay Now</small>
-                                      <small>{{activePaymentMethod}}</small>
-                                  </span>
-                              </button>
+                              <?php if ($this->identity()) : ?>
+
+                                  <button class="btn border_dark" @click="pay()">
+                                      <span>
+                                          <small>Pay Now</small>
+                                          <small>{{activePaymentMethod}}</small>
+                                      </span>
+                                  </button>
+                              <?php else : ?>
+                                  <a class="btn border_dark" href="<?= $this->url("app", ["action" => "refer"]) ?>">
+                                      <span>
+                                          <small>Pay Now</small>
+                                          <small>{{activePaymentMethod}}</small>
+                                      </span>
+                                  </a>
+                              <?php endif; ?>
                           </div>
                       </div>
                   </div>
@@ -85,6 +96,7 @@
                   paymentMethod: [],
                   activePaymentMethod: "",
                   activeMethodId: 0,
+                  courseUuid: "",
               }
           },
 
@@ -112,7 +124,31 @@
               },
 
               payWithFlutterwave() {
-                  alert("flutterwave");
+                  //   axios.
+                  FlutterwaveCheckout({
+                      public_key: "FLWPUBK_TEST-SANDBOXDEMOKEY-X",
+                      tx_ref: "titanic-48981487343MDI0NzMx",
+                      amount: 54600,
+                      currency: "USD",
+                      payment_options: "card",
+                      redirect_url: "https://glaciers.titanic.com/handle-flutterwave-payment",
+                      meta: {
+                          consumer_id: 23,
+                          consumer_mac: "92a3-912ba-1192a",
+                      },
+                      customer: {
+                          email: "rose@unsinkableship.com",
+                          phone_number: "08102909304",
+                          name: "Rose DeWitt Bukater",
+                      },
+                      customizations: {
+                          title: "Terces Academy",
+                          description: "Payment for an awesome cruise",
+                          logo: "https://www.logolynx.com/images/logolynx/22/2239ca38f5505fbfce7e55bbc0604386.jpeg",
+                      },
+                  });
+
+
               },
 
               payWithPaypal() {

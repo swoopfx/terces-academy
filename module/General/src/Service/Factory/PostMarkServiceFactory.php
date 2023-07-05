@@ -16,6 +16,6 @@ class PostMarkServiceFactory implements FactoryInterface
         $xserv = new PostMarkService();
         $postmarkClient = new PostmarkClient("35fcd24c-72e2-4bbf-8a04-1b961d421450");
         $xserv->setPostmarkClient($postmarkClient);
-        return $xserv ;
+        return $xserv;
     }
 }

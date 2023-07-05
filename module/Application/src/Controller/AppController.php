@@ -12,6 +12,7 @@ use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
 use Doctrine\ORM\EntityManager;
 use DoctrineModule\Validator\NoObjectExists;
+use Laminas\Session\Container;
 
 class AppController extends  AbstractActionController
 {
@@ -127,6 +128,16 @@ class AppController extends  AbstractActionController
             }
         }
         return $jsonModel;
+    }
+
+    public function referAction()
+    {
+        $viewModel = new ViewModel();
+        $referContainer = new Container("refer");
+        $url = $this->getRequest()->getHeader('Referer')->getUri();
+        $referContainer->refer = $url;
+        return $this->redirect()->toRoute("register");
+        // return $viewModel;
     }
 
 
