@@ -77,7 +77,7 @@ use General\Service\GeneralService;
             <div class="col col-lg-6">
                 <!-- Button will hide on Mobile Device -->
                 <div class="btn_wrap pt-0 d-none d-lg-flex justify-content-end">
-                    <a class="btn border_dark" href="course.html">
+                    <a class="btn border_dark" href="<?= $this->url("application", ["action" => "all-course"]) ?>">
                         <span>
                             <small>Explore Courses</small>
                             <small>Explore Courses</small>
@@ -237,31 +237,31 @@ use General\Service\GeneralService;
                         <li>
                             <i class="fas fa-square"></i>
                             <span>
-                            <?= GeneralService::GENERAL_TRAINING_FREE ?> (free) (free)
+                                <?= GeneralService::GENERAL_TRAINING_FREE ?> (free) (free)
                             </span>
                         </li>
                         <li>
                             <i class="fas fa-square"></i>
                             <span>
-                            <?= GeneralService::GENERAL_TRAINING_WORK_EXPERIENCE ?> (Paid)
+                                <?= GeneralService::GENERAL_TRAINING_WORK_EXPERIENCE ?> (Paid)
                             </span>
                         </li>
                         <li>
                             <i class="fas fa-square"></i>
                             <span>
-                            <?= GeneralService::GENERAL_TRAINING_CERTIFICATE_PROGRAM ?>(Paid)
+                                <?= GeneralService::GENERAL_TRAINING_CERTIFICATE_PROGRAM ?>(Paid)
                             </span>
                         </li>
 
                         <li>
                             <i class="fas fa-square"></i>
                             <span>
-                            <?= GeneralService::GENERAL_TRAINING_INTERVIEW_PREP ?>  (Paid)
+                                <?= GeneralService::GENERAL_TRAINING_INTERVIEW_PREP ?> (Paid)
                             </span>
                         </li>
                     </ul>
                     <div class="btn_wrap pb-0">
-                        <a class="btn btn_dark" href="#">
+                        <a class="btn btn_dark" href="<?= $this->url("register") ?>">
                             <span>
                                 <small>Register Now</small>
                                 <small>Register Now</small>

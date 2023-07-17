@@ -8,52 +8,61 @@ use Application\Entity\Programs;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="subscriberss")
+ * @ORM\Table(name="active_user_program")
  */
-class Subscribers
+
+class ActiveUserProgram
 {
 
     /**
      *
-     * @var integer @ORM\Column(name="id", type="integer")
+     * @var int @ORM\Column(name="id", type="integer", nullable=false, options={"unsigned"=true})
      *      @ORM\Id
      *      @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
 
+
     /**
      * Undocumented variable
-     * @ORM\ManyToOne(targetEntity="Authentication\Entity\User")
-     * @var  User
+     * @ORM\ManytoOne(targetEntity="Authentication\Entity\User")
+     * @var User
      */
     private $user;
+
 
     /**
      * Undocumented variable
      * @ORM\ManyToOne(targetEntity="Application\Entity\Programs")
-     * @var  Programs
+     * @var Programs
      */
-    private $progams;
+    private $program;
 
     /**
      * Undocumented variable
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="boolean", nullable=false, options={"default":"1"})
+     * @var bool
+     */
+    private $isActive;
+
+    /**
+     * Undocumented variable
+     * @ORM\Column(type="datetime", nullable=false)
      * @var \Datetime
      */
     private $createdOn;
 
-
     /**
      * Undocumented variable
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=false)
      * @var \Datetime
      */
     private $updatedOn;
 
     /**
-     * Get @ORM\Column(name="id", type="integer")
+     * Get @ORM\Column(name="id", type="integer", nullable=false, options={"unsigned"=true})
      *
-     * @return  integer
+     * @return  int
      */
     public function getId()
     {
@@ -89,21 +98,45 @@ class Subscribers
      *
      * @return  Programs
      */
-    public function getProgams()
+    public function getProgram()
     {
-        return $this->progams;
+        return $this->program;
     }
 
     /**
      * Set undocumented variable
      *
-     * @param  Programs  $progams  Undocumented variable
+     * @param  Programs  $program  Undocumented variable
      *
      * @return  self
      */
-    public function setProgams(Programs $progams)
+    public function setProgram(Programs $program)
     {
-        $this->progams = $progams;
+        $this->program = $program;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  bool
+     */
+    public function getIsActive()
+    {
+        return $this->isActive;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  bool  $isActive  Undocumented variable
+     *
+     * @return  self
+     */
+    public function setIsActive(bool $isActive)
+    {
+        $this->isActive = $isActive;
 
         return $this;
     }
@@ -128,7 +161,7 @@ class Subscribers
     public function setCreatedOn(\Datetime $createdOn)
     {
         $this->createdOn = $createdOn;
-
+        $this->updatedOn = $createdOn;
         return $this;
     }
 

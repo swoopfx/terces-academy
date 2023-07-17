@@ -4,9 +4,17 @@ declare(strict_types=1);
 
 namespace Application;
 
+use Application\Controller\AdminController;
 use Application\Controller\AppController;
+use Application\Controller\Factory\AdminControllerFactory;
 use Application\Controller\Factory\AppControllerFactory;
 use Application\Controller\Factory\IndexControllerFactory;
+use Application\Service\Factory\TransactionServiceFactory;
+use Application\Service\PaypalService;
+use Application\Service\Factory\PaypalServiceFactory;
+use Application\Service\TransactionService;
+use Application\View\Factory\IsSuscribedFactory;
+use Application\View\isSubscribed;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
 use Laminas\ServiceManager\Factory\InvokableFactory;
@@ -53,6 +61,21 @@ return [
                     ],
                 ],
             ],
+
+            'admin' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/admin[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[a-zA-Z0-9_-]*'
+                    ],
+                    'defaults' => [
+                        'controller' => AppController::class,
+                        'action'     => 'index',
+                    ],
+                ],
+            ],
         ],
     ],
     'controllers' => [
@@ -60,6 +83,7 @@ return [
             // Controller\IndexController::class => IndexControllerFactory::class,
             Controller\IndexController::class => IndexControllerFactory::class,
             AppController::class => AppControllerFactory::class,
+            AdminController::class => AdminControllerFactory::class
         ],
     ],
     'doctrine' => [
@@ -76,6 +100,12 @@ return [
                     __NAMESPACE__ . '\Entity' => __NAMESPACE__ . '_driver'
                 ]
             ]
+        ]
+    ],
+    "service_manager" => [
+        "factories" => [
+            TransactionService::class => TransactionServiceFactory::class,
+            PaypalService::class => PaypalServiceFactory::class
         ]
     ],
     'view_manager' => [
@@ -104,4 +134,13 @@ return [
             'ViewJsonStrategy'
         ]
     ],
+
+    "view_helpers" => [
+        "factories" => [
+            isSubscribed::class => IsSuscribedFactory::class
+        ],
+        "aliases" => [
+            "isSubscribed" => isSubscribed::class
+        ]
+    ]
 ];

@@ -8,6 +8,7 @@ use Application\Entity\PaymentMethod;
 use Application\Entity\Programs;
 use Doctrine\ORM\EntityManager;
 use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\Session\Container;
 use Laminas\View\Model\ViewModel;
 
 class IndexController extends AbstractActionController
@@ -125,13 +126,17 @@ class IndexController extends AbstractActionController
         if ($uuid == NULL) {
             return $this->redirect()->toRoute("home");
         }
+        $buyCourseSession = new Container("buy_course_uuid");
+        $buyCourseSession->uuid = $uuid;
         $em = $this->entityManager;
-        $data =  $em->getRepository(Programs::class)->findOneBy([]);
+        $data =  $em->getRepository(Programs::class)->findOneBy([
+            "uuid" => $uuid
+        ]);
         $paymentMethod = $em->getRepository(PaymentMethod::class)->findAll();
 
         $viewModel->setVariables([
-            "data"=>$data,
-            "method"=>$paymentMethod
+            "data" => $data,
+            "method" => $paymentMethod
         ]);
         return $viewModel;
     }

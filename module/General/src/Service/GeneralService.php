@@ -4,6 +4,7 @@ namespace General\Service;
 
 use Doctrine\ORM\EntityManager;
 use Laminas\Authentication\AuthenticationService;
+use General\Entity\Settings;
 
 class GeneralService
 {
@@ -14,7 +15,7 @@ class GeneralService
 
     const GENERAL_TRAINING_CERTIFICATE_PROGRAM = "Business Analysis Certification Program";
 
-    const GENERAL_TRAINING_INTERVIEW_PREP = "Business Analysis interview Preparation";
+    const GENERAL_TRAINING_INTERVIEW_PREP = "One on One Interview Prep";
     /**
      * Undocumented variable
      *
@@ -28,6 +29,14 @@ class GeneralService
      * @var AuthenticationService 
      */
     private $auth;
+
+
+    /**
+     * Undocumented variable
+     *
+     * @var Settings
+     */
+    private $settings;
 
 
 
@@ -75,6 +84,30 @@ class GeneralService
     public function setAuth(AuthenticationService $auth)
     {
         $this->auth = $auth;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  Settings
+     */ 
+    public function getSettings()
+    {
+        return $this->settings;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  Settings  $settings  Undocumented variable
+     *
+     * @return  self
+     */ 
+    public function setSettings(Settings $settings)
+    {
+        $this->settings = $settings;
 
         return $this;
     }

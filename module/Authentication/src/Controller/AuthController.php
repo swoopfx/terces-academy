@@ -24,6 +24,8 @@ use DoctrineModule\Validator\NoObjectExists;
 use Laminas\Validator\StringLength;
 use Ramsey\Uuid\Uuid;
 use General\Service\ActiveCampaignService;
+use General\Service\PostMarkService;
+use Laminas\Session\Container;
 
 class AuthController  extends AbstractActionController
 {
@@ -50,6 +52,13 @@ class AuthController  extends AbstractActionController
      * @var AuthenticationService
      */
     private $authService;
+
+    /**
+     * Undocumented variable
+     *
+     * @var PostMarkService
+     */
+    private $postmarkService;
 
     public function loginAction()
     {
@@ -229,55 +238,76 @@ class AuthController  extends AbstractActionController
             $post = $request->getPost();
             $inputFilter->setData($post);
             if ($inputFilter->isValid()) {
-                $data = $inputFilter->getValues();
-                $userEntity = new User();
-                $token = md5(uniqid(mt_rand(), true));
-                $userEntity->setCreatedOn(new \Datetime())
-                    ->setRole($entityManager->find(Roles::class, UserService::USER_ROLE_CUSTOMER))
-                    ->setEmail($data["email"])
-                    ->setPassword(UserService::encryptPassword($data["password"]))
-                    ->setEmailConfirmed(False)
-                    ->setFullname($data["fullname"])
-                    ->setRegistrationDate(new \Datetime())->setRegistrationToken($token)
-                    ->setUuid(Uuid::uuid4())
-                    ->setUid(uniqid())
-                    ->setState($entityManager->find(UserState::class, UserService::USER_STATE_ENABLED));
+
+                try {
+
+                    $data = $inputFilter->getValues();
+                    $userEntity = new User();
+                    $token = md5(uniqid(mt_rand(), true));
+                    $userEntity->setCreatedOn(new \Datetime())
+                        ->setRole($entityManager->find(Roles::class, UserService::USER_ROLE_CUSTOMER))
+                        ->setEmail($data["email"])
+                        ->setPassword(UserService::encryptPassword($data["password"]))
+                        ->setEmailConfirmed(False)
+                        ->setFullname($data["fullname"])
+                        ->setRegistrationDate(new \Datetime())->setRegistrationToken($token)
+                        ->setUuid(Uuid::uuid4())
+                        ->setUid(uniqid())
+                        ->setState($entityManager->find(UserState::class, UserService::USER_STATE_ENABLED));
 
 
-                // send email
-                $nameArray = explode(" ", $data["fullname"]);
-                // Register on Active campaign 
+                    // send email
+                    $nameArray = explode(" ", $data["fullname"]);
+                    // Register on Active campaign 
+
+                    $data = [
+                        "fullname" => $data["fullname"],
+
+                        "email" => $data["email"]
+                    ];
+                    $jsonModel->setVariables([
+                        "data" => $data,
+                        "success" => true
+                    ]);
+                    $activeCampaignData = [
+                        "email" => $data["email"],
+                        "firstname" => $nameArray[0],
+                        "lastname" => $nameArray[1],
+                        "phone" => "",
+                    ];
+
+                    // call active campaign newsletter
+                    $activeResponse = $this->activeCampaignService->createContact($activeCampaignData);
+                    $activeCampaignList = [
+                        "list" => 5,
+                        "contact" => $activeResponse["id"]
+                    ];
+                    // $fulllink = "";
+                    $fulllink = $this->url()->fromRoute('auth', array(
+                        'action' => 'confirm-email',
+                        'id' => $userEntity->getRegistrationToken()
+                    ), array(
+                        'force_canonical' => true
+                    ));
+                    $this->activeCampaignService->updateContactList($activeCampaignList);
+                    $emailData["to"] =  $data["email"];
+                    $emailData["link"] = $fulllink;
+
+                    $this->postmarkService->sendConfirmEmail($emailData);
+
+                    $entityManager->persist($userEntity);
+                    $entityManager->flush();
+
+                    $response->setStatusCode(201);
+                } catch (\Throwable $th) {
+                    $jsonModel->setVariables([
+                        "success" => false,
+                        "message" => $th->getMessage()
+                    ]);
+                    $response->setStatusCode(400);
+                }
 
 
-                $entityManager->persist($userEntity);
-                $entityManager->flush();
-
-                $response->setStatusCode(201);
-                $data = [
-                    "fullname" => $data["fullname"],
-
-                    "email" => $data["email"]
-                ];
-                $jsonModel->setVariables([
-                    "data" => $data,
-                    "success" => true
-                ]);
-                $activeCampaignData = [
-                    "email" => $data["email"],
-                    "firstname" => $nameArray[0],
-                    "lastname" => $nameArray[1],
-                    "phone" => "",
-                ];
-
-                // call active campaign newsletter
-                $activeResponse = $this->activeCampaignService->createContact($activeCampaignData);
-                $activeCampaignList = [
-                    "list" => 5,
-                    "contact" => $activeResponse["id"]
-                ];
-                $this->activeCampaignService->updateContactList($activeCampaignList);
-                
-                $response->setStatusCode(201);
                 return $jsonModel;
             } else {
                 $jsonModel->setVariables([
@@ -452,14 +482,21 @@ class AuthController  extends AbstractActionController
                          * to display the required form to fill the profile
                          * if required redirect to the copletinfg profile Page
                          */
-                        // $redirect = $fullUrl . "/admin";
-                        $link =
+                        $redirect = $this->url()->fromRoute('home', array(), array(
+                            'force_canonical' => true
+                        ));
+                        $cont = new Container("refer");
+                        $referal = $cont->refer;
+                        if ($referal != "") {
+                            $redirect = $referal;
+                        }
+                        // $link =
 
-                            $response->setStatusCode(201);
+                        $response->setStatusCode(201);
                         $jsonModel->setVariables([
                             "redirect" => $redirect
                         ]);
-                        $jsonModel->setVariables([]);
+                        $cont->refer = "";
                         return $jsonModel;
                         // return $this->redirect()->toRoute($this->options->getLoginRedirectRoute());
                     } else {
@@ -758,7 +795,7 @@ class AuthController  extends AbstractActionController
                 ));
                 return $viewModel;
             } else {
-                return $this->redirect()->toRoute('admin');
+                return $this->redirect()->toRoute('login');
             }
         } catch (\Exception $e) {
             // return $this->getServiceLocator()->get('csnuser_error_view')->createErrorView(
@@ -768,6 +805,53 @@ class AuthController  extends AbstractActionController
             // $this->options->getNavMenu()
             // );
         }
+    }
+
+
+    public function confirmEmailAction()
+    {
+
+        $token = $this->params()->fromRoute('id');
+        $viewModel = new ViewModel();
+        try {
+            $entityManager = $this->entityManager;
+            if ($token !== '' && $user = $entityManager->getRepository(User::class)->findOneBy(array(
+                'registrationToken' => $token
+            ))) {
+                if ($user->getEmailConfirmed() == TRUE) {
+                    $this->flashmessenger()->addErrorMessage("This email has been confirmed already");
+                    $this->redirect()->toRoute("login");
+                }
+                $user->setRegistrationToken(md5(uniqid(mt_rand(), true)));
+                $user->setState($entityManager->find(UserState::class, UserService::USER_STATE_ENABLED));
+                $user->setEmailConfirmed(1);
+                $entityManager->persist($user);
+                $entityManager->flush();
+
+                $this->flashmessenger()->addSuccessMessage("Email successfully confirmed and registration completed");
+                $this->redirect()->toRoute("login");
+                // $viewModel = new ViewModel(array(
+                // 'navMenu' => $this->options->getNavMenu()
+                // ));
+
+                // $viewModel->setTemplate('csn-user/registration/confirm-email-success');
+                // return $viewModel;
+                return $this;
+            } else {
+                $this->flashmessenger()->addErrorMessage("There was a problem consfirming your email");
+                return $this->redirect()->toRoute('login', array());
+            }
+        } catch (\Exception $e) {
+            // return $this->getServiceLocator()->get('csnuser_error_view')->createErrorView(
+            // $this->getTranslatorHelper()->translate('Something went wrong during the activation of your account! Please, try again later.'),
+            // $e,
+            // $this->options->getDisplayExceptions(),
+            // $this->options->getNavMenu()
+            // );
+            $this->flashmessenger()->addErrorMessage("There was a problem consfirming your email");
+            return $this->redirect()->toRoute('login', array());
+        }
+        return $viewModel;
     }
 
 
@@ -854,6 +938,30 @@ class AuthController  extends AbstractActionController
     public function setActiveCampaignService(ActiveCampaignService $activeCampaignService)
     {
         $this->activeCampaignService = $activeCampaignService;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  PostMarkService
+     */
+    public function getPostmarkService()
+    {
+        return $this->postmarkService;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  PostMarkService  $postmarkService  Undocumented variable
+     *
+     * @return  self
+     */
+    public function setPostmarkService(PostMarkService $postmarkService)
+    {
+        $this->postmarkService = $postmarkService;
 
         return $this;
     }

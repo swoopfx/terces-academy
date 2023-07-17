@@ -3,6 +3,7 @@
 namespace Application\Controller\Factory;
 
 use Application\Controller\AppController;
+use Application\Service\TransactionService;
 use General\Service\ActiveCampaignService;
 use General\Service\GeneralService;
 use Laminas\ServiceManager\Factory\FactoryInterface;
@@ -16,7 +17,10 @@ class AppControllerFactory implements FactoryInterface
         $ctr = new AppController();
         $generalService = $container->get(GeneralService::class);
         $activeCampaignService = $container->get(ActiveCampaignService::class);
-        $ctr->setEntityManager($generalService->getEntityManager())->setActiveCampaignService($activeCampaignService);
+        $transactionService = $container->get(TransactionService::class);
+        $ctr->setEntityManager($generalService->getEntityManager())
+            ->setTransactionService($transactionService)
+            ->setActiveCampaignService($activeCampaignService);
         return $ctr;
     }
 }

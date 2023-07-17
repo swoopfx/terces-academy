@@ -72,10 +72,10 @@ class ActiveCampaignService
         $response = $client->send();
         if ($response->isSuccess()) {
             $data = json_decode($response->getBody());
-            return [
-                "id" => $data->contact->id,
-                "data" => json_encode($data),
-            ];
+            // return [
+            //     "id" => $data->contact->id,
+            //     "data" => json_encode($data),
+            // ];
         } else {
             throw new \Exception($response->getReasonPhrase());
         }
