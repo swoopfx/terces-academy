@@ -13,6 +13,7 @@ use Laminas\View\Model\ViewModel;
 use Doctrine\ORM\EntityManager;
 use DoctrineModule\Validator\NoObjectExists;
 use Laminas\Session\Container;
+use Application\Service\TransactionService;
 
 class AppController extends  AbstractActionController
 {
@@ -31,6 +32,13 @@ class AppController extends  AbstractActionController
      * @var ActiveCampaignService
      */
     private $activeCampaignService;
+
+    /**
+     * Undocumented variable
+     *
+     * @var TransactionService
+     */
+    private $transactionService;
 
     public function indexAction()
     {
@@ -176,6 +184,78 @@ class AppController extends  AbstractActionController
         return $jsonModel;
     }
 
+
+    public function preTransactionAction()
+    {
+        $jsonModel = new JsonModel();
+        $response = $this->getResponse();
+        $inputData = [];
+        try {
+            $data = $this->transactionService->preTransaction($inputData);
+            $response->setStatusCode(201);
+            $jsonModel->setVariables([
+                "data" => $data
+            ]);
+        } catch (\Throwable $th) {
+            $response->setStatusCode(400);
+            $jsonModel->setVariables([
+                "desc" => $th->getMessage()
+            ]);
+        }
+        return $jsonModel;
+    }
+
+
+    public function paypalCreateOrderAction()
+    {
+
+        $jsonModel = new jsonModel();
+        $response = $this->getResponse();
+        $request = $this->getRequest();
+        try {
+            $data =  $this->transactionService->paypalCreateOrder();
+            // $jsonModel->setVariable("data", $data);
+            // $response->setStatusCode(201);
+
+            $response->getHeaders()->addHeaderLine('Content-Type', 'application/json');
+            $response->setContent($data);
+            return $response;
+        } catch (\Throwable $th) {
+            //throw $th;
+            $response->setStatusCode(400);
+            $jsonModel->setVariables([
+                "success" => false,
+                "desc" => $th->getMessage()
+            ]);
+        }
+        return $jsonModel;
+    }
+
+
+    public function paypalCapturePaymentAction()
+    {
+        $jsonModel = new jsonModel();
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        try {
+            $data =  $this->transactionService->paypalCreateOrder();
+            // $jsonModel->setVariable("data", $data);
+            // $response->setStatusCode(201);
+
+            $response->getHeaders()->addHeaderLine('Content-Type', 'application/json');
+            $response->setContent($data);
+            return $response;
+        } catch (\Throwable $th) {
+            //throw $th;
+            $response->setStatusCode(400);
+            $jsonModel->setVariables([
+                "success" => false,
+                "desc" => $th->getMessage()
+            ]);
+        }
+        return $jsonModel;
+    }
+
     /**
      * Get the value of entityManager
      */
@@ -216,6 +296,30 @@ class AppController extends  AbstractActionController
     public function setActiveCampaignService(ActiveCampaignService $activeCampaignService)
     {
         $this->activeCampaignService = $activeCampaignService;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  TransactionService
+     */
+    public function getTransactionService()
+    {
+        return $this->transactionService;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  TransactionService  $transactionService  Undocumented variable
+     *
+     * @return  self
+     */
+    public function setTransactionService(TransactionService $transactionService)
+    {
+        $this->transactionService = $transactionService;
 
         return $this;
     }

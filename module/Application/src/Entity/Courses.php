@@ -7,6 +7,7 @@ use Application\Entity\Programs;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use General\Entity\Image;
+use Application\Entity\Quiz;
 
 /**
  * @ORM\Entity
@@ -87,11 +88,26 @@ class Courses
      */
     private $courseContent;
 
+    /**
+     * Undocumented variable
+     *
+     * @var bool 
+     */
+    private $isQuiz;
+
+    /**
+     * Undocumented variable
+     * @ORM\OneToMany(targetEntity="Application\Entity\Quiz", mappedBy="course")
+     * @var Collection
+     */
+    private $quiz;
+
 
 
     public function __construct()
     {
         $this->courseContent = new ArrayCollection();
+        $this->quiz = new ArrayCollection();
     }
 
     /**
@@ -300,7 +316,7 @@ class Courses
      * Get undocumented variable
      *
      * @return  Collection
-     */ 
+     */
     public function getCourseContent()
     {
         return $this->courseContent;
@@ -312,11 +328,45 @@ class Courses
      * @param  Collection  $courseContent  Undocumented variable
      *
      * @return  self
-     */ 
+     */
     public function setCourseContent(Collection $courseContent)
     {
         $this->courseContent = $courseContent;
 
         return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  bool
+     */
+    public function getIsQuiz()
+    {
+        return $this->isQuiz;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  bool  $isQuiz  Undocumented variable
+     *
+     * @return  self
+     */
+    public function setIsQuiz(bool $isQuiz)
+    {
+        $this->isQuiz = $isQuiz;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  Collection
+     */
+    public function getQuiz()
+    {
+        return $this->quiz;
     }
 }
