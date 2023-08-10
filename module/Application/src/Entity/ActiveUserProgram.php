@@ -6,7 +6,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Authentication\Entity\User;
 use Application\Entity\Programs;
 
+
 /**
+ * These are the users registtered to a program 
  * @ORM\Entity
  * @ORM\Table(name="active_user_program")
  */
@@ -58,6 +60,13 @@ class ActiveUserProgram
      * @var \Datetime
      */
     private $updatedOn;
+
+    /**
+     * Undocumented variable
+     * @ORM\Column(nullable=false)
+     * @var string
+     */
+    private $uuid;
 
     /**
      * Get @ORM\Column(name="id", type="integer", nullable=false, options={"unsigned"=true})
@@ -185,6 +194,30 @@ class ActiveUserProgram
     public function setUpdatedOn(\Datetime $updatedOn)
     {
         $this->updatedOn = $updatedOn;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  string
+     */ 
+    public function getUuid()
+    {
+        return $this->uuid;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  string  $uuid  Undocumented variable
+     *
+     * @return  self
+     */ 
+    public function setUuid(string $uuid)
+    {
+        $this->uuid = $uuid;
 
         return $this;
     }
