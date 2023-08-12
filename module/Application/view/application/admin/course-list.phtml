@@ -1,0 +1,34 @@
+<?php echo $this->headtitle("Course List"); ?>
+
+
+<div class="section-wrapper mg-t-20">
+    <label class="section-title"><?= $data[0]["programs"]["title"] ?></label>
+    <p class="mg-b-20 mg-sm-b-40">Users and and programs they subscibe to</p>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-colored table-primary">
+            <thead>
+                <tr>
+                    <th class="wd-10p">Section</th>
+                    <th class="wd-35p">Course Title</th>
+                    <th class="wd-35p">Description</th>
+                    <th class="wd-20p"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($data as $key => $da) : ?>
+                <tr>
+                    <th scope="row"><?= $key ?></th>
+                    <td><?= $da["title"] ?></td>
+                    <td><?= $da["description"] ?></td>
+                    <td><a
+                            href="<?= $this->url("admin", ["action" => "edit-program", "id" => $da[0]["programs"]["uuid"]]) ?>"><i
+                                class="icon ion-edit tx-20"></i></a></td>
+                </tr>
+                <?php endforeach ?>
+
+            </tbody>
+        </table>
+    </div><!-- table-responsive -->
+
+</div><!-- section-wrapper -->

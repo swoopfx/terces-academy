@@ -8,8 +8,10 @@ use General\Service\ActiveCampaignService;
 use General\Service\Factory\ActiveCampaignServiceFactory;
 use General\Service\Factory\GeneralServiceFactory;
 use General\Service\Factory\PostMarkServiceFactory;
+use General\Service\Factory\UploadServiceFactory;
 use General\Service\GeneralService;
 use General\Service\PostMarkService;
+use General\Service\UploadService;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
 use Laminas\ServiceManager\Factory\InvokableFactory;
@@ -64,7 +66,8 @@ return [
         "factories" => [
             GeneralService::class => GeneralServiceFactory::class,
             ActiveCampaignService::class => ActiveCampaignServiceFactory::class,
-            PostMarkService::class => PostMarkServiceFactory::class
+            PostMarkService::class => PostMarkServiceFactory::class,
+            UploadService::class => UploadServiceFactory::class
         ]
     ],
     'view_manager' => [

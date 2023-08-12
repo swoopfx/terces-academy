@@ -128,17 +128,17 @@ class TransactionService
             ->setPaypalOrderId($decodedData->id)
             ->setAmount($amount);
 
-      
+
 
         $em->persist($transactionEntity);
         $em->flush();
 
-        
+
         return $rdata;
     }
 
 
-    public function 
+    // public function 
 
 
     public static function transactionUid()

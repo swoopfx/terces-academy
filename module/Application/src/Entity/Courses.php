@@ -120,6 +120,12 @@ class Courses
         return $this->id;
     }
 
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
+    }
+
     /**
      * Get the value of uuid
      *
