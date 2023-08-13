@@ -6,6 +6,8 @@ use Application\Entity\ActiveUserProgram;
 use Application\Entity\CourseContent;
 use Application\Entity\Courses;
 use Application\Entity\Programs;
+use Authentication\Entity\User;
+use Authentication\Service\UserService;
 use Laminas\Mvc\Controller\AbstractActionController;
 use General\Service\GeneralService;
 use General\Service\UploadService;
@@ -51,6 +53,52 @@ class AdminController extends AbstractActionController
     public function indexAction()
     {
         $viewModel = new ViewModel();
+        return $viewModel;
+    }
+
+    public function userListAction()
+    {
+        $viewModel = new ViewModel();
+        $userEntity = $this->identity();
+        $response = $this->getResponse();
+        try {
+            $order = ($this->params()->fromQuery("order", NULL) == null ? "DESC" : "ASC");
+            $pageCount = ($this->params()->fromQuery("page_count", 40) > 100 ? 100 : $this->params()->fromQuery("page_count", 40));
+            $orderBy = $this->params()->fromQuery("order_by", "id");
+            $query = $this->entityManager->createQueryBuilder()->select([
+                "c", "r", "s"
+            ])->from(User::class, "c")
+                ->leftJoin("c.role", "r")
+                ->leftJoin("c.state", "s")
+
+                ->orderBy("c.{$orderBy}", $order)
+                ->getQuery()
+                ->setHydrationMode(Query::HYDRATE_ARRAY);
+
+            $paginator = new Paginator($query);
+            $totalItems = count($paginator);
+
+            $currentPage = ($this->params()->fromQuery("page")) ?: 1;
+            $totalPageCount = ceil($totalItems / $pageCount);
+            $nextPage = (($currentPage < $totalPageCount) ? $currentPage + 1 : $totalPageCount);
+            $previousPage = (($currentPage > 1) ? $currentPage - 1 : 1);
+
+            $records = $paginator->getQuery()->setFirstResult($pageCount * ($currentPage - 1))
+                // ->setMaxResults($pageCount)
+                ->getResult(Query::HYDRATE_ARRAY);
+
+            $viewModel->setVariables([
+                "previous_page" => $previousPage,
+                "next_page" => $nextPage,
+                "data" => $records
+            ]);
+        } catch (\Throwable $th) {
+
+            $response->setStatusCode(400);
+            $viewModel->setVariables([
+                "success" => FALSE
+            ]);
+        }
         return $viewModel;
     }
 

@@ -2,6 +2,7 @@
 
 namespace Application\Service;
 
+use Application\Entity\ActiveUserProgram;
 use Application\Entity\Programs;
 use Application\Entity\Transaction;
 use Application\Entity\TransactionStatus;
@@ -135,6 +136,54 @@ class TransactionService
 
 
         return $rdata;
+    }
+
+
+    public function paypalConfirmOrder($data)
+    {
+        $em = $this->generalService->getEntityManager();
+        $confirmData = $this->paypalService->capturePayment($data["orderID"]);
+
+        $decodedData = json_decode($confirmData);
+        $transactionEntity = $em->getRepository(Transaction::class)
+            ->findOneBy(["paypalOrderId" => $data["orderID"]]);
+        if ($decodedData->status == "COMPLETED") {
+            /**
+             * @var Transaction
+             */
+            $transactionEntity = $em->getRepository(Transaction::class)
+                ->findOneBy(["paypalOrderId" => $data["orderID"]]);
+            $transactionEntity->setUpdatedOn(new \Datetime())->setPaypalConfirmData($confirmData)->setStatus($em->find(TransactionStatus::class, self::TRANSACTION_STATUS_COMPLETED));
+
+
+            // create Active user Training f
+            $buyCourseSession = new Container("buy_course_uuid");
+            $auth = $this->generalService->getAuth()->getIdentity();
+
+            /**
+             * @var Programs
+             */
+            $programEntity = $em->getRepository(Programs::class)->findOneBy([
+                "uuid" => $buyCourseSession->uuid
+            ]);
+            $activeUserProgramEntity = new ActiveUserProgram();
+            $activeUserProgramEntity->setProgram($programEntity)->setUser($auth)
+                ->setCreatedOn(new \Datetime())
+                ->setIsActive(TRUE)
+                ->setUuid(Uuid::uuid4());
+
+
+            $em->persist($activeUserProgramEntity);
+            $em->persist($transactionEntity);
+            $em->flush();
+
+            // send EMailto customer
+        } else {
+            $transactionEntity->setUpdatedOn(new \Datetime())->setStatus($em->find(TransactionStatus::class, self::TRANSACTION_STATUS_FAILED));
+            $em->persist($transactionEntity);
+            $em->flush();
+            throw new \Exception("Payment was not completed");
+        }
     }
 
 

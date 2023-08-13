@@ -237,22 +237,30 @@ class AppController extends  AbstractActionController
         $jsonModel = new jsonModel();
         $request = $this->getRequest();
         $response = $this->getResponse();
-        try {
-            $data =  $this->transactionService->paypalCreateOrder();
-            // $jsonModel->setVariable("data", $data);
-            // $response->setStatusCode(201);
+        if ($request->isPost()) {
+            $json = $request->getContent();
+            $data = json_decode($json, true);
+            try {
+                $data =  $this->transactionService->paypalConfirmOrder($data);
+                // $jsonModel->setVariable("data", $data);
+                // $response->setStatusCode(201);
 
-            $response->getHeaders()->addHeaderLine('Content-Type', 'application/json');
-            $response->setContent($data);
-            return $response;
-        } catch (\Throwable $th) {
-            //throw $th;
-            $response->setStatusCode(400);
-            $jsonModel->setVariables([
-                "success" => false,
-                "desc" => $th->getMessage()
-            ]);
+                $response->getHeaders()->addHeaderLine('Content-Type', 'application/json');
+
+                // $response->setContent($data);
+                $response->setStatusCode(201);
+                return $response;
+            } catch (\Throwable $th) {
+                //throw $th;
+                $response->setStatusCode(400);
+                // var_dump($th->getMessage());
+                // $jsonModel->setVariables([
+                //     "success" => false,
+                //     "desc" => $th->getMessage()
+                // ]);
+            }
         }
+
         return $jsonModel;
     }
 

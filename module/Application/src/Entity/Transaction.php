@@ -105,7 +105,12 @@ class Transaction
      */
     private $paypalOrderId;
 
-    // private 
+    /**
+     * Contains json encoded data of a confimation information 
+     * @ORM\Column(type="text", nullable=true)
+     * @var string
+     */
+    private $paypalConfirmData;
 
 
     /**
@@ -398,6 +403,30 @@ class Transaction
     public function setPaypalOrderId(string $paypalOrderId)
     {
         $this->paypalOrderId = $paypalOrderId;
+
+        return $this;
+    }
+
+    /**
+     * Get contains json encoded data of a confimation information
+     *
+     * @return  string
+     */
+    public function getPaypalConfirmData()
+    {
+        return $this->paypalConfirmData;
+    }
+
+    /**
+     * Set contains json encoded data of a confimation information
+     *
+     * @param  string  $paypalConfirmData  Contains json encoded data of a confimation information
+     *
+     * @return  self
+     */
+    public function setPaypalConfirmData(string $paypalConfirmData)
+    {
+        $this->paypalConfirmData = $paypalConfirmData;
 
         return $this;
     }

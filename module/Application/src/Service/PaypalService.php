@@ -96,37 +96,37 @@ class PaypalService
             "Content-Type" => "application/json"
         ]);
 
-        $data = [
-            "intent" => "CAPTURE",
-            "purchase_units" => [
-                [
-                    "reference_id" => $data["tx_ref"],
-                    "amount" => [
-                        "currency_code" => "USD",
-                        "value" => $data["price"]
-                    ]
-                ]
-            ],
-            // "payment_source" => [
-            //     "paypal" => [
-            //         "experience_context" => [
-            //             "payment_method_preference" => "IMMEDIATE_PAYMENT_REQUIRED",
-            //             "payment_method_selected" => "PAYPAL",
-            //             "brand_name" => "EXAMPLE INC",
-            //             "locale" => "en-US",
-            //             "landing_page" => "LOGIN",
-            //             "shipping_preference" => "SET_PROVIDED_ADDRESS",
-            //             "user_action" => "PAY_NOW",
-            //             "return_url" => "https://example.com/returnUrl",
-            //             "cancel_url" => "https://example.com/cancelUrl"
-            //         ]
-            //     ]
-            // ]
-        ];
-        $client->setRawBody(json_encode($data));
+        // $data = [
+        //     "intent" => "CAPTURE",
+        //     "purchase_units" => [
+        //         [
+        //             "reference_id" => $data["tx_ref"],
+        //             "amount" => [
+        //                 "currency_code" => "USD",
+        //                 "value" => $data["price"]
+        //             ]
+        //         ]
+        //     ],
+        // "payment_source" => [
+        //     "paypal" => [
+        //         "experience_context" => [
+        //             "payment_method_preference" => "IMMEDIATE_PAYMENT_REQUIRED",
+        //             "payment_method_selected" => "PAYPAL",
+        //             "brand_name" => "EXAMPLE INC",
+        //             "locale" => "en-US",
+        //             "landing_page" => "LOGIN",
+        //             "shipping_preference" => "SET_PROVIDED_ADDRESS",
+        //             "user_action" => "PAY_NOW",
+        //             "return_url" => "https://example.com/returnUrl",
+        //             "cancel_url" => "https://example.com/cancelUrl"
+        //         ]
+        //     ]
+        // ]
+        // ];
+        // $client->setRawBody(json_encode($data));
         $res = $client->send();
         if ($res->isSuccess()) {
-            // var_dump("Got Here");
+
             return $res->getBody();
         } else {
             throw new \Exception($res->getReasonPhrase());
