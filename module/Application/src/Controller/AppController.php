@@ -246,7 +246,7 @@ class AppController extends  AbstractActionController
                 // $response->setStatusCode(201);
 
                 $response->getHeaders()->addHeaderLine('Content-Type', 'application/json');
-
+                $this->flashMessenger()->addSuccessMessage("You have successfully paid for the Service please continue with you training");
                 // $response->setContent($data);
                 $response->setStatusCode(201);
                 return $response;

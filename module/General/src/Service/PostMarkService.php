@@ -28,9 +28,39 @@ class PostMarkService
             [
 
                 "action_url" => $data["link"],
-                "company_name" => "company_name_Value",
-                "company_address" => "company_address_Value",
-                "name" => "name_Value",
+                "company_name" => GeneralService::COMPANY_NAME,
+                "company_address" => GeneralService::COMPANY_ADDRESS,
+                "name_value" => $data["name"],
+
+            ]
+        );
+    }
+
+
+    public function acquisitionSuccessEmail($data)
+    {
+        // Send an email:
+        $sendResult = $this->postmarkClient->sendEmailWithTemplate(
+            "app@tercesjobs.com",
+            $data["to"],
+            32810913,
+            [
+
+                "product_name" => $data["product_name"],
+                "name" => $data["customer_name"],
+
+                "receipt_id" => $data["tx_ref"],
+                "date" => $data["date"],
+                "receipt_details" => [
+                    [
+                        "description" => "Being payment for " . $data["product_name"],
+                        "amount" => $data["amount"]
+                    ]
+                ],
+                "total" => $data["amount"],
+
+                "company_name" => GeneralService::COMPANY_NAME,
+                "company_address" => GeneralService::COMPANY_ADDRESS,
 
             ]
         );

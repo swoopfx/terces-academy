@@ -3,8 +3,10 @@
 namespace Application\Service;
 
 use Application\Entity\ActiveUserProgram;
+use Application\Entity\ActiveUserProgramStatus;
 use Application\Entity\Programs;
 use Application\Entity\Transaction;
+use General\Service\PostMarkService;
 use Application\Entity\TransactionStatus;
 use General\Service\GeneralService;
 use Laminas\Session\Container;
@@ -36,6 +38,13 @@ class TransactionService
      * @var PaypalService
      */
     private $paypalService;
+
+    /**
+     * Undocumented variable
+     *
+     * @var PostMarkService
+     */
+    private $postmarkService;
 
 
     public function hydrateTransaction()
@@ -143,7 +152,7 @@ class TransactionService
     {
         $em = $this->generalService->getEntityManager();
         $confirmData = $this->paypalService->capturePayment($data["orderID"]);
-
+        $auth = $this->generalService->getAuth()->getIdentity();
         $decodedData = json_decode($confirmData);
         $transactionEntity = $em->getRepository(Transaction::class)
             ->findOneBy(["paypalOrderId" => $data["orderID"]]);
@@ -170,12 +179,22 @@ class TransactionService
             $activeUserProgramEntity->setProgram($programEntity)->setUser($auth)
                 ->setCreatedOn(new \Datetime())
                 ->setIsActive(TRUE)
+                ->setStatus($em->find(ActiveUserProgramStatus::class, GeneralService::ACTIVE_USER_PROGRAM_STATUS_ACQUIRED))
                 ->setUuid(Uuid::uuid4());
 
+            $date = new \Datetime();
+
+            $mail["to"] = $auth->getEmail();
+            $mail["product_name"] = $programEntity->getTitle();
+            $mail["customer_name"] = $auth->getFullname();
+            $mail["tx_ref"] = $transactionEntity->getUuid();
+            $mail["date"] = $date->format('Y-m-d');
+            $mail["amount"] = $transactionEntity->getAmount();
 
             $em->persist($activeUserProgramEntity);
             $em->persist($transactionEntity);
             $em->flush();
+
 
             // send EMailto customer
         } else {
@@ -239,6 +258,30 @@ class TransactionService
     public function setPaypalService(PaypalService $paypalService)
     {
         $this->paypalService = $paypalService;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  PostMarkService
+     */
+    public function getPostmarkService()
+    {
+        return $this->postmarkService;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  PostMarkService  $postmarkService  Undocumented variable
+     *
+     * @return  self
+     */
+    public function setPostmarkService(PostMarkService $postmarkService)
+    {
+        $this->postmarkService = $postmarkService;
 
         return $this;
     }

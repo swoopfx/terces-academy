@@ -292,6 +292,7 @@ class AuthController  extends AbstractActionController
                     $this->activeCampaignService->updateContactList($activeCampaignList);
                     $emailData["to"] =  $data["email"];
                     $emailData["link"] = $fulllink;
+                    $emailData["name"] = $data["fullname"];
 
                     $this->postmarkService->sendConfirmEmail($emailData);
 

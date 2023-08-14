@@ -5,6 +5,7 @@ namespace Application\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Authentication\Entity\User;
 use Application\Entity\Programs;
+use Application\Entity\ActiveUserProgramStatus;
 
 
 /**
@@ -67,6 +68,13 @@ class ActiveUserProgram
      * @var string
      */
     private $uuid;
+
+    /**
+     * Undocumented variable
+     * @ORM\ManyToOne(targetEntity="Application\Entity\ActiveUserProgramStatus")
+     * @var ActiveUserProgramStatus
+     */
+    private $status;
 
     /**
      * Get @ORM\Column(name="id", type="integer", nullable=false, options={"unsigned"=true})
@@ -202,7 +210,7 @@ class ActiveUserProgram
      * Get undocumented variable
      *
      * @return  string
-     */ 
+     */
     public function getUuid()
     {
         return $this->uuid;
@@ -214,10 +222,34 @@ class ActiveUserProgram
      * @param  string  $uuid  Undocumented variable
      *
      * @return  self
-     */ 
+     */
     public function setUuid(string $uuid)
     {
         $this->uuid = $uuid;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  ActiveUserProgramStatus
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  ActiveUserProgramStatus  $status  Undocumented variable
+     *
+     * @return  self
+     */
+    public function setStatus(ActiveUserProgramStatus $status)
+    {
+        $this->status = $status;
 
         return $this;
     }

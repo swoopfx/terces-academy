@@ -184,12 +184,22 @@ use General\Service\GeneralService;
         <!-- Main Body - Start
 ================================================== -->
         <main class="page_content">
-            <div class="alert alert-success" role="alert">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                <strong>Well done!</strong> You successfully read this important alert message.
-            </div><!-- alert -->
+
+
+            <?php
+            $flashMessenger = $this->flashMessenger()
+                ->setMessageOpenFormat('<div%s  role="alert">
+                <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+     <ul><li>')
+
+                ->setMessageCloseString('</div>');
+            ?>
+            <?php echo $flashMessenger->render('error', ['alert', 'alert-dismissable', 'alert-danger']); ?>
+            <?php echo $flashMessenger->render('info', ['alert', 'alert-dismissable', 'alert-info']); ?>
+            <?php echo $flashMessenger->render('default', ['alert', 'alert-dismissable', 'alert-warning']); ?>
+            <?php echo $flashMessenger->render('success', ['alert', 'alert-dismissable', 'alert-success']); ?>
             <?= $this->content ?>
         </main>
         <!-- Main Body - End
@@ -255,7 +265,7 @@ use General\Service\GeneralService;
                                             <?php if ($this->identity() != NULL) :
                                                 if ($this->identity()->getRole()->getId() == 1000) : ?>
                                             <li>
-                                                <a href="">
+                                                <a href="<?= $this->url("admin") ?>">
                                                     <span class="item_icon"><i class="fas fa-caret-right"></i></span>
                                                     <span class="item_text">Admin</span>
                                                 </a>

@@ -10,20 +10,20 @@
             <thead>
                 <tr>
                     <th class="wd-10p">ID</th>
-                    <th class="wd-35p">Name</th>
-                    <th class="wd-35p">Position</th>
-                    <th class="wd-20p">Salary</th>
+                    <th class="wd-35p">Title</th>
+                    <th class="wd-35p">Active</th>
+                    <th class="wd-20p"></th>
                 </tr>
             </thead>
             <tbody>
                 <?php foreach ($data as $da) : ?>
                 <tr>
-                    <th scope="row">1</th>
+                    <th scope="row"><?= $da["id"] ?></th>
                     <td><?= $da["title"] ?></td>
-                    <td>System Architect</td>
+                    <td><?= $da["isActive"]?></td>
                     <td><a href="<?= $this->url("admin", ["action" => "course-list", "id" => $da["uuid"]]) ?>"><i
                                 class="icon ion-eye tx-20"></i></a> | <a
-                            href="<?= $this->url("admin", ["action"=>"edit-program", "id"=>$da["uuid"]])?>"><i
+                            href="<?= $this->url("admin", ["action" => "edit-program", "id" => $da["uuid"]]) ?>"><i
                                 class="icon ion-edit tx-20"></i></a>
                     </td>
                 </tr>

@@ -102,7 +102,7 @@ class AdminController extends AbstractActionController
         return $viewModel;
     }
 
-    public function activeProgramListAction()
+    public function activeProgramListsAction()
     {
         $viewModel = new ViewModel();
         $userEntity = $this->identity();
@@ -115,19 +115,17 @@ class AdminController extends AbstractActionController
                 "partial c.{id, uuid, user, program, isActive, createdOn, updatedOn}",
                 "partial u.{id, fullname, username, email, role, state, emailConfirmed, uuid, uid}",
                 "partial p.{id, uuid, programId, title, createdOn}",
+                "partial s.{id, status}"
                 // "partial s.{id, status}",
                 // "partial wt.{id, type}",
                 // "partial wu.{id, fullname, username, email}"
             ])->from(ActiveUserProgram::class, "c")
                 ->leftJoin("c.user", "u")
                 ->leftJoin("c.program", "p")
-
-                ->where("c.user = :userId")
-                ->andWhere("c.isActive = :active")
-
-
+                ->leftJoin("c.status", "s")
+                ->where("c.isActive = :active")
                 ->setParameters([
-                    "userId" => $userEntity->getId(),
+
                     // "status" => TrashBustterService::ASSIGNED_REQUEST_STATUS_COMPLETED,
                     "active" => TRUE
                 ])
@@ -159,6 +157,12 @@ class AdminController extends AbstractActionController
                 "success" => FALSE
             ]);
         }
+        return $viewModel;
+    }
+
+    public function viewActiveUserProgramAction()
+    {
+        $viewModel = new ViewModel();
         return $viewModel;
     }
 
