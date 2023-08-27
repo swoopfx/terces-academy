@@ -14,7 +14,7 @@ use Application\Service\PaypalService;
 use Application\Service\Factory\PaypalServiceFactory;
 use Application\Service\TransactionService;
 use Application\View\Factory\IsSuscribedFactory;
-use Application\View\isSubscribed;
+use Application\View\IsSubscribed;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
 use Laminas\ServiceManager\Factory\InvokableFactory;
@@ -127,6 +127,7 @@ return [
             "partials_courselist" => __DIR__ . '/../view/partials/course_list.phtml',
             "partials_schedule_service" => __DIR__ . '/../view/partials/schedule_service.phtml',
             "partials_coming_free_training" => __DIR__ . '/../view/partials/coming_free_training.phtml',
+            "partial_quiz" => __DIR__ . '/../view/partials/quiz_partial.phtml',
         ],
         'template_path_stack' => [
             __DIR__ . '/../view',
@@ -138,10 +139,10 @@ return [
 
     "view_helpers" => [
         "factories" => [
-            isSubscribed::class => IsSuscribedFactory::class
+            IsSubscribed::class => IsSuscribedFactory::class
         ],
         "aliases" => [
-            "isSubscribed" => isSubscribed::class
+            "isSubscribed" => IsSubscribed::class
         ]
     ]
 ];

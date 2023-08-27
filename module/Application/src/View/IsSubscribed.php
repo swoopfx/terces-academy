@@ -7,7 +7,7 @@ use General\Service\GeneralService;
 use Laminas\View\Helper\AbstractHelper;
 use Psr\Container\ContainerInterface;
 
-class isSubscribed extends AbstractHelper
+class IsSubscribed extends AbstractHelper
 {
 
     private $em;
@@ -16,18 +16,10 @@ class isSubscribed extends AbstractHelper
 
     public function __invoke($programId)
     {
-        // var_dump($this->auth->getIdentity()->getId());
+
         if (!$this->auth->hasIdentity()) {
             return false;
         } else {
-            // /**
-            //  * @var GeneralService
-            //  */
-            // $generalService = $container->get("general_service");
-            // $auth = $generalService->getAuth();
-            // $em = $generalService->getEntityManager();
-            // $identity = $auth->getIdentity();
-            // if ($this->auth->hasIdentity()) {
             $activeUserProgramEntity = $this->em->getRepository(ActiveUserProgram::class)->findOneBy([
                 "user" => $this->auth->getIdentity()->getId(),
                 "program" => $programId,
@@ -38,7 +30,6 @@ class isSubscribed extends AbstractHelper
             } else {
                 return false;
             }
-            // }
         }
     }
 

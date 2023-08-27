@@ -6,9 +6,12 @@ namespace Application\Controller;
 
 use Application\Entity\PaymentMethod;
 use Application\Entity\Programs;
+use Application\Entity\Quiz;
 use Doctrine\ORM\EntityManager;
+use Laminas\Db\Sql\Where;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Session\Container;
+use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
 
 class IndexController extends AbstractActionController
@@ -89,6 +92,7 @@ class IndexController extends AbstractActionController
         $viewModel = new ViewModel();
         $em = $this->entityManager;
         $data = $em->find(Programs::class, 10);
+        // $data = $em->getRepository(Programs::)
         $viewModel->setVariables([
             "data" => $data
         ]);
@@ -139,6 +143,39 @@ class IndexController extends AbstractActionController
             "method" => $paymentMethod
         ]);
         return $viewModel;
+    }
+
+
+    public function getQuizAction()
+    {
+        $jsonModel = new JsonModel();
+        $em = $this->entityManager;
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        $id = $this->params()->fromRoute("id", NULL);
+        if ($id == "") {
+            $jsonModel->setVariables([
+                "success" => false,
+                "message" => "Absent Identity"
+            ]);
+            $response->setStatusCode(400);
+        }
+        $data = $em->getRepository(Quiz::class)->createQueryBuilder("q")
+            ->select(["q", "qq", "qa", "c"])
+            ->leftJoin("q.course", "c")
+            ->leftJoin("q.questions", "qq")
+            ->leftJoin("qq.answer", "qa")
+
+            ->where("c.id = :id")
+            ->setParameters([
+                "id" => $id,
+            ])->getQuery()
+            ->getArrayResult();
+
+        $jsonModel->setVariables([
+            "data" => $data
+        ]);
+        return $jsonModel;
     }
 
 

@@ -95,6 +95,7 @@
        
         "laminas/laminas-coding-standard": "^2.5",
         "phpunit/phpunit": "^9.6",
-        "laminas/laminas-test": "^4.7"
+        "laminas/laminas-test": "^4.7",
+        "codeception/module-laminas": "^3.0"
     }
 }

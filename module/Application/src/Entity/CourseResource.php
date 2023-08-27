@@ -2,47 +2,38 @@
 
 namespace Application\Entity;
 
-use Application\Entity\CourseContent;
-use Application\Entity\ResourceType;
+use Application\Entity\Courses;
 use General\Entity\Image;
 use Doctrine\ORM\Mapping as ORM;
 
+
 /**
+ * Undocumented class 
  * @ORM\Entity
- * @ORM\Table(name="resourcess")
+ * @ORM\Table(name="course_resource")
  */
-
-class Resources
+class CourseResource
 {
-
     /**
      *
-     * @var integer @ORM\Column(name="id", type="integer")
+     * @var int 
+     * @ORM\Column(name="id", type="integer", nullable=false, options={"unsigned"=true})
      *      @ORM\Id
      *      @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
 
     /**
-     * Undocumented variable
-     * @ORM\ManyToOne(targetEntity="Application\Entity\CourseContent", inversedBy="resources")
-     * @var CourseContent
-     */
-    private $courseContent;
-
-    /**
-     * Undocumented variable
-     * @ORM\Column(nullable=false)
-     * @var string
+     * @ORM\Column(nullable=false, unique=true)
      */
     private $uuid;
 
     /**
      * Undocumented variable
-     * @ORM\ManyToOne(targetEntity="Application\Entity\ResourceType")
-     * @var ResourceType
+     * @ORM\ManyToOne(targetEntity="Courses", inversedBy="courseResource")
+     * @var Courses
      */
-    private $resourcesType;
+    private $courses;
 
     /**
      * Undocumented variable
@@ -58,31 +49,26 @@ class Resources
      */
     private $resourceFile;
 
-    // /**
-    //  * Undocumented variable
-    //  * @ORM\Column(type="text", nullable=true)
-    //  * @var string
-    //  */
-    // private $resourceDesc;
+
 
     /**
      * Undocumented variable
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="datetime")
      * @var \Datetime
      */
     private $createdOn;
 
     /**
      * Undocumented variable
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="datetime")
      * @var \Datetime
      */
     private $updatedOn;
 
     /**
-     * Get @ORM\Column(name="id", type="integer")
+     * Get the value of id
      *
-     * @return  integer
+     * @return  int
      */
     public function getId()
     {
@@ -90,33 +76,7 @@ class Resources
     }
 
     /**
-     * Get undocumented variable
-     *
-     * @return  CourseContent
-     */
-    public function getCourseContent()
-    {
-        return $this->courseContent;
-    }
-
-    /**
-     * Set undocumented variable
-     *
-     * @param  CourseContent  $courseContent  Undocumented variable
-     *
-     * @return  self
-     */
-    public function setCourseContent(CourseContent $courseContent)
-    {
-        $this->courseContent = $courseContent;
-
-        return $this;
-    }
-
-    /**
-     * Get undocumented variable
-     *
-     * @return  string
+     * Get the value of uuid
      */
     public function getUuid()
     {
@@ -124,13 +84,11 @@ class Resources
     }
 
     /**
-     * Set undocumented variable
-     *
-     * @param  string  $uuid  Undocumented variable
+     * Set the value of uuid
      *
      * @return  self
      */
-    public function setUuid(string $uuid)
+    public function setUuid($uuid)
     {
         $this->uuid = $uuid;
 
@@ -140,23 +98,23 @@ class Resources
     /**
      * Get undocumented variable
      *
-     * @return  ResourceType
+     * @return  Courses
      */
-    public function getResourcesType()
+    public function getCourses()
     {
-        return $this->resourcesType;
+        return $this->courses;
     }
 
     /**
      * Set undocumented variable
      *
-     * @param  ResourceType  $resourcesType  Undocumented variable
+     * @param  Courses  $courses  Undocumented variable
      *
      * @return  self
      */
-    public function setResourcesType(ResourceType $resourcesType)
+    public function setCourses(Courses $courses)
     {
-        $this->resourcesType = $resourcesType;
+        $this->courses = $courses;
 
         return $this;
     }
@@ -205,30 +163,6 @@ class Resources
     public function setResourceFile(Image $resourceFile)
     {
         $this->resourceFile = $resourceFile;
-
-        return $this;
-    }
-
-    /**
-     * Get undocumented variable
-     *
-     * @return  string
-     */
-    public function getResourceDesc()
-    {
-        return $this->resourceDesc;
-    }
-
-    /**
-     * Set undocumented variable
-     *
-     * @param  string  $resourceDesc  Undocumented variable
-     *
-     * @return  self
-     */
-    public function setResourceDesc(string $resourceDesc)
-    {
-        $this->resourceDesc = $resourceDesc;
 
         return $this;
     }

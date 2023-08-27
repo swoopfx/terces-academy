@@ -67,10 +67,10 @@ class Courses extends \Application\Entity\Courses implements \Doctrine\ORM\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', '' . "\0" . 'Application\\Entity\\Courses' . "\0" . 'id', '' . "\0" . 'Application\\Entity\\Courses' . "\0" . 'uuid', '' . "\0" . 'Application\\Entity\\Courses' . "\0" . 'programs', '' . "\0" . 'Application\\Entity\\Courses' . "\0" . 'title', '' . "\0" . 'Application\\Entity\\Courses' . "\0" . 'description', '' . "\0" . 'Application\\Entity\\Courses' . "\0" . 'createdOn', '' . "\0" . 'Application\\Entity\\Courses' . "\0" . 'updatedOn', '' . "\0" . 'Application\\Entity\\Courses' . "\0" . 'banner', '' . "\0" . 'Application\\Entity\\Courses' . "\0" . 'video', '' . "\0" . 'Application\\Entity\\Courses' . "\0" . 'courseContent', '' . "\0" . 'Application\\Entity\\Courses' . "\0" . 'isQuiz', '' . "\0" . 'Application\\Entity\\Courses' . "\0" . 'quiz'];
+            return ['__isInitialized__', '' . "\0" . 'Application\\Entity\\Courses' . "\0" . 'id', '' . "\0" . 'Application\\Entity\\Courses' . "\0" . 'arrange', '' . "\0" . 'Application\\Entity\\Courses' . "\0" . 'uuid', '' . "\0" . 'Application\\Entity\\Courses' . "\0" . 'programs', '' . "\0" . 'Application\\Entity\\Courses' . "\0" . 'title', '' . "\0" . 'Application\\Entity\\Courses' . "\0" . 'description', '' . "\0" . 'Application\\Entity\\Courses' . "\0" . 'createdOn', '' . "\0" . 'Application\\Entity\\Courses' . "\0" . 'updatedOn', '' . "\0" . 'Application\\Entity\\Courses' . "\0" . 'banner', '' . "\0" . 'Application\\Entity\\Courses' . "\0" . 'video', '' . "\0" . 'Application\\Entity\\Courses' . "\0" . 'courseContent', '' . "\0" . 'Application\\Entity\\Courses' . "\0" . 'isQuiz', '' . "\0" . 'Application\\Entity\\Courses' . "\0" . 'quiz', '' . "\0" . 'Application\\Entity\\Courses' . "\0" . 'courseResource'];
         }
 
-        return ['__isInitialized__', '' . "\0" . 'Application\\Entity\\Courses' . "\0" . 'id', '' . "\0" . 'Application\\Entity\\Courses' . "\0" . 'uuid', '' . "\0" . 'Application\\Entity\\Courses' . "\0" . 'programs', '' . "\0" . 'Application\\Entity\\Courses' . "\0" . 'title', '' . "\0" . 'Application\\Entity\\Courses' . "\0" . 'description', '' . "\0" . 'Application\\Entity\\Courses' . "\0" . 'createdOn', '' . "\0" . 'Application\\Entity\\Courses' . "\0" . 'updatedOn', '' . "\0" . 'Application\\Entity\\Courses' . "\0" . 'banner', '' . "\0" . 'Application\\Entity\\Courses' . "\0" . 'video', '' . "\0" . 'Application\\Entity\\Courses' . "\0" . 'courseContent', '' . "\0" . 'Application\\Entity\\Courses' . "\0" . 'isQuiz', '' . "\0" . 'Application\\Entity\\Courses' . "\0" . 'quiz'];
+        return ['__isInitialized__', '' . "\0" . 'Application\\Entity\\Courses' . "\0" . 'id', '' . "\0" . 'Application\\Entity\\Courses' . "\0" . 'arrange', '' . "\0" . 'Application\\Entity\\Courses' . "\0" . 'uuid', '' . "\0" . 'Application\\Entity\\Courses' . "\0" . 'programs', '' . "\0" . 'Application\\Entity\\Courses' . "\0" . 'title', '' . "\0" . 'Application\\Entity\\Courses' . "\0" . 'description', '' . "\0" . 'Application\\Entity\\Courses' . "\0" . 'createdOn', '' . "\0" . 'Application\\Entity\\Courses' . "\0" . 'updatedOn', '' . "\0" . 'Application\\Entity\\Courses' . "\0" . 'banner', '' . "\0" . 'Application\\Entity\\Courses' . "\0" . 'video', '' . "\0" . 'Application\\Entity\\Courses' . "\0" . 'courseContent', '' . "\0" . 'Application\\Entity\\Courses' . "\0" . 'isQuiz', '' . "\0" . 'Application\\Entity\\Courses' . "\0" . 'quiz', '' . "\0" . 'Application\\Entity\\Courses' . "\0" . 'courseResource'];
     }
 
     /**
@@ -190,17 +190,6 @@ class Courses extends \Application\Entity\Courses implements \Doctrine\ORM\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getId', []);
 
         return parent::getId();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setId($id)
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setId', [$id]);
-
-        return parent::setId($id);
     }
 
     /**
@@ -432,6 +421,50 @@ class Courses extends \Application\Entity\Courses implements \Doctrine\ORM\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getQuiz', []);
 
         return parent::getQuiz();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getArrange()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getArrange', []);
+
+        return parent::getArrange();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setArrange(int $arrange)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setArrange', [$arrange]);
+
+        return parent::setArrange($arrange);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getCourseResource()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getCourseResource', []);
+
+        return parent::getCourseResource();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function addCourseResource(\Application\Entity\CourseResource $resourse)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'addCourseResource', [$resourse]);
+
+        return parent::addCourseResource($resourse);
     }
 
 }

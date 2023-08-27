@@ -57,7 +57,8 @@ use General\Service\GeneralService;
     <div class="slim-header">
         <div class="container">
             <div class="slim-header-left">
-                <h2 class="slim-logo"><a href="<?php $this->url("admin") ?>"> <img width="143" height="42" src="/assets/images/oie_3QNUOMetbJh7.png" alt="Terces - Online Learning Platform"></a></h2>
+                <h2 class="slim-logo"><a href="<?php $this->url("admin") ?>"> <img width="143" height="42"
+                            src="/assets/images/oie_3QNUOMetbJh7.png" alt="Terces - Online Learning Platform"></a></h2>
 
                 <div class="search-box">
                     <input type="text" class="form-control" placeholder="Search">
@@ -94,6 +95,13 @@ use General\Service\GeneralService;
                         <span>Dashboard</span>
                     </a>
 
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="<?= $this->url("admin", ["action" => "program-list"]) ?>">
+                        <i class="icon ion-ios-analytics-outline"></i>
+                        <span>Programs</span>
+                    </a>
                 </li>
 
                 <li class="nav-item with-sub mega-dropdown">

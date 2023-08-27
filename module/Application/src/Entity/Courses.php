@@ -2,6 +2,7 @@
 
 namespace Application\Entity;
 
+use Application\Entity\CourseResource;
 use Doctrine\ORM\Mapping as ORM;
 use Application\Entity\Programs;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -23,6 +24,16 @@ class Courses
      *      @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
+
+
+    /**
+     *
+     * @var int 
+     * @ORM\Column( type="integer", unique=true,  options={"unsigned"=true})
+     *      
+     *      
+     */
+    private $arrange;
 
     /**
      * @ORM\Column(nullable=false)
@@ -97,17 +108,25 @@ class Courses
 
     /**
      * Undocumented variable
-     * @ORM\OneToMany(targetEntity="Application\Entity\Quiz", mappedBy="course")
-     * @var Collection
+     * @ORM\OneToOne(targetEntity="Application\Entity\Quiz", mappedBy="course")
+     * @var Quiz
      */
     private $quiz;
+
+    /**
+     * Undocumented variable
+     * @ORM\OneToMany(targetEntity="CourseResource", mappedBy="courses")
+     * @var Collection
+     */
+    private $courseResource;
 
 
 
     public function __construct()
     {
         $this->courseContent = new ArrayCollection();
-        $this->quiz = new ArrayCollection();
+        // $this->quiz = new ArrayCollection();
+        $this->courseResource = new ArrayCollection();
     }
 
     /**
@@ -120,11 +139,7 @@ class Courses
         return $this->id;
     }
 
-    public function setId($id)
-    {
-        $this->id = $id;
-        return $this;
-    }
+
 
     /**
      * Get the value of uuid
@@ -374,5 +389,48 @@ class Courses
     public function getQuiz()
     {
         return $this->quiz;
+    }
+
+    /**
+     * Get the value of arrange
+     *
+     * @return  int
+     */
+    public function getArrange()
+    {
+        return $this->arrange;
+    }
+
+    /**
+     * Set the value of arrange
+     *
+     * @param  int  $arrange
+     *
+     * @return  self
+     */
+    public function setArrange(int $arrange)
+    {
+        $this->arrange = $arrange;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  Collection
+     */
+    public function getCourseResource()
+    {
+        return $this->courseResource;
+    }
+
+    public function addCourseResource(CourseResource $resourse)
+    {
+        if (!$this->courseResource->contains($resourse)) {
+            $this->courseResource->add($resourse);
+            $resourse->setCourses($this);
+        }
+        return $this;
     }
 }

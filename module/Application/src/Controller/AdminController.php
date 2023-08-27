@@ -4,8 +4,13 @@ namespace Application\Controller;
 
 use Application\Entity\ActiveUserProgram;
 use Application\Entity\CourseContent;
+use Application\Entity\CourseResource;
 use Application\Entity\Courses;
 use Application\Entity\Programs;
+use Application\Entity\Quiz;
+use Application\Entity\QuizAnswer;
+use Application\Entity\QuizQuestion;
+use Application\Entity\Resources;
 use Authentication\Entity\User;
 use Authentication\Service\UserService;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -213,7 +218,7 @@ class AdminController extends AbstractActionController
             ]);
         } catch (\Throwable $th) {
 
-            // var_dump($th->getTrace());
+            // var_dump($th->getMessage());
             $this->flashMessenger()->addErrorMessage($th->getMessage());
             $url = $this->getRequest()->getHeader('Referer')->getUri();
             return $this->redirect()->toUrl($url);
@@ -251,7 +256,7 @@ class AdminController extends AbstractActionController
             }
             $order = ($this->params()->fromQuery("order", NULL) == null ? "ASC" : "DESC");
             $pageCount = ($this->params()->fromQuery("page_count", 40) > 100 ? 100 : $this->params()->fromQuery("page_count", 40));
-            $orderBy = $this->params()->fromQuery("order_by", "id");
+            $orderBy = $this->params()->fromQuery("order_by", "order");
             $query = $this->entityManager->createQueryBuilder()->select([
                 "c", "p", "b", "v"
             ])->from(Courses::class, "c")
@@ -472,7 +477,7 @@ class AdminController extends AbstractActionController
                     $courseEntity = new Courses();
                     $courseEntity->setCreatedOn(new \Datetime())
                         ->setTitle($value["title"])
-                        ->setId($value["id"])
+                        ->setArrange($value["id"])
                         ->setUuid(Uuid::uuid4())
                         ->setDescription($value["description"])
                         ->setBanner($bannerEntity)
@@ -501,6 +506,193 @@ class AdminController extends AbstractActionController
             }
         }
         return $jsonmodel;
+    }
+
+    public function removeCourseResouceAction()
+    {
+        $jsonModel = new JsonModel();
+        $id = $this->params()->fromRoute("id", NULL);
+        $em = $this->entityManager;
+        $response = $this->getResponse();
+        if ($id == NULL) {
+            $response->setStatusCode(400);
+            $jsonModel->setVariables([
+                "success" => false,
+                "message" => "id absent"
+            ]);
+            return $jsonModel;
+        }
+        try {
+            $resourceEntity = $em->find(CourseResource::class, $id);
+            $em->remove($resourceEntity);
+            $em->flush();
+
+            $response->setStatusCode(202);
+        } catch (\Throwable $th) {
+            $response->setStatusCode(400);
+            $jsonModel->setVariables([
+                "success" => false,
+                "message" => $th->getMessage()
+            ]);
+            return $jsonModel;
+        }
+
+
+        return $jsonModel;
+    }
+
+    public function getCourseResourcesAction()
+    {
+        $jsonModel = new JsonModel();
+        $response = $this->getResponse();
+        $id = $this->params()->fromRoute("id", NULL);
+        if ($id == NULL) {
+            $response->setStatusCode(400);
+            $jsonModel->setVariables([
+                "success" => false,
+                "message" => "id absent"
+            ]);
+            return $jsonModel;
+        }
+
+        $em = $this->entityManager;
+        $data = $em->getRepository(CourseResource::class)->createQueryBuilder("r")->select(["r", "cc",  "rf"])
+            ->leftJoin("r.courses", "cc")
+            // ->leftJoin("r.resourceType", "rt")
+            ->leftJoin("r.resourceFile", "rf")
+            ->where("cc.id = :id")
+            ->setParameters([
+                "id" => $id
+            ])->getQuery()->getArrayResult();
+        $jsonModel->setVariables([
+            "data" => $data
+        ]);
+        return $jsonModel;
+    }
+
+    public function addCourseResourcesAction()
+    {
+        $jsonModel = new JsonModel();
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        $em = $this->entityManager;
+        if ($request->isPost()) {
+            $post = $request->getPost()->toArray();
+            $file = $request->getFiles()->toArray();
+            $postData = \array_merge($post, $file);
+
+            $inputFilter = new InputFilter();
+
+            $inputFilter->add([
+                'name' => 'course_id',
+                'required' => true,
+                'break_chain_on_failure' => true,
+                'filters' => [
+                    [
+                        'name' => 'StripTags'
+                    ],
+                    [
+                        'name' => 'StringTrim'
+                    ]
+                ],
+                'validators' => [
+                    [
+                        'name' => 'NotEmpty',
+                        'options' => [
+                            'messages' => [
+                                'isEmpty' => 'Course ID is required'
+                            ]
+                        ]
+                    ]
+                ]
+            ]);
+
+
+
+            $inputFilter->add([
+                'name' => 'title',
+                'required' => false,
+                'break_chain_on_failure' => true,
+                'filters' => [
+                    [
+                        'name' => 'StripTags'
+                    ],
+                    [
+                        'name' => 'StringTrim'
+                    ]
+                ],
+                'validators' => [
+                    [
+                        'name' => 'NotEmpty',
+                        'options' => [
+                            'messages' => [
+                                'isEmpty' => 'Title is required'
+                            ]
+                        ]
+                    ]
+                ]
+            ]);
+            $inputFilter->add([
+                'name' => 'file',
+                'required' => true,
+                'break_chain_on_failure' => true,
+                'filters' => [
+                    [
+                        'name' => 'StripTags'
+                    ],
+                    [
+                        'name' => 'StringTrim'
+                    ]
+                ],
+                'validators' => [
+                    [
+                        'name' => 'NotEmpty',
+                        'options' => [
+                            'messages' => [
+                                'isEmpty' => 'A document is required'
+                            ]
+                        ]
+                    ]
+                ]
+            ]);
+
+
+            $inputFilter->setData($postData);
+            if ($inputFilter->isValid()) {
+                $value = $inputFilter->getValues();
+                try {
+                    $bannerEntity = $this->uploadService->upload($value["file"]);
+
+                    $resouseEntity = new CourseResource();
+                    $resouseEntity->setCreatedOn(new \Datetime())
+
+                        ->setCourses($em->find(Courses::class, $value["course_id"]))
+                        ->setResourceTitle($value["title"])
+                        ->setUuid(Uuid::uuid4())
+                        ->setResourceFile($bannerEntity);
+
+                    $em->persist($resouseEntity);
+                    $em->flush();
+                    $response->setStatusCode(201);
+                    $jsonModel->setVariables([
+                        "success" => true
+                    ]);
+                } catch (\Throwable $th) {
+                    $response->setStatusCode(400);
+                    $jsonModel->setVariables([
+                        "success" => false,
+                        "message" => $th->getMessage(),
+                    ]);
+                }
+            } else {
+                $response->setStatusCode(400);
+                $jsonModel->setVariables([
+                    "success" => false,
+                    "message" => $inputFilter->getMessages(),
+                ]);
+            }
+        }
+        return $jsonModel;
     }
 
     public function editCourseAction()
@@ -552,10 +744,12 @@ class AdminController extends AbstractActionController
             ]);
             $response->setStatusCode(400);
         }
-        $data  = $em->createQueryBuilder()->select(["cc", "c", "b"])
+        $data  = $em->createQueryBuilder()->select(["cc", "c", "b", "r", "rf"])
             ->from(CourseContent::class, "cc")
             ->leftJoin("cc.courses", "c")
             ->leftJoin("cc.banner", "b")
+            ->leftJoin("cc.resources", "r")
+            ->leftJoin("r.resourceFile", "rf")
             ->where("c.id = :cou")
             ->setParameters([
                 "cou" => $id
@@ -768,7 +962,7 @@ class AdminController extends AbstractActionController
                     $courseContentEntity = new CourseContent();
                     $courseContentEntity->setCreatedOn(new \Datetime())
                         ->setTitle($value["title"])
-                        ->setId($value["id"])
+                        ->setArrange($value["id"])
                         ->setUuid(Uuid::uuid4())
                         ->setVideo($value["video"])
                         ->setSnippetVideo($value["snippetVideo"])
@@ -837,6 +1031,331 @@ class AdminController extends AbstractActionController
         }
         return $jsonModel;
     }
+
+
+
+    public function getContentResourcesAction()
+    {
+        $jsonModel = new JsonModel();
+        $response = $this->getResponse();
+        $id = $this->params()->fromRoute("id", NULL);
+        if ($id == NULL) {
+            $response->setStatusCode(400);
+            $jsonModel->setVariables([
+                "success" => false,
+                "message" => "id absent"
+            ]);
+            return $jsonModel;
+        }
+
+        $em = $this->entityManager;
+        $data = $em->getRepository(Resources::class)->createQueryBuilder("r")->select(["r", "cc", "rt", "rf"])
+            ->leftJoin("r.courseContent", "cc")
+            ->leftJoin("r.resourcesType", "rt")
+            ->leftJoin("r.resourceFile", "rf")
+            ->where("cc.id = :id")
+            ->setParameters([
+                "id" => $id
+            ])->getQuery()->getArrayResult();
+        $jsonModel->setVariables([
+            "data" => $data
+        ]);
+        return $jsonModel;
+    }
+
+    public function removeContentResouceAction()
+    {
+        $jsonModel = new JsonModel();
+        $id = $this->params()->fromRoute("id", NULL);
+        $em = $this->entityManager;
+        $response = $this->getResponse();
+        if ($id == NULL) {
+            $response->setStatusCode(400);
+            $jsonModel->setVariables([
+                "success" => false,
+                "message" => "id absent"
+            ]);
+            return $jsonModel;
+        }
+        try {
+            $resourceEntity = $em->find(Resources::class, $id);
+            $em->remove($resourceEntity);
+            $em->flush();
+
+            $response->setStatusCode(202);
+        } catch (\Throwable $th) {
+            $response->setStatusCode(400);
+            $jsonModel->setVariables([
+                "success" => false,
+                "message" => $th->getMessage()
+            ]);
+            return $jsonModel;
+        }
+
+
+        return $jsonModel;
+    }
+
+    public function addContentResourcesAction()
+    {
+        $jsonModel = new JsonModel();
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        $em = $this->entityManager;
+        if ($request->isPost()) {
+            $post = $request->getPost()->toArray();
+            $file = $request->getFiles()->toArray();
+            $postData = \array_merge($post, $file);
+
+            $inputFilter = new InputFilter();
+
+            $inputFilter->add([
+                'name' => 'content_id',
+                'required' => true,
+                'break_chain_on_failure' => true,
+                'filters' => [
+                    [
+                        'name' => 'StripTags'
+                    ],
+                    [
+                        'name' => 'StringTrim'
+                    ]
+                ],
+                'validators' => [
+                    [
+                        'name' => 'NotEmpty',
+                        'options' => [
+                            'messages' => [
+                                'isEmpty' => 'Course ID is required'
+                            ]
+                        ]
+                    ]
+                ]
+            ]);
+
+
+
+            $inputFilter->add([
+                'name' => 'title',
+                'required' => false,
+                'break_chain_on_failure' => true,
+                'filters' => [
+                    [
+                        'name' => 'StripTags'
+                    ],
+                    [
+                        'name' => 'StringTrim'
+                    ]
+                ],
+                'validators' => [
+                    [
+                        'name' => 'NotEmpty',
+                        'options' => [
+                            'messages' => [
+                                'isEmpty' => 'Title is required'
+                            ]
+                        ]
+                    ]
+                ]
+            ]);
+            $inputFilter->add([
+                'name' => 'file',
+                'required' => true,
+                'break_chain_on_failure' => true,
+                'filters' => [
+                    [
+                        'name' => 'StripTags'
+                    ],
+                    [
+                        'name' => 'StringTrim'
+                    ]
+                ],
+                'validators' => [
+                    [
+                        'name' => 'NotEmpty',
+                        'options' => [
+                            'messages' => [
+                                'isEmpty' => 'A document is required'
+                            ]
+                        ]
+                    ]
+                ]
+            ]);
+
+
+            $inputFilter->setData($postData);
+            if ($inputFilter->isValid()) {
+                $value = $inputFilter->getValues();
+                try {
+                    $bannerEntity = $this->uploadService->upload($value["file"]);
+
+                    $resouseEntity = new Resources();
+                    $resouseEntity->setCreatedOn(new \Datetime())
+                        ->setCourseContent($em->find(CourseContent::class, $value["content_id"]))
+                        ->setResourceTitle($value["title"])
+                        ->setUuid(Uuid::uuid4())
+                        ->setResourceFile($bannerEntity);
+
+                    $em->persist($resouseEntity);
+                    $em->flush();
+                    $response->setStatusCode(201);
+                    $jsonModel->setVariables([
+                        "success" => true
+                    ]);
+                } catch (\Throwable $th) {
+                    $response->setStatusCode(400);
+                    $jsonModel->setVariables([
+                        "success" => false,
+                        "message" => $th->getMessage(),
+                    ]);
+                }
+            } else {
+                $response->setStatusCode(400);
+                $jsonModel->setVariables([
+                    "success" => false,
+                    "message" => $inputFilter->getMessages(),
+                ]);
+            }
+        }
+        return $jsonModel;
+    }
+
+    //. Quiz
+
+    public function createQuizAction()
+    {
+        $jsonModel = new JsonModel();
+        $response = $this->getResponse();
+        $request = $this->getRequest();
+        $em = $this->entityManager;
+        if ($request->isPost()) {
+            $post = $request->getPost()->toArray();
+            $inputFilter = new inputFilter();
+            $inputFilter->add([
+                'name' => 'question',
+                'required' => true,
+                'break_chain_on_failure' => true,
+                'filters' => [
+                    [
+                        'name' => 'StripTags'
+                    ],
+                    [
+                        'name' => 'StringTrim'
+                    ]
+                ],
+                'validators' => [
+                    [
+                        'name' => 'NotEmpty',
+                        'options' => [
+                            'messages' => [
+                                'isEmpty' => 'A document is required'
+                            ]
+                        ]
+                    ]
+                ]
+            ]);
+
+            $inputFilter->add([
+                'name' => 'answer',
+                'required' => true,
+                'break_chain_on_failure' => true,
+                'filters' => [
+                    [
+                        'name' => 'StripTags'
+                    ],
+                    [
+                        'name' => 'StringTrim'
+                    ]
+                ],
+                'validators' => [
+                    [
+                        'name' => 'NotEmpty',
+                        'options' => [
+                            'messages' => [
+                                'isEmpty' => 'A document is required'
+                            ]
+                        ]
+                    ]
+                ]
+            ]);
+
+            $inputFilter->add([
+                'name' => 'course_id',
+                'required' => true,
+                'break_chain_on_failure' => true,
+                'filters' => [
+                    [
+                        'name' => 'StripTags'
+                    ],
+                    [
+                        'name' => 'StringTrim'
+                    ]
+                ],
+                'validators' => [
+                    [
+                        'name' => 'NotEmpty',
+                        'options' => [
+                            'messages' => [
+                                'isEmpty' => 'A document is required'
+                            ]
+                        ]
+                    ]
+                ]
+            ]);
+
+            $inputFilter->setData($post);
+            if ($inputFilter->isValid()) {
+                $value = $inputFilter->getValues();
+                try {
+                    // $quizEntity = new Quiz();
+                    $course = $value["course_id"];
+                    $quizEntity = $em->getRepository(Quiz::class)->findOneBy([
+                        "course" => $course
+                    ]);
+                    if ($quizEntity == NULL) {
+                        $quizEntity = new Quiz();
+                        $quizEntity->setCreatedOn(new \Datetime())->setUuid(Uuid::uuid4())->setCourse($em->find(Courses::class, $value["course_id"]));
+                    }
+
+
+                    $quizQuestionEntity = new QuizQuestion();
+                    $quizQuestionEntity->setCreatedOn(new \Datetime())
+                        ->setUuid(Uuid::uuid4())
+                        ->setQuestion($value["question"])
+                        ->setQuiz($quizEntity)
+                        ->setIsActive(TRUE);
+
+                    $decodedAnswer = json_decode($value["answer"]);
+                    foreach ($decodedAnswer as $ans) {
+                        $quizAnswerEntity = new QuizAnswer();
+                        $quizAnswerEntity->setCreatedOn(new \Datetime())
+                            ->setAnswerText($ans->text)
+                            ->setQuestion($quizQuestionEntity)
+                            ->setIsAnswer(boolval($ans->isAnswer))
+                            ->setUuid(Uuid::uuid4());
+                        $em->persist($quizAnswerEntity);
+                    }
+                    $em->persist($quizQuestionEntity);
+
+                    $em->persist($quizEntity);
+                    $em->flush();
+
+                    $response->setStatusCode(201);
+                    $jsonModel->setVariables([
+                        "success" => true
+                    ]);
+                } catch (\Throwable $th) {
+                    $response->setStatusCode(400);
+                    $jsonModel->setVariables([
+                        "desc" => $th->getMessage()
+                    ]);
+                }
+            }
+        }
+        return $jsonModel;
+    }
+
+
 
 
 

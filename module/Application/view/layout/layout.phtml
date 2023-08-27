@@ -73,55 +73,45 @@ use General\Service\GeneralService;
                     <div class="col col-lg-3 col-5">
                         <div class="site_logo">
                             <a class="site_link" href="<?= $this->url("home") ?>">
-                                <img width="143" height="42" src="/assets/images/oie_3QNUOMetbJh7.png"
-                                    alt="Terces - Online Learning Platform">
+                                <img width="143" height="42" src="/assets/images/oie_3QNUOMetbJh7.png" alt="Terces - Online Learning Platform">
                             </a>
                         </div>
                     </div>
                     <div class="col col-lg-6 col-2">
                         <nav class="main_menu navbar navbar-expand-lg">
-                            <div class="main_menu_inner collapse navbar-collapse justify-content-center"
-                                id="main_menu_dropdown">
+                            <div class="main_menu_inner collapse navbar-collapse justify-content-center" id="main_menu_dropdown">
                                 <ul class="main_menu_list unordered_list_center">
                                     <li><a class="nav-link" href="<?php echo  $this->url("home"); ?>">Home</a></li>
-                                    <li><a class="nav-link"
-                                            href="<?php echo $this->url("application", ["action" => "about"]) ?>">About
+                                    <li><a class="nav-link" href="<?php echo $this->url("application", ["action" => "about"]) ?>">About
                                             Us</a></li>
 
                                     <li class="dropdown">
-                                        <a class="nav-link" href="#" id="pages_submenu" role="button"
-                                            data-bs-toggle="dropdown" aria-expanded="false">
+                                        <a class="nav-link" href="#" id="pages_submenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                             Programs
                                         </a>
                                         <ul class="dropdown-menu" aria-labelledby="pages_submenu">
-                                            <li><a
-                                                    href="<?= $this->url("application", ["action" => "business-analysis-program"]) ?>"><?= GeneralService::GENERAL_TRAINING_WORK_EXPERIENCE ?>
+                                            <li><a href="<?= $this->url("application", ["action" => "business-analysis-program"]) ?>"><?= GeneralService::GENERAL_TRAINING_WORK_EXPERIENCE ?>
                                                 </a></li>
 
-                                            <li><a
-                                                    href="<?= $this->url("application", ["action" => "business-certificate-program"]) ?>"><?= GeneralService::GENERAL_TRAINING_CERTIFICATE_PROGRAM ?>
+                                            <li><a href="<?= $this->url("application", ["action" => "business-certificate-program"]) ?>"><?= GeneralService::GENERAL_TRAINING_CERTIFICATE_PROGRAM ?>
                                                 </a></li>
 
-                                            <li><a
-                                                    href="<?= $this->url("application", ["action" => "one-on-one-interview-prep"]) ?>"><?= GeneralService::GENERAL_TRAINING_INTERVIEW_PREP ?>
+                                            <li><a href="<?= $this->url("application", ["action" => "one-on-one-interview-prep"]) ?>"><?= GeneralService::GENERAL_TRAINING_INTERVIEW_PREP ?>
                                                 </a></li>
 
-                                            <li><a
-                                                    href="<?= $this->url("application", ["action" => "career-service"]) ?>">Career
+                                            <li><a href="<?= $this->url("application", ["action" => "career-service"]) ?>">Career
                                                     Service</a></li>
 
                                         </ul>
                                     </li>
-                                    <li><a class="nav-link"
-                                            href="<?php echo $this->url("application", ["action" => "business-analysis-masterclass"]) ?>">Free
-                                            Training</a></li>
-                                    <li><a class="nav-link"
-                                            href="<?= $this->url("application", ["action" => "about"]) . "#faq" ?>">FAQ</a>
+                                    <!--   <li><a class="nav-link"
+                                            href="">Free
+                                            Training</a></li> -->
+                                    <li><a class="nav-link" href="<?= $this->url("application", ["action" => "about"]) . "#faq" ?>">FAQ</a>
                                     </li>
 
 
-                                    <li><a class="nav-link"
-                                            href="<?= $this->url("application", ["action" => "contact"]) ?>">Contact</a>
+                                    <li><a class="nav-link" href="<?= $this->url("application", ["action" => "contact"]) ?>">Contact</a>
                                     </li>
                                 </ul>
                             </div>
@@ -130,48 +120,46 @@ use General\Service\GeneralService;
                     <div class="col col-lg-3 col-5">
                         <ul class="header_btns_group unordered_list_end">
                             <li>
-                                <button class="mobile_menu_btn" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#main_menu_dropdown" aria-controls="main_menu_dropdown"
-                                    aria-expanded="false" aria-label="Toggle navigation">
+                                <button class="mobile_menu_btn" type="button" data-bs-toggle="collapse" data-bs-target="#main_menu_dropdown" aria-controls="main_menu_dropdown" aria-expanded="false" aria-label="Toggle navigation">
                                     <i class="far fa-bars"></i>
                                 </button>
                             </li>
                             <?php
 
                             if ($this->identity()) : ?>
-                            <li>
-                                <a class="btn border_dark" href="<?= $this->url("login") ?>">
-                                    <span>
-                                        <small>My Acc.</small>
-                                        <small>My Acc.</small>
-                                    </span>
-                                </a>
-                            </li>
-                            <li>
-                                <a class="btn border_dark" href="<?= $this->url("logout") ?>">
-                                    <span>
-                                        <small>Logout</small>
-                                        <small>Logout</small>
-                                    </span>
-                                </a>
-                            </li>
+                                <li>
+                                    <a class="btn border_dark" href="<?= $this->url("login") ?>">
+                                        <span>
+                                            <small>My Acc.</small>
+                                            <small>My Acc.</small>
+                                        </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="btn border_dark" href="<?= $this->url("logout") ?>">
+                                        <span>
+                                            <small>Logout</small>
+                                            <small>Logout</small>
+                                        </span>
+                                    </a>
+                                </li>
                             <?php else : ?>
-                            <li>
-                                <a class="btn border_dark" href="<?= $this->url("login") ?>">
-                                    <span>
-                                        <small>Login</small>
-                                        <small>Login</small>
-                                    </span>
-                                </a>
-                            </li>
-                            <li>
-                                <a class="btn btn_dark" href="<?= $this->url("register") ?>">
-                                    <span>
-                                        <small>Sign Up</small>
-                                        <small>Sign Up</small>
-                                    </span>
-                                </a>
-                            </li>
+                                <li>
+                                    <a class="btn border_dark" href="<?= $this->url("login") ?>">
+                                        <span>
+                                            <small>Login</small>
+                                            <small>Login</small>
+                                        </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="btn btn_dark" href="<?= $this->url("register") ?>">
+                                        <span>
+                                            <small>Sign Up</small>
+                                            <small>Sign Up</small>
+                                        </span>
+                                    </a>
+                                </li>
                             <?php endif; ?>
                         </ul>
                     </div>
@@ -215,8 +203,7 @@ use General\Service\GeneralService;
                             <div class="footer_widget">
                                 <div class="site_logo">
                                     <a class="site_link" href="">
-                                        <img src="/assets/images/oie_3QNUOMetbJh7.png"
-                                            alt="Terces - Online Learning Platform">
+                                        <img src="/assets/images/oie_3QNUOMetbJh7.png" alt="Terces - Online Learning Platform">
                                     </a>
                                 </div>
                                 <p>
@@ -233,7 +220,10 @@ use General\Service\GeneralService;
                                         <a href="#!"><i class="fab fa-twitter"></i></a>
                                     </li>
                                     <li>
-                                        <a href="#!"><i class="fab fa-linkedin-in"></i></a>
+                                        <a href="#!"><i class="fab fa-instagram"></i></a>
+                                    </li>
+                                    <li>
+                                        <a href="#!"><i class="fab fa-telegram"></i></a>
                                     </li>
                                 </ul>
                             </div>
@@ -264,12 +254,12 @@ use General\Service\GeneralService;
                                             </li>
                                             <?php if ($this->identity() != NULL) :
                                                 if ($this->identity()->getRole()->getId() == 1000) : ?>
-                                            <li>
-                                                <a href="<?= $this->url("admin") ?>">
-                                                    <span class="item_icon"><i class="fas fa-caret-right"></i></span>
-                                                    <span class="item_text">Admin</span>
-                                                </a>
-                                            </li>
+                                                    <li>
+                                                        <a href="<?= $this->url("admin") ?>">
+                                                            <span class="item_icon"><i class="fas fa-caret-right"></i></span>
+                                                            <span class="item_text">Admin</span>
+                                                        </a>
+                                                    </li>
                                             <?php
 
                                                 endif;
@@ -283,27 +273,26 @@ use General\Service\GeneralService;
                                         </ul>
                                     </div>
                                 </div>
-                                <div class="col-4 col-md-4 col-sm-4">
+                                <div class="col-6 col-md-6 col-sm-6">
                                     <div class="footer_widget">
                                         <h3 class="footer_widget_title">Program</h3>
                                         <ul class="page_list unordered_list_block">
                                             <li>
                                                 <a href="#!">
                                                     <span class="item_icon"><i class="fas fa-caret-right"></i></span>
-                                                    <span class="item_text">Business Analysis Hands-On Program</span>
+                                                    <span class="item_text"><?= GeneralService::GENERAL_TRAINING_WORK_EXPERIENCE ?></span>
                                                 </a>
                                             </li>
                                             <li>
                                                 <a href="#!">
                                                     <span class="item_icon"><i class="fas fa-caret-right"></i></span>
-                                                    <span class="item_text">Business analysis Certification
-                                                        Program</span>
+                                                    <span class="item_text"><?= GeneralService::GENERAL_TRAINING_CERTIFICATE_PROGRAM ?></span>
                                                 </a>
                                             </li>
                                             <li>
                                                 <a href="#!">
                                                     <span class="item_icon"><i class="fas fa-caret-right"></i></span>
-                                                    <span class="item_text">Business Analysis On job Support</span>
+                                                    <span class="item_text"><?= GeneralService::GENERAL_TRAINING_INTERVIEW_PREP ?></span>
                                                 </a>
                                             </li>
 
