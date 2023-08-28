@@ -40,7 +40,7 @@ class QuizAnswer
 
     /**
      * Undocumented variable
-     * @ORM\Column(nullable=false)
+     * @ORM\Column(nullable=false, type="text")
      * @var string
      */
     private $answerText;

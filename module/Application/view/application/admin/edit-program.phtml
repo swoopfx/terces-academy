@@ -44,48 +44,40 @@
                         </thead>
                         <tbody>
                             <?php foreach ($data->getCourses() as $key => $course) : ?>
-                            <tr>
-                                <td><?= $course->getArrange() ?></td>
-                                <td class="pd-l-20">
-                                    <img src="<?= $course->getBanner()->getImageUrl() ?>" class="wd-36 rounded-circle"
-                                        alt="Image">
-                                </td>
-                                <td>
-                                    <a href="" class="tx-inverse tx-14 tx-medium d-block"><?= $course->getTitle() ?></a>
-                                    <span class="tx-11 d-block">UUID: <?= strtoupper($course->getUuid()) ?></span><br>
-                                    <button @click="getCResourse('<?= $course->getId() ?>')" data-toggle="modal"
-                                        data-target="#addCourseResources" class="btn btn-primary btn-sm">Add
-                                        Resources</button>
+                                <tr>
+                                    <td><?= $course->getArrange() ?></td>
+                                    <td class="pd-l-20">
+                                        <img src="<?= $course->getBanner()->getImageUrl() ?>" class="wd-36 rounded-circle" alt="Image">
+                                    </td>
+                                    <td>
+                                        <a href="" class="tx-inverse tx-14 tx-medium d-block"><?= $course->getTitle() ?></a>
+                                        <span class="tx-11 d-block">UUID: <?= strtoupper($course->getUuid()) ?></span><br>
+                                        <button @click="getCResourse('<?= $course->getId() ?>')" data-toggle="modal" data-target="#addCourseResources" class="btn btn-primary btn-sm">Add
+                                            Resources</button>
 
-                                </td>
+                                    </td>
 
-                                <td>
-                                    <div class="row">
-                                        <button @click="getCourseContent('<?= $course->getId() ?>')"
-                                            class="btn btn-success btn-sm"><i class="fa fa-eye"></i></button>
-                                        <button @click=" removeCourse('<?= $course->getId() ?>')"
-                                            class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
-                                        <button @click="editCourse('<?= $course->getId() ?>')" ref="editContentButton"
-                                            data-toggle="modal" data-target="#modalEditCourse"
-                                            class="btn btn-sm btn-warning"> <i class="fa fa-edit"></i>
-                                        </button>
-                                    </div>
-                                    <div class="row">
-                                        <button @click="newQuiz('<?= $course->getId() ?>')" data-toggle="modal"
-                                            data-target="#modalQuiz" class="btn btn-sm btn-primary">
-                                            <i class="fa fa-plus"></i></button>
+                                    <td>
+                                        <div class="row">
+                                            <button @click="getCourseContent('<?= $course->getId() ?>')" class="btn btn-success btn-sm"><i class="fa fa-eye"></i></button>
+                                            <button @click=" removeCourse('<?= $course->getId() ?>')" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
+                                            <button @click="editCourse('<?= $course->getId() ?>')" ref="editContentButton" data-toggle="modal" data-target="#modalEditCourse" class="btn btn-sm btn-warning"> <i class="fa fa-edit"></i>
+                                            </button>
+                                        </div>
+                                        <div class="row">
+                                            <button @click="newQuiz('<?= $course->getId() ?>')" data-toggle="modal" data-target="#modalQuiz" class="btn btn-sm btn-primary">
+                                                <i class="fa fa-plus"></i></button>
 
-                                    </div>
-                                </td>
-                            </tr>
+                                        </div>
+                                    </td>
+                                </tr>
                             <?php endforeach ?>
 
                         </tbody>
                     </table>
                 </div><!-- table-responsive -->
                 <div class="card-footer tx-12 pd-y-15 bg-transparent">
-                    <button data-toggle="modal" data-target="#modalCreateCourse" class="btn btn-sm btn-warning"><i
-                            class="fa fa-angle-down mg-r-5"></i>Create Course</a>
+                    <button data-toggle="modal" data-target="#modalCreateCourse" class="btn btn-sm btn-warning"><i class="fa fa-angle-down mg-r-5"></i>Create Course</a>
                 </div><!-- card-footer -->
 
 
@@ -110,8 +102,7 @@
                                 <div class="row mg-t-20">
                                     <div class="col-lg">
                                         <label>Course Title:</label>
-                                        <input ref="courseTitle" class="form-control" placeholder="Intro To businesss"
-                                            type="text">
+                                        <input ref="courseTitle" class="form-control" placeholder="Intro To businesss" type="text">
                                     </div><!-- col -->
                                 </div>
                                 <div class="row mg-t-20">
@@ -123,8 +114,7 @@
                                 <div class="row mg-t-20">
                                     <div class="col-lg mg-t-10 mg-lg-t-0">
                                         <div class="custom-file">
-                                            <input type="file" ref="courseBanner" class="custom-file-input"
-                                                id="customFile">
+                                            <input type="file" ref="courseBanner" class="custom-file-input" id="customFile">
                                             <label class="custom-file-label" for="customFile">Upload Banner</label>
                                         </div><!-- custom-file -->
                                     </div><!-- col -->
@@ -132,8 +122,7 @@
                                 <div class="row mg-t-20">
                                     <div class="col-lg mg-t-10 mg-lg-t-0">
                                         <label>Video Link :</label>
-                                        <input ref="courseVideo" class="form-control" placeholder="Intro To businesss"
-                                            type="text">
+                                        <input ref="courseVideo" class="form-control" placeholder="Intro To businesss" type="text">
                                     </div><!-- col -->
                                 </div><!-- row -->
                             </div>
@@ -164,15 +153,13 @@
                                 <div class="row">
                                     <div class="col-lg">
                                         <label>Edit ID:</label>
-                                        <input ref="editCourseId" class="form-control" placeholder="Intro To businesss"
-                                            type="text">
+                                        <input ref="editCourseId" class="form-control" placeholder="Intro To businesss" type="text">
                                     </div><!-- col -->
                                 </div>
                                 <div class="row mg-t-20">
                                     <div class="col-lg">
                                         <label>Edit Course Title:</label>
-                                        <input ref="editCourseTitle" class="form-control"
-                                            placeholder="Intro To businesss" type="text">
+                                        <input ref="editCourseTitle" class="form-control" placeholder="Intro To businesss" type="text">
                                     </div><!-- col -->
                                 </div>
                                 <div class="row mg-t-20">
@@ -192,8 +179,7 @@
                                 <div class="row mg-t-20">
                                     <div class="col-lg mg-t-10 mg-lg-t-0">
                                         <label>Edit Video Link :</label>
-                                        <input ref="editCourseVideo" class="form-control"
-                                            placeholder="Intro To businesss" type="text">
+                                        <input ref="editCourseVideo" class="form-control" placeholder="Intro To businesss" type="text">
                                     </div><!-- col -->
                                 </div><!-- row -->
                             </div>
@@ -233,8 +219,7 @@
                                 <td>{{cour.arrange}}</td>
                                 <td>
                                     <a href="" class="tx-inverse tx-14 tx-medium d-block">{{cour.title}}</a>
-                                    <span class="tx-11 d-block"><span
-                                            class="square-8 bg-danger mg-r-5 rounded-circle"></span>
+                                    <span class="tx-11 d-block"><span class="square-8 bg-danger mg-r-5 rounded-circle"></span>
                                         {{cour.uuid.toUpperCase()}}</span>
                                     <p>
 
@@ -244,24 +229,18 @@
                                 </td>
 
                                 <td class="pd-l-20">
-                                    <a :href="cour.video" target="__blank"> <img :src="cour.banner.imageUrl"
-                                            class="wd-55" alt="Image"></a>
+                                    <a :href="cour.video" target="__blank"> <img :src="cour.banner.imageUrl" class="wd-55" alt="Image"></a>
                                 </td>
                                 <td class="valign-middle tx-center">
                                     <div class="row">
-                                        <button @click="getCourseContent(cour.id)" class="btn btn-success btn-sm"><i
-                                                class="fa fa-eye"></i></button>
-                                        <button @click="removeCourseContent(cour.id)" class="btn btn-danger btn-sm"><i
-                                                class="fa fa-trash"></i></button>
-                                        <button @click="editCourse(cour.id)" ref="editContentButton" data-toggle="modal"
-                                            data-target="#modalEditCourse" class="btn btn-sm btn-warning"> <i
-                                                class="fa fa-edit"></i>
+                                        <button @click="getCourseContent(cour.id)" class="btn btn-success btn-sm"><i class="fa fa-eye"></i></button>
+                                        <button @click="removeCourseContent(cour.id)" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
+                                        <button @click="editCourse(cour.id)" ref="editContentButton" data-toggle="modal" data-target="#modalEditCourse" class="btn btn-sm btn-warning"> <i class="fa fa-edit"></i>
                                         </button>
                                     </div>
                                     <br>
                                     <div class="row">
-                                        <button data-toggle="modal" @click="getResourse(cour.id)"
-                                            data-target="#addResources" class="btn btn-sm btn-primary">Add
+                                        <button data-toggle="modal" @click="getResourse(cour.id)" data-target="#addResources" class="btn btn-sm btn-primary">Add
                                             Resources</button>
                                     </div>
                                 </td>
@@ -273,8 +252,7 @@
                     </table>
                 </div><!-- table-responsive -->
                 <div class="card-footer tx-12 pd-y-15 bg-transparent">
-                    <button data-toggle="modal" data-target="#modalCreateContent" class="btn btn-sm btn-warning"
-                        href=""><i class="fa fa-plus-down mg-r-5"></i>Create Content</a>
+                    <button data-toggle="modal" data-target="#modalCreateContent" class="btn btn-sm btn-warning" href=""><i class="fa fa-plus-down mg-r-5"></i>Create Content</a>
                 </div><!-- card-footer -->
             </div><!-- card -->
         </div><!-- col-6 -->
@@ -308,8 +286,7 @@
                         <div class="row mg-t-20">
                             <div class="col-lg">
                                 <label>Content Title:</label>
-                                <input ref="contentTitle" class="form-control" placeholder="Intro To businesss"
-                                    type="text">
+                                <input ref="contentTitle" class="form-control" placeholder="Intro To businesss" type="text">
                             </div><!-- col -->
                         </div>
                         <div class="row mg-t-20">
@@ -327,6 +304,18 @@
                             </div><!-- col -->
                         </div>
 
+                        <div class="row mg-t-20">
+                            <div class="col-lg mg-t-10 mg-lg-t-0">
+                                <label>Snippet Video Link :</label>
+                                <input ref="contentVideoSnippet" class="form-control" placeholder="Intro To businesss" type="text">
+                            </div><!-- col -->
+                        </div><!-- row -->
+                        <div class="row mg-t-20">
+                            <div class="col-lg mg-t-10 mg-lg-t-0">
+                                <label>Video Link :</label>
+                                <input ref="contentVideo" class="form-control" placeholder="Intro To businesss" type="text">
+                            </div><!-- col -->
+                        </div><!-- row -->
 
                     </div>
                     <div class="modal-footer">
@@ -366,10 +355,8 @@
                                 <tbody v-if="contentResources.length">
                                     <tr v-for="res in contentResources">
 
-                                        <td><a :href="res.resourceFile.imageUrl"
-                                                target="_blank">{{res.resourceTitle}}</a></td>
-                                        <td><button @click="removeResource(res.id)" class="btn btn-sm"><i
-                                                    class="fa fa-trash"></i></button></td>
+                                        <td><a :href="res.resourceFile.imageUrl" target="_blank">{{res.resourceTitle}}</a></td>
+                                        <td><button @click="removeResource(res.id)" class="btn btn-sm"><i class="fa fa-trash"></i></button></td>
 
                                     </tr>
 
@@ -380,8 +367,7 @@
                         <div class="row mg-t-20">
                             <div class="col-lg mg-t-10 mg-lg-t-0">
                                 <label>Resource Title :</label>
-                                <input ref="resourceTitle" class="form-control" placeholder="Intro To businesss"
-                                    type="text">
+                                <input ref="resourceTitle" class="form-control" placeholder="Intro To businesss" type="text">
                             </div><!-- col -->
                         </div><!-- row -->
                         <div class="row mg-t-20">
@@ -396,8 +382,7 @@
 
                     </div>
                     <div class="modal-footer">
-                        <button :disabled="isCreatingResource" @click="createResources()" type="button"
-                            class="btn btn-primary">Add Resource</button>
+                        <button :disabled="isCreatingResource" @click="createResources()" type="button" class="btn btn-primary">Add Resource</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>
                 </div>
@@ -435,10 +420,8 @@
                                 <tbody v-if="courseResources.length">
                                     <tr v-for="res in courseResources">
 
-                                        <td><a :href="res.resourceFile.imageUrl"
-                                                target="_blank">{{res.resourceTitle}}</a></td>
-                                        <td><button @click="removeCourseResource(res.id)" class="btn btn-sm"><i
-                                                    class="fa fa-trash"></i></button></td>
+                                        <td><a :href="res.resourceFile.imageUrl" target="_blank">{{res.resourceTitle}}</a></td>
+                                        <td><button @click="removeCourseResource(res.id)" class="btn btn-sm"><i class="fa fa-trash"></i></button></td>
 
                                     </tr>
 
@@ -449,8 +432,7 @@
                         <div class="row mg-t-20">
                             <div class="col-lg mg-t-10 mg-lg-t-0">
                                 <label>Resource Title :</label>
-                                <input ref="resourceCTitle" class="form-control" placeholder="Intro To businesss"
-                                    type="text">
+                                <input ref="resourceCTitle" class="form-control" placeholder="Intro To businesss" type="text">
                             </div><!-- col -->
                         </div><!-- row -->
                         <div class="row mg-t-20">
@@ -465,8 +447,7 @@
 
                     </div>
                     <div class="modal-footer">
-                        <button :disabled="isCreatingCResource" @click="createCourseResources()" type="button"
-                            class="btn btn-primary">Add Resource</button>
+                        <button :disabled="isCreatingCResource" @click="createCourseResources()" type="button" class="btn btn-primary">Add Resource</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>
                 </div>
@@ -489,16 +470,14 @@
                             <div class="row mg-t-20">
                                 <div class="col-lg">
                                     <label>Question:</label>
-                                    <textarea ref="quizQuestion" class="form-control"
-                                        placeholder="Intro To businesss"></textarea>
+                                    <textarea ref="quizQuestion" class="form-control" placeholder="Intro To businesss"></textarea>
                                 </div><!-- col -->
                             </div>
                             <div v-if="quizAnwerList.length" class="row mg-t-20">
                                 <div class="col-lg mg-t-10 mg-lg-t-0">
                                     <ul>
                                         <li v-for="(ans, index) in quizAnwerList">{{ans.text}} ({{ans.isAnswer}})
-                                            <button @click="removeQuizAnswer(index)" class="btn btn-default"><i
-                                                    class="fa fa-trash"></i></button>
+                                            <button @click="removeQuizAnswer(index)" class="btn btn-default"><i class="fa fa-trash"></i></button>
                                         </li>
                                     </ul>
                                 </div>
@@ -508,16 +487,13 @@
                                 <div class="row mg-b-25">
                                     <div class="col-lg-4">
                                         <div class="form-group">
-                                            <label class="form-control-label">Question Answer <span
-                                                    class="tx-danger">*</span></label>
-                                            <input class="form-control" type="text" ref="questionAnswer"
-                                                placeholder="Enter firstname">
+                                            <label class="form-control-label">Question Answer <span class="tx-danger">*</span></label>
+                                            <input class="form-control" type="text" ref="questionAnswer" placeholder="Enter firstname">
                                         </div>
                                     </div><!-- col-4 -->
                                     <div class="col-lg-4">
                                         <div class="form-group">
-                                            <label class="form-control-label">Is Answer <span
-                                                    class="tx-danger">*</span></label>
+                                            <label class="form-control-label">Is Answer <span class="tx-danger">*</span></label>
                                             <input class="form-control" type="checkbox" v-model="isAnswer">
                                         </div>
                                     </div><!-- col-4 -->
@@ -539,8 +515,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button @click="createQuiz()" :disabled="isCreatingQuiz" type="button"
-                            class="btn btn-primary">Create</button>
+                        <button @click="createQuiz()" :disabled="isCreatingQuiz" type="button" class="btn btn-primary">Create</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Refresh</button>
                     </div>
                 </div>
@@ -552,435 +527,435 @@
 
 </div>
 <script>
-const editProgram = Vue.createApp({
-    data() {
-        return {
-            activeProgram: "",
-            isCourseContent: false,
-            isFetchinContent: false,
-            courseContent: [],
-            activeCourse: 0,
-            contentResources: [],
-            isFetchingResources: false,
-            activeCourseContent: "",
-            isCreatingResource: false,
+    const editProgram = Vue.createApp({
+        data() {
+            return {
+                activeProgram: "",
+                isCourseContent: false,
+                isFetchinContent: false,
+                courseContent: [],
+                activeCourse: 0,
+                contentResources: [],
+                isFetchingResources: false,
+                activeCourseContent: "",
+                isCreatingResource: false,
 
-            courseResources: [],
-            isFetchingCResources: false,
-            activeCourse: "",
-            isCreatingCResource: false,
+                courseResources: [],
+                isFetchingCResources: false,
+                activeCourse: "",
+                isCreatingCResource: false,
 
-            quizAnwerList: [],
-            isAnswer: false,
-            quizActiveCourse: "",
-            isCreatingQuiz: false,
-        }
-    },
-
-
-    methods: {
-
-        createCourse() {
-            this.isCreatingCourse = true;
-            let fille = this.$refs.courseBanner.files[0];
-            if (this.$refs.courseBanner.files.length == 0) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Empty Image',
-                    text: "Image cannot be empty"
-                });
-            } else if (this.$refs.courseId.value == "" ||
-                this.$refs.courseTitle.value == "" ||
-                this.$refs.courseDescription.value == "" ||
-                this.$refs.courseBanner.value == "") {
-
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'A required field is empty',
-
-                });
-            } else if (fille > 1024 * 1024 * 2) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Image size',
-                    text: "Image file should notbe more than 2MB",
-
-                });
-                this.isSubmitting = false;
-            } else {
-                this.isCreatingCourse = false;
-
-
-                let formData = new FormData();
-                formData.append("id", this.$refs.courseId.value);
-                formData.append("title", this.$refs.courseTitle.value);
-                formData.append("description", this.$refs.courseDescription.value);
-                formData.append("banner", fille);
-                formData.append("video", this.$refs.courseVideo.value);
-                formData.append("program", this.$refs.programId.value);
-
-                axios.post("/admin/add-course", formData, {
-                    headers: {
-                        "Content-Type": "multipart/form-data"
-                    }
-                }).then(res => {
-                    if (res.status == 201) {
-                        window.location.reload();
-                    }
-                }).catch(err => {
-
-                });
+                quizAnwerList: [],
+                isAnswer: false,
+                quizActiveCourse: "",
+                isCreatingQuiz: false,
             }
         },
 
 
-        getCourseDetails(id) {
+        methods: {
 
-        },
+            createCourse() {
+                this.isCreatingCourse = true;
+                let fille = this.$refs.courseBanner.files[0];
+                if (this.$refs.courseBanner.files.length == 0) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Empty Image',
+                        text: "Image cannot be empty"
+                    });
+                } else if (this.$refs.courseId.value == "" ||
+                    this.$refs.courseTitle.value == "" ||
+                    this.$refs.courseDescription.value == "" ||
+                    this.$refs.courseBanner.value == "") {
 
-        editCourse(id) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'A required field is empty',
 
-        },
+                    });
+                } else if (fille > 1024 * 1024 * 2) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Image size',
+                        text: "Image file should notbe more than 2MB",
 
-        removeCourse(id) {
-            Swal.fire({
-                title: 'Are you sure you want to remove this course',
-                text: "This action is irreversible ",
-                showDenyButton: true,
-                showCancelButton: true,
-                confirmButtonText: 'Remove',
-                denyButtonText: `ignore`,
-            }).then((result) => {
-                /* Read more about isConfirmed, isDenied below */
-                if (result.isConfirmed) {
+                    });
+                    this.isSubmitting = false;
+                } else {
+                    this.isCreatingCourse = false;
+
+
                     let formData = new FormData();
-                    formData.append("key", id);
-                    axios.post("/admin/remove-course", formData).then(res => {
-                        if (res.status == 202) {
+                    formData.append("id", this.$refs.courseId.value);
+                    formData.append("title", this.$refs.courseTitle.value);
+                    formData.append("description", this.$refs.courseDescription.value);
+                    formData.append("banner", fille);
+                    formData.append("video", this.$refs.courseVideo.value);
+                    formData.append("program", this.$refs.programId.value);
+
+                    axios.post("/admin/add-course", formData, {
+                        headers: {
+                            "Content-Type": "multipart/form-data"
+                        }
+                    }).then(res => {
+                        if (res.status == 201) {
                             window.location.reload();
                         }
-                    }).catch()
-                }
-            })
-        },
+                    }).catch(err => {
 
-        getCourseContent(id) {
-            // alert(id);
-            this.isCourseContent = true;
-            this.isFetchinContent = true;
-            this.activeCourse = id;
-            axios.get(`/admin/get-course-content/${id}`).then(res => {
-                if (res.status == 200) {
-                    this.courseContent = res.data.data;
-                    this.isFetchinContent = false;
-                    this.isCourseContent = true;
-                }
-            }).catch(err => {
-
-            });
-        },
-
-        createCourseContent() {
-            this.isCreatingCourse = true;
-            let fille = this.$refs.contentBanner.files[0];
-            if (this.$refs.contentBanner.files.length == 0) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Empty Image',
-                    text: "Image cannot be empty"
-                });
-            } else if (this.$refs.contentId.value == "" ||
-                this.$refs.contentTitle.value == "" ||
-                this.$refs.contentDescription.value == "" ||
-                this.$refs.contentBanner.value == "" ||
-
-                this.$refs.contentVideo.value == "") {
-
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'A required field is empty',
-
-                });
-            } else if (fille > 1024 * 1024 * 2) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Image size',
-                    text: "Image file should notbe more than 2MB",
-
-                });
-                this.isSubmitting = false;
-            } else {
-                this.isCreatingCourse = false;
-
-
-                let formData = new FormData();
-                formData.append("id", this.$refs.contentId.value);
-                formData.append("title", this.$refs.contentTitle.value);
-                formData.append("description", this.$refs.contentDescription.value);
-                formData.append("snippetVideo", this.$refs.contentVideoSnippet.value);
-                formData.append("banner", fille);
-                formData.append("video", this.$refs.contentVideo.value);
-                formData.append("course", this.activeCourse);
-
-                axios.post("/admin/add-course-content", formData, {
-                    headers: {
-                        "Content-Type": "multipart/form-data"
-                    }
-                }).then(res => {
-                    if (res.status == 201) {
-                        window.location.reload();
-                    }
-                }).catch(err => {
-
-                });
-            }
-        },
-
-        editCourseContent() {
-
-        },
-
-        removeCourseContent(id) {
-            Swal.fire({
-                title: 'Are you sure you want to remove this course',
-                text: "This action is irreversible ",
-                showDenyButton: true,
-                showCancelButton: true,
-                confirmButtonText: 'Remove',
-                denyButtonText: `ignore`,
-            }).then((result) => {
-                /* Read more about isConfirmed, isDenied below */
-                if (result.isConfirmed) {
-                    let formData = new FormData();
-                    formData.append("key", id);
-                    axios.post("/admin/remove-course-content", formData).then(res => {
-                        if (res.status == 202) {
-                            window.location.reload();
-                        }
-                    }).catch(err => {})
-                }
-            })
-
-        },
-
-        getResourse(courseContentId = "") {
-
-            this.isFetchingResources = true;
-            this.activeCourseContent = courseContentId;
-            axios.get(`/admin/get-content-resources/${courseContentId}`).then((result) => {
-                if (result.status == 200) {
-                    this.isFetchingResources = false;
-                    this.contentResources = result.data.data;
-                }
-            }).catch((err) => {
-                Swal.fire({
-                    icon: "error",
-                    title: "An error occured",
-                    text: err.response.data.message,
-                });
-            });
-        },
-
-        createResources() {
-            if (this.$refs.resourceFile.files.length == 0) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Empty Image',
-                    text: "Document cannot be empty"
-                });
-            } else if (this.activeCourseContent == "" || this.$refs.resourceTitle.value == "") {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Empty Image',
-                    text: "A required Field is empty"
-                });
-            } else {
-                this.isCreatingResource = true;
-                let formData = new FormData();
-                formData.append("content_id", this.activeCourseContent);
-                formData.append("title", this.$refs.resourceTitle.value);
-                formData.append("file", this.$refs.resourceFile.files[0]);
-
-                axios.post("/admin/add-content_resources", formData).then(res => {
-                    if (res.status == 201) {
-                        this.$refs.resourceTitle.value = "";
-                        this.$refs.resourceFile.files[0] = "";
-                        this.getResourse(this.activeCourseContent);
-                        this.isCreatingResource = false;
-                    }
-                }).catch(err => {
-                    Swal.fire({
-                        icon: "error",
-                        title: "An error occured",
-                        text: err.response.data.message,
                     });
-                    this.isCreatingResource = false;
-                });
-            }
-        },
-
-        removeResource(id) {
-            Swal.fire({
-                title: 'Are you sure you want to remove this resource',
-                text: "This action is irreversible ",
-                showDenyButton: true,
-                showCancelButton: true,
-                confirmButtonText: 'Remove',
-                denyButtonText: `ignore`,
-            }).then((result) => {
-                /* Read more about isConfirmed, isDenied below */
-                if (result.isConfirmed) {
-                    let formData = new FormData();
-                    formData.append("key", id);
-                    axios.post(`/admin/remove-content-resouce/${id}`, formData).then(res => {
-                        if (res.status == 202) {
-                            this.getResourse(this.activeCourseContent)
-                        }
-                    }).catch(err => {})
                 }
-            })
-        },
+            },
 
 
+            getCourseDetails(id) {
 
-        // Course
-        getCResourse(courseId = "") {
+            },
 
-            this.isFetchingCResources = true;
-            this.activeCourse = courseId;
-            axios.get(`/admin/get-course-resources/${courseId}`).then((result) => {
-                if (result.status == 200) {
-                    this.isFetchingCResources = false;
-                    this.courseResources = result.data.data;
-                }
-            }).catch((err) => {
+            editCourse(id) {
+
+            },
+
+            removeCourse(id) {
                 Swal.fire({
-                    icon: "error",
-                    title: "An error occured",
-                    text: err.response.data.message,
-                });
-            });
-        },
-
-        createCourseResources() {
-            if (this.$refs.resourceCFile.files.length == 0) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Empty Image',
-                    text: "Document cannot be empty"
-                });
-            } else if (this.activeCourse == "" || this.$refs.resourceCTitle.value == "") {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Empty Image',
-                    text: "A required Field is empty"
-                });
-            } else {
-                this.isCreatingCResource = true;
-                let formData = new FormData();
-                formData.append("course_id", this.activeCourse);
-                formData.append("title", this.$refs.resourceCTitle.value);
-                formData.append("file", this.$refs.resourceCFile.files[0]);
-
-                axios.post("/admin/add-course-resources", formData).then(res => {
-                    if (res.status == 201) {
-                        this.$refs.resourceCTitle.value = "";
-                        this.$refs.resourceCFile.files[0] = "";
-                        this.getCResourse(this.activeCourse);
-                        this.isCreatingCResource = false;
+                    title: 'Are you sure you want to remove this course',
+                    text: "This action is irreversible ",
+                    showDenyButton: true,
+                    showCancelButton: true,
+                    confirmButtonText: 'Remove',
+                    denyButtonText: `ignore`,
+                }).then((result) => {
+                    /* Read more about isConfirmed, isDenied below */
+                    if (result.isConfirmed) {
+                        let formData = new FormData();
+                        formData.append("key", id);
+                        axios.post("/admin/remove-course", formData).then(res => {
+                            if (res.status == 202) {
+                                window.location.reload();
+                            }
+                        }).catch()
                     }
-                }).catch(err => {
-                    Swal.fire({
-                        icon: "error",
-                        title: "An error occured",
-                        text: err.response.data.message,
-                    });
-                    this.isCreatingCResource = false;
-                });
-            }
-        },
-
-        removeCourseResource(id) {
-            Swal.fire({
-                title: 'Are you sure you want to remove this resource',
-                text: "This action is irreversible ",
-                showDenyButton: true,
-                showCancelButton: true,
-                confirmButtonText: 'Remove',
-                denyButtonText: `ignore`,
-            }).then((result) => {
-                /* Read more about isConfirmed, isDenied below */
-                if (result.isConfirmed) {
-                    let formData = new FormData();
-                    formData.append("key", id);
-                    axios.post(`/admin/remove-course-resouce/${id}`, formData).then(res => {
-                        if (res.status == 202) {
-                            this.getResourse(this.activeCourseContent)
-                        }
-                    }).catch(err => {})
-                }
-            })
-        },
-        // Quiz
-
-        newQuiz(id) {
-            this.quizActiveCourse = id;
-        },
-
-        addQuizAnswer() {
-            let answerObject = {
-                "text": this.$refs.questionAnswer.value,
-                "isAnswer": this.isAnswer
-            };
-            this.quizAnwerList.push(answerObject);
-            this.$refs.questionAnswer.value = "";
-            this.isAnswer = false;
-            console.log(this.quizAnwerList);
-        },
-
-        removeQuizAnswer(index) {
-            this.quizAnwerList.splice(index, 1);
-        },
-
-
-        createQuiz() {
-            this.isCreatingQuiz = true;
-            if (this.$refs.quizQuestion.value == "" || this.quizAnwerList.length == 0 || this
-                .quizActiveCourse == "") {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Requred field',
-                    text: "A required Field is empty"
                 })
-                this.isCreatingQuiz = false;
-            } else {
-                let formData = new FormData();
-                formData.append("question", this.$refs.quizQuestion.value);
-                formData.append("answer", JSON.stringify(this.quizAnwerList));
-                formData.append("course_id", this.quizActiveCourse);
-                axios.post("/admin/create-quiz", formData).then((result) => {
+            },
 
-                    if (result.status == 201) {
-                        window.location.reload();
-                        this.isCreatingQuiz = false;
+            getCourseContent(id) {
+                // alert(id);
+                this.isCourseContent = true;
+                this.isFetchinContent = true;
+                this.activeCourse = id;
+                axios.get(`/admin/get-course-content/${id}`).then(res => {
+                    if (res.status == 200) {
+                        this.courseContent = res.data.data;
+                        this.isFetchinContent = false;
+                        this.isCourseContent = true;
+                    }
+                }).catch(err => {
+
+                });
+            },
+
+            createCourseContent() {
+                this.isCreatingCourse = true;
+                let fille = this.$refs.contentBanner.files[0];
+                if (this.$refs.contentBanner.files.length == 0) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Empty Image',
+                        text: "Image cannot be empty"
+                    });
+                } else if (this.$refs.contentId.value == "" ||
+                    this.$refs.contentTitle.value == "" ||
+                    this.$refs.contentDescription.value == "" ||
+                    this.$refs.contentBanner.value == "" ||
+
+                    this.$refs.contentVideo.value == "") {
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'A required field is empty',
+
+                    });
+                } else if (fille > 1024 * 1024 * 2) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Image size',
+                        text: "Image file should notbe more than 2MB",
+
+                    });
+                    this.isSubmitting = false;
+                } else {
+                    this.isCreatingCourse = false;
+
+
+                    let formData = new FormData();
+                    formData.append("id", this.$refs.contentId.value);
+                    formData.append("title", this.$refs.contentTitle.value);
+                    formData.append("description", this.$refs.contentDescription.value);
+                    formData.append("snippetVideo", this.$refs.contentVideoSnippet.value);
+                    formData.append("banner", fille);
+                    formData.append("video", this.$refs.contentVideo.value);
+                    formData.append("course", this.activeCourse);
+
+                    axios.post("/admin/add-course-content", formData, {
+                        headers: {
+                            "Content-Type": "multipart/form-data"
+                        }
+                    }).then(res => {
+                        if (res.status == 201) {
+                            window.location.reload();
+                        }
+                    }).catch(err => {
+
+                    });
+                }
+            },
+
+            editCourseContent() {
+
+            },
+
+            removeCourseContent(id) {
+                Swal.fire({
+                    title: 'Are you sure you want to remove this course',
+                    text: "This action is irreversible ",
+                    showDenyButton: true,
+                    showCancelButton: true,
+                    confirmButtonText: 'Remove',
+                    denyButtonText: `ignore`,
+                }).then((result) => {
+                    /* Read more about isConfirmed, isDenied below */
+                    if (result.isConfirmed) {
+                        let formData = new FormData();
+                        formData.append("key", id);
+                        axios.post("/admin/remove-course-content", formData).then(res => {
+                            if (res.status == 202) {
+                                window.location.reload();
+                            }
+                        }).catch(err => {})
+                    }
+                })
+
+            },
+
+            getResourse(courseContentId = "") {
+
+                this.isFetchingResources = true;
+                this.activeCourseContent = courseContentId;
+                axios.get(`/admin/get-content-resources/${courseContentId}`).then((result) => {
+                    if (result.status == 200) {
+                        this.isFetchingResources = false;
+                        this.contentResources = result.data.data;
                     }
                 }).catch((err) => {
                     Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: "An error occured"
+                        icon: "error",
+                        title: "An error occured",
+                        text: err.response.data.message,
                     });
-                    this.isCreatingQuiz = false;
                 });
+            },
+
+            createResources() {
+                if (this.$refs.resourceFile.files.length == 0) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Empty Image',
+                        text: "Document cannot be empty"
+                    });
+                } else if (this.activeCourseContent == "" || this.$refs.resourceTitle.value == "") {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Empty Image',
+                        text: "A required Field is empty"
+                    });
+                } else {
+                    this.isCreatingResource = true;
+                    let formData = new FormData();
+                    formData.append("content_id", this.activeCourseContent);
+                    formData.append("title", this.$refs.resourceTitle.value);
+                    formData.append("file", this.$refs.resourceFile.files[0]);
+
+                    axios.post("/admin/add-content_resources", formData).then(res => {
+                        if (res.status == 201) {
+                            this.$refs.resourceTitle.value = "";
+                            this.$refs.resourceFile.files[0] = "";
+                            this.getResourse(this.activeCourseContent);
+                            this.isCreatingResource = false;
+                        }
+                    }).catch(err => {
+                        Swal.fire({
+                            icon: "error",
+                            title: "An error occured",
+                            text: err.response.data.message,
+                        });
+                        this.isCreatingResource = false;
+                    });
+                }
+            },
+
+            removeResource(id) {
+                Swal.fire({
+                    title: 'Are you sure you want to remove this resource',
+                    text: "This action is irreversible ",
+                    showDenyButton: true,
+                    showCancelButton: true,
+                    confirmButtonText: 'Remove',
+                    denyButtonText: `ignore`,
+                }).then((result) => {
+                    /* Read more about isConfirmed, isDenied below */
+                    if (result.isConfirmed) {
+                        let formData = new FormData();
+                        formData.append("key", id);
+                        axios.post(`/admin/remove-content-resouce/${id}`, formData).then(res => {
+                            if (res.status == 202) {
+                                this.getResourse(this.activeCourseContent)
+                            }
+                        }).catch(err => {})
+                    }
+                })
+            },
+
+
+
+            // Course
+            getCResourse(courseId = "") {
+
+                this.isFetchingCResources = true;
+                this.activeCourse = courseId;
+                axios.get(`/admin/get-course-resources/${courseId}`).then((result) => {
+                    if (result.status == 200) {
+                        this.isFetchingCResources = false;
+                        this.courseResources = result.data.data;
+                    }
+                }).catch((err) => {
+                    Swal.fire({
+                        icon: "error",
+                        title: "An error occured",
+                        text: err.response.data.message,
+                    });
+                });
+            },
+
+            createCourseResources() {
+                if (this.$refs.resourceCFile.files.length == 0) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Empty Image',
+                        text: "Document cannot be empty"
+                    });
+                } else if (this.activeCourse == "" || this.$refs.resourceCTitle.value == "") {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Empty Image',
+                        text: "A required Field is empty"
+                    });
+                } else {
+                    this.isCreatingCResource = true;
+                    let formData = new FormData();
+                    formData.append("course_id", this.activeCourse);
+                    formData.append("title", this.$refs.resourceCTitle.value);
+                    formData.append("file", this.$refs.resourceCFile.files[0]);
+
+                    axios.post("/admin/add-course-resources", formData).then(res => {
+                        if (res.status == 201) {
+                            this.$refs.resourceCTitle.value = "";
+                            this.$refs.resourceCFile.files[0] = "";
+                            this.getCResourse(this.activeCourse);
+                            this.isCreatingCResource = false;
+                        }
+                    }).catch(err => {
+                        Swal.fire({
+                            icon: "error",
+                            title: "An error occured",
+                            text: err.response.data.message,
+                        });
+                        this.isCreatingCResource = false;
+                    });
+                }
+            },
+
+            removeCourseResource(id) {
+                Swal.fire({
+                    title: 'Are you sure you want to remove this resource',
+                    text: "This action is irreversible ",
+                    showDenyButton: true,
+                    showCancelButton: true,
+                    confirmButtonText: 'Remove',
+                    denyButtonText: `ignore`,
+                }).then((result) => {
+                    /* Read more about isConfirmed, isDenied below */
+                    if (result.isConfirmed) {
+                        let formData = new FormData();
+                        formData.append("key", id);
+                        axios.post(`/admin/remove-course-resouce/${id}`, formData).then(res => {
+                            if (res.status == 202) {
+                                this.getCResourse(this.activeCourse);
+                            }
+                        }).catch(err => {})
+                    }
+                })
+            },
+            // Quiz
+
+            newQuiz(id) {
+                this.quizActiveCourse = id;
+            },
+
+            addQuizAnswer() {
+                let answerObject = {
+                    "text": this.$refs.questionAnswer.value,
+                    "isAnswer": this.isAnswer
+                };
+                this.quizAnwerList.push(answerObject);
+                this.$refs.questionAnswer.value = "";
+                this.isAnswer = false;
+                console.log(this.quizAnwerList);
+            },
+
+            removeQuizAnswer(index) {
+                this.quizAnwerList.splice(index, 1);
+            },
+
+
+            createQuiz() {
+                this.isCreatingQuiz = true;
+                if (this.$refs.quizQuestion.value == "" || this.quizAnwerList.length == 0 || this
+                    .quizActiveCourse == "") {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Requred field',
+                        text: "A required Field is empty"
+                    })
+                    this.isCreatingQuiz = false;
+                } else {
+                    let formData = new FormData();
+                    formData.append("question", this.$refs.quizQuestion.value);
+                    formData.append("answer", JSON.stringify(this.quizAnwerList));
+                    formData.append("course_id", this.quizActiveCourse);
+                    axios.post("/admin/create-quiz", formData).then((result) => {
+
+                        if (result.status == 201) {
+                            window.location.reload();
+                            this.isCreatingQuiz = false;
+                        }
+                    }).catch((err) => {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: "An error occured"
+                        });
+                        this.isCreatingQuiz = false;
+                    });
+                }
             }
-        }
 
 
 
-    },
-});
-editProgramm = editProgram.mount("#editProgram");
-//https://www.youtube.com/embed/m-2PRSl8jQk
+        },
+    });
+    editProgramm = editProgram.mount("#editProgram");
+    //https://www.youtube.com/embed/m-2PRSl8jQk
 </script>
