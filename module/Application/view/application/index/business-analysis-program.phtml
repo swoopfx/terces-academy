@@ -51,13 +51,16 @@ $f = new \NumberFormatter("en", NumberFormatter::SPELLOUT);
                                     <span
                                         class="sale_price"><?= $this->currencyFormat($data->getCost(), "USD") ?></span>
                                 </div>
-                                <a href="<?= $this->url("application", ["action" => "buy-course", "id" => $data->getUuid()]) ?>"
-                                    class="btn btn_dark">
+                                <a data-toggle="modal" data-target="#modalPayment" class="btn btn_dark">
                                     <span>
                                         <small>Get Course</small>
                                         <small>Get Course</small>
                                     </span>
                                 </a>
+
+
+
+
                                 <ul class="course_info_list unordered_list_block">
 
                                     <li>
@@ -277,7 +280,8 @@ $f = new \NumberFormatter("en", NumberFormatter::SPELLOUT);
                             <div class="item_price">
                                 <span class="sale_price"><?= $this->currencyFormat($data->getCost(), "USD") ?></span>
                             </div>
-                            <a href="<?= $this->url("application", ["action" => "buy-course", "id" => $data->getUuid()]) ?>"
+                            <a data-toggle="modal" data-target="#modalPayment"
+                                href="<?= $this->url("application", ["action" => "buy-course", "id" => $data->getUuid()]) ?>"
                                 class="btn btn_dark">
                                 <span>
                                     <small>Get Course</small>
@@ -305,23 +309,23 @@ $f = new \NumberFormatter("en", NumberFormatter::SPELLOUT);
 
                             </ul>
                         </div>
-                        <!--
-                    <div class="callbox_wrap">
-                        <h3 class="widget_title">Get More Benefits with Our Plans</h3>
-                        <a class="btn border_dark w-100" href="pricing.html">
-                            <span>
-                                <small>Our Plans</small>
-                                <small>Our Plans</small>
-                            </span>
-                        </a>
-                        <a class="btn btn_dark w-100" href="course.html">
-                            <span>
-                                <small>See Whole Course</small>
-                                <small>See Whole Course</small>
-                            </span>
-                        </a>
-                    </div>
-                                -->
+
+                        <div class="callbox_wrap">
+                            <h3 class="widget_title">Schedule your internship</h3>
+                            <a class="btn border_dark w-100" href="">
+                                <span>
+                                    <small>Click To Schedule</small>
+                                    <small>Click To Schedule</small>
+                                </span>
+                            </a>
+                            <!--  <a class="btn btn_dark w-100" href="">
+                                <span>
+                                    <small>See Whole Course</small>
+                                    <small>See Whole Course</small>
+                                </span>
+                            </a> -->
+                        </div>
+
 
                     </aside>
                 </div>
@@ -330,6 +334,51 @@ $f = new \NumberFormatter("en", NumberFormatter::SPELLOUT);
     </section>
     <!-- Course Details Section - End
         ================================================== -->
+    <div id="modalPayment" class="modal fade">
+        <div class="modal-dialog modal-dialog-vertical-center" role="document">
+            <div class="modal-content bd-0 tx-14">
+                <div class="modal-header">
+                    <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">
+                        Payment</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body pd-25">
+
+                    <div class="card card-body">
+                        <div class="callbox_wrap">
+                            <!--   <h3 class="widget_title">Get More Benefits with Our Plans</h3> -->
+                            <a class="btn border_dark w-100"
+                                href=" <?= $this->url("application", ["action" => "buy-course", "id" => $data->getUuid()]) ?>">
+                                <span>
+                                    <small>Pay Once</small>
+                                    <small>Pay Once</small>
+                                </span>
+                            </a>
+                            <a class="btn btn_dark w-100" href="<?= ($this->identity() == NULL ? $this->url("login") : $this->url("application", ["action" => "generate-installments", "id" => $this->identity()->getUuid()], [
+                                                                    'query' => [
+                                                                        'cuuid' => $data->getUuid(),
+                                                                    ],
+                                                                ])) ?>">
+                                <span>
+                                    <small>Pay 4 installments</small>
+                                    <small>Pay 4 installments</small>
+                                </span>
+                            </a>
+                        </div>
+
+                    </div>
+
+
+
+                </div>
+                <div class="modal-footer">
+
+                </div>
+            </div>
+        </div><!-- modal-dialog -->
+    </div><!-- modal -->
 </div>
 <script>
 const bana = Vue.createApp({

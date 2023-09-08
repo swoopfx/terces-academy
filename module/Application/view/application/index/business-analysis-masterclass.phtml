@@ -184,9 +184,110 @@ use General\Service\GeneralService;
     </div>
 </section>
 
+<!-- Course Details Section - Start
+        ================================================== -->
+<section id="materclass" class="details_section course_details_section">
+    <div class="container">
+        <div class="row">
+
+            <div class="col col-lg-8 order-lg-last">
+                <div class="ps-lg-5">
+                    <div class="section_heading">
+                        <h2 class="heading_text">
+                            {{activeData.title}}
+                        </h2>
+                    </div>
+                    <div class="intro_video mb-4">
+                        <div class="video_wrap">
+                            <img src="https://s3.amazonaws.com/aibnigeria/1692605051_oie_hYYx6lPuBea5.png" alt="Collab – Online Learning Platform">
+                            <a class="video_play_btn popup_video" :href="activeData.video">
+                                <span class="icon"><i class="fas fa-play"></i></span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <a class="btn border_dark btn_small" href="#!">
+                        <span>
+                            <small><img src="/assets/images/icon/icon_clip.svg" alt="Collab – Online Learning Platform">
+                                Resources</small>
+                            <small><img src="/assets/images/icon/icon_clip_white.svg" alt="Collab – Online Learning Platform"> Resources</small>
+                        </span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col col-lg-4">
+                <div class="accordion style_2" id="corse_details_accordion">
+                    <div class="accordion-item">
+                        <div class="accordion-button" role="button" data-bs-toggle="collapse" data-bs-target="#collapse_one" aria-expanded="true">
+                            Section 1. Business analysis foundation
+                        </div>
+                        <div id="collapse_one" class="accordion-collapse collapse show" data-bs-parent="#corse_details_accordion">
+                            <div v-for="(sec, index) in section1" class="accordion-body">
+
+                                <div v-if="index <= 7" class="checkbox_item">
+
+                                    <label for="checkbox_1_1">
+                                        <?php if ($this->identity()) : ?>
+                                            <a @click="isClickContent(index)">
+                                                {{sec.title}}</a>
+                                        <?php else : ?>
+                                            <a href="<?= $this->url("application", ["action" => "register"]) ?>">
+                                                {{sec.title}}</a>
+                                        <?php endif; ?>
+                                    </label>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Course Details Section - End
+        ================================================== -->
+
 
 <?= $this->partial("partials_coming_free_training") ?>
 <?= $this->partial("partials_courselist") ?>
 
 
 <?php $this->partial("partials_newsletter")  ?>
+
+<script>
+    const materclass = Vue.createApp({
+        data() {
+            return {
+                section1: "",
+                activeData: {
+
+                    "title": "Introduction to Business Analysis",
+                    "video": "https://www.youtube.com/watch?v=6DOVPrTdTiY"
+                },
+            }
+        },
+        mounted() {
+            this.getSectionOne();
+        },
+        methods: {
+            isClickContent(inn) {
+                this.activeData = this.section1[inn];
+            },
+            getSectionOne() {
+
+                axios.get("/get-section-one").then((result) => {
+
+                    if (result.status == 200) {
+                        this.section1 = result.data.data;
+                    }
+                }).catch((err) => {
+
+                });
+            }
+        },
+    });
+    materclass.mount("#materclass")
+</script>

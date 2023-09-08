@@ -4,9 +4,10 @@ namespace Application\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Authentication\Entity\User;
+use Application\Entity\Installement;
 use Application\Entity\Programs;
 use Application\Entity\ActiveUserProgramStatus;
-
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * These are the users registtered to a program 
@@ -75,6 +76,34 @@ class ActiveUserProgram
      * @var ActiveUserProgramStatus
      */
     private $status;
+
+    /**
+     * Undocumented variable
+     * @ORM\Column(type="boolean", options={"default":0})
+     * @var bool
+     */
+    private $isInstallement;
+
+    /**
+     * Undocumented variable
+     * @ORM\OneToMany(targetEntity="Application\Entity\Installement", mappedBy="activeUserProgram")
+     * @var Collection
+     */
+    private $activeInstallment;
+
+    /**
+     * Undocumented variable
+     * ManyToOne(targetEntity="Application\Entity\Installement")
+     * @var Installement
+     */
+    private $paidInstallment;
+
+
+    public function __construct()
+    {
+        $this->activeInstallment = new ArrayCollection();
+    }
+
 
     /**
      * Get @ORM\Column(name="id", type="integer", nullable=false, options={"unsigned"=true})
@@ -250,6 +279,78 @@ class ActiveUserProgram
     public function setStatus(ActiveUserProgramStatus $status)
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  Installement
+     */
+    public function getActiveInstallment()
+    {
+        return $this->activeInstallment;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  Installement  $activeInstallment  Undocumented variable
+     *
+     * @return  self
+     */
+    public function setActiveInstallment(Installement $activeInstallment)
+    {
+        $this->activeInstallment = $activeInstallment;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  bool
+     */
+    public function getIsInstallement()
+    {
+        return $this->isInstallement;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  bool  $isInstallement  Undocumented variable
+     *
+     * @return  self
+     */
+    public function setIsInstallement(bool $isInstallement)
+    {
+        $this->isInstallement = $isInstallement;
+
+        return $this;
+    }
+
+    /**
+     * Get manyToOne(targetEntity="Application\Entity\Installement")
+     *
+     * @return  Installement
+     */
+    public function getPaidInstallment()
+    {
+        return $this->paidInstallment;
+    }
+
+    /**
+     * 
+     *
+     * @param  Installement  $paidInstallment  ManyToOne(targetEntity="Application\Entity\Installement")
+     *
+     * @return  self
+     */
+    public function setPaidInstallment(Installement $paidInstallment)
+    {
+        $this->paidInstallment = $paidInstallment;
 
         return $this;
     }

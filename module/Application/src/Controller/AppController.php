@@ -143,7 +143,9 @@ class AppController extends  AbstractActionController
         $viewModel = new ViewModel();
         $referContainer = new Container("refer");
         $url = $this->getRequest()->getHeader('Referer')->getUri();
+
         $referContainer->refer = $url;
+
         return $this->redirect()->toRoute("register");
         // return $viewModel;
     }
@@ -231,6 +233,36 @@ class AppController extends  AbstractActionController
         return $jsonModel;
     }
 
+    public function paypalCreateInstallmentOrderAction()
+    {
+        $jsonModel = new jsonModel();
+        $response = $this->getResponse();
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+
+            try {
+                $post = $request->getContent();
+                $decoded = json_decode($post, true);
+                $data =  $this->transactionService->paypalCreateInstallmentOrder($decoded["uuid"]);
+                // $jsonModel->setVariable("data", $data);
+                // $response->setStatusCode(201);
+
+                $response->getHeaders()->addHeaderLine('Content-Type', 'application/json');
+                $response->setContent($data);
+                return $response;
+            } catch (\Throwable $th) {
+                //throw $th;
+                $response->setStatusCode(400);
+                $jsonModel->setVariables([
+                    "success" => false,
+                    "desc" => $th->getMessage()
+                ]);
+            }
+        }
+
+        return $jsonModel;
+    }
+
 
     public function paypalCapturePaymentAction()
     {
@@ -242,6 +274,40 @@ class AppController extends  AbstractActionController
             $data = json_decode($json, true);
             try {
                 $data =  $this->transactionService->paypalConfirmOrder($data);
+                // $jsonModel->setVariable("data", $data);
+                // $response->setStatusCode(201);
+
+                $response->getHeaders()->addHeaderLine('Content-Type', 'application/json');
+                $this->flashMessenger()->addSuccessMessage("You have successfully paid for the Service please continue with you training");
+                // $response->setContent($data);
+                $response->setStatusCode(201);
+                return $response;
+            } catch (\Throwable $th) {
+                //throw $th;
+                $response->setStatusCode(400);
+                // var_dump($th->getMessage());
+                // $jsonModel->setVariables([
+                //     "success" => false,
+                //     "desc" => $th->getMessage()
+                // ]);
+            }
+        }
+
+        return $jsonModel;
+    }
+
+
+
+    public function paypalCaptureInstallmentPaymentAction()
+    {
+        $jsonModel = new jsonModel();
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        if ($request->isPost()) {
+            $json = $request->getContent();
+            $data = json_decode($json, true);
+            try {
+                $data =  $this->transactionService->paypalConfirmInstallmentOrder($data);
                 // $jsonModel->setVariable("data", $data);
                 // $response->setStatusCode(201);
 
