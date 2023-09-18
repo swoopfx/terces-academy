@@ -105,7 +105,7 @@ class CourseContent
 
     /**
      * Undocumented variable
-     * @ORM\OneToMany(targetEntity="Resources", mappedBy="courseContent")
+     * @ORM\OneToMany(targetEntity="Resources", mappedBy="courseContent", cascade={"remove"})
      * @var Collection
      */
     private $resources;

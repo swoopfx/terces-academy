@@ -54,8 +54,7 @@
                       <div class="pricing_card text-center tilt">
                           <h3 class="card_heading">Amount Payable</h3>
                           <div class="pricing_wrap">
-                              <span
-                                  class="price_value"><sup><?= $this->currencyFormat($data->getCost(), "USD") ?></span>
+                              <span class="price_value"><sup><?= $this->currencyFormat($data->getCost(), "USD") ?></span>
                               <small class="d-block"></small> <?= $data->getTitle(); ?></small>
 
                           </div>
@@ -70,14 +69,14 @@
                           <div class="btn_wrap pb-0">
                               <?php if ($this->identity()) : ?>
 
-                              <div id="paypal-button-container"></div>
+                                  <div id="paypal-button-container"></div>
                               <?php else : ?>
-                              <a class="btn border_dark" href="<?= $this->url("app", ["action" => "refer"]) ?>">
-                                  <span>
-                                      <small>Pay Now</small>
+                                  <a class="btn border_dark" href="<?= $this->url("app", ["action" => "refer"]) ?>">
+                                      <span>
+                                          <small>Pay Now</small>
 
-                                  </span>
-                              </a>
+                                      </span>
+                                  </a>
                               <?php endif; ?>
                           </div>
                       </div>
@@ -91,159 +90,159 @@
         ================================================== -->
 
   <script>
-paypal.Buttons({
-    // Order is created on the server and the order id is returned
-    createOrder() {
-        return fetch("/app/paypal-create-order", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                // use the "body" param to optionally pass additional order information
-                // like product skus and quantities
-                body: JSON.stringify({
-                    //   cart: [{
-                    //       sku: "YOUR_PRODUCT_STOCK_KEEPING_UNIT",
-                    //       quantity: "YOUR_PRODUCT_QUANTITY",
-                    //   }, ],
-                }),
-            })
-            .then((response) => response.json())
-            .then((order) => order.id);
-    },
-    // Finalize the transaction on the server after payer approval
-    onApprove(data) {
-        return fetch("/app/paypal-capture-payment", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    orderID: data.orderID
-                })
-            })
-            .then((response) => {
-                if (response.status == 201) {
-                    window.location.href = "/";
-                } else if (response.status == 400) {
-                    Swal.fire({
-                        title: "Something went wrong",
+      paypal.Buttons({
+          // Order is created on the server and the order id is returned
+          createOrder() {
+              return fetch("/app/paypal-create-order", {
+                      method: "POST",
+                      headers: {
+                          "Content-Type": "application/json",
+                      },
+                      // use the "body" param to optionally pass additional order information
+                      // like product skus and quantities
+                      body: JSON.stringify({
+                          //   cart: [{
+                          //       sku: "YOUR_PRODUCT_STOCK_KEEPING_UNIT",
+                          //       quantity: "YOUR_PRODUCT_QUANTITY",
+                          //   }, ],
+                      }),
+                  })
+                  .then((response) => response.json())
+                  .then((order) => order.id);
+          },
+          // Finalize the transaction on the server after payer approval
+          onApprove(data) {
+              return fetch("/app/paypal-capture-payment", {
+                      method: "POST",
+                      headers: {
+                          "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify({
+                          orderID: data.orderID
+                      })
+                  })
+                  .then((response) => {
+                      if (response.status == 201) {
+                          window.location.href = "/";
+                      } else if (response.status == 400) {
+                          Swal.fire({
+                              title: "Something went wrong",
 
-                        type: "error",
-                    })
-                }
-            })
-            // .then((orderData) => {
-            //     // Successful capture! For dev/demo purposes:
-            //     // console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
-            //     // const transaction = orderData.purchase_units[0].payments.captures[0];
-            //     // alert(`Transaction ${transaction.status}: ${transaction.id}\n\nSee console for all available details`);
-            //     // When ready to go live, remove the alert and show a success message within this page. For example:
-            //     // const element = document.getElementById('paypal-button-container');
-            //     // element.innerHTML = '<h3>Thank you for your payment!</h3>';
-            //     // Or go to another URL:  window.location.href = 'thank_you.html';
-            // })
-            .catch(err => {
-                Swal.fire({
-                    title: "Something went wrong",
-                    type: "error",
-                })
-            });
-    }
-}).render('#paypal-button-container');
+                              type: "error",
+                          })
+                      }
+                  })
+                  // .then((orderData) => {
+                  //     // Successful capture! For dev/demo purposes:
+                  //     // console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+                  //     // const transaction = orderData.purchase_units[0].payments.captures[0];
+                  //     // alert(`Transaction ${transaction.status}: ${transaction.id}\n\nSee console for all available details`);
+                  //     // When ready to go live, remove the alert and show a success message within this page. For example:
+                  //     // const element = document.getElementById('paypal-button-container');
+                  //     // element.innerHTML = '<h3>Thank you for your payment!</h3>';
+                  //     // Or go to another URL:  window.location.href = 'thank_you.html';
+                  // })
+                  .catch(err => {
+                      Swal.fire({
+                          title: "Something went wrong",
+                          type: "error",
+                      })
+                  });
+          }
+      }).render('#paypal-button-container');
 
-const buycourse = Vue.createApp({
-    data() {
-        return {
-            paymentMethod: [],
-            activePaymentMethod: "",
-            activeMethodId: 0,
-            courseUuid: "",
-            isPaying: false,
-        }
-    },
+      const buycourse = Vue.createApp({
+          data() {
+              return {
+                  paymentMethod: [],
+                  activePaymentMethod: "",
+                  activeMethodId: 0,
+                  courseUuid: "",
+                  isPaying: false,
+              }
+          },
 
-    mounted() {
-        this.getPaymentMethod();
-    },
+          mounted() {
+              this.getPaymentMethod();
+          },
 
-    methods: {
-        getPaymentMethod() {
-            axios.get("/app/get-payment-methods").then(res => {
-                if (res.status == 200) {
-                    this.paymentMethod = res.data.data;
-                    this.activePaymentMethod = res.data.data[0].method;
-                    this.activeMethodId = res.data.data[0].id;
-                }
-            }).catch(err => {
+          methods: {
+              getPaymentMethod() {
+                  axios.get("/app/get-payment-methods").then(res => {
+                      if (res.status == 200) {
+                          this.paymentMethod = res.data.data;
+                          this.activePaymentMethod = res.data.data[0].method;
+                          this.activeMethodId = res.data.data[0].id;
+                      }
+                  }).catch(err => {
 
-            });
-        },
+                  });
+              },
 
-        selectMethod(e, r) {
-            this.activePaymentMethod = e;
-            this.activeMethodId = r;
-            console.log(this.actieMethodId);
-        },
+              selectMethod(e, r) {
+                  this.activePaymentMethod = e;
+                  this.activeMethodId = r;
+                  console.log(this.actieMethodId);
+              },
 
-        payWithFlutterwave() {
-            this.isPaying = true;
-            axios.get("/app/pre-transaction").then(res => {
+              payWithFlutterwave() {
+                  this.isPaying = true;
+                  axios.get("/app/pre-transaction").then(res => {
 
-                if (res.status == 201) {
-                    resData = res.data.data;
-                    FlutterwaveCheckout({
-                        public_key: resData.public_key,
-                        tx_ref: resData.tx_ref,
-                        amount: resData.amount,
-                        currency: "USD",
-                        payment_options: "card",
-                        //   redirect_url: "https://glaciers.titanic.com/handle-flutterwave-payment",
-                        meta: {
-                            consumer_id: 23,
-                            consumer_mac: resData.customer.uuid,
-                        },
-                        customer: {
-                            email: resData.customer.email,
-                            //   phone_number: "08102909304",
-                            name: resData.customer.fullname,
-                        },
-                        callback: function(response) { // specified callback function
-                            if (response.status == "successful") {
-                                cutomerboard.tx_ref = response.tx_ref;
-                                cutomerboard.amountPayed = response.amount;
-                                cutomerboard.concludeNewPayment();
-                            } else {
-                                // set error
-                            }
-                        },
-                        customizations: {
-                            title: "Terces Academy",
-                            description: resData.description,
-                            logo: "https://academy.tercesjobs.com/assets/images/oie_3QNUOMetbJh7.png",
-                        },
-                    });
-                }
-            }).catch()
+                      if (res.status == 201) {
+                          resData = res.data.data;
+                          FlutterwaveCheckout({
+                              public_key: resData.public_key,
+                              tx_ref: resData.tx_ref,
+                              amount: resData.amount,
+                              currency: "USD",
+                              payment_options: "card",
+                              //   redirect_url: "https://glaciers.titanic.com/handle-flutterwave-payment",
+                              meta: {
+                                  consumer_id: 23,
+                                  consumer_mac: resData.customer.uuid,
+                              },
+                              customer: {
+                                  email: resData.customer.email,
+                                  //   phone_number: "08102909304",
+                                  name: resData.customer.fullname,
+                              },
+                              callback: function(response) { // specified callback function
+                                  if (response.status == "successful") {
+                                      cutomerboard.tx_ref = response.tx_ref;
+                                      cutomerboard.amountPayed = response.amount;
+                                      cutomerboard.concludeNewPayment();
+                                  } else {
+                                      // set error
+                                  }
+                              },
+                              customizations: {
+                                  title: "Terces Academy",
+                                  description: resData.description,
+                                  logo: "https://academy.tercesjobs.com/assets/images/oie_3QNUOMetbJh7.png",
+                              },
+                          });
+                      }
+                  }).catch()
 
 
 
-        },
+              },
 
-        payWithPaypal() {
+              payWithPaypal() {
 
-        },
+              },
 
-        pay() {
+              pay() {
 
-            if (this.activeMethodId == 10) {
+                  if (this.activeMethodId == 10) {
 
-                this.payWithFlutterwave()
-            } else if (this.activeMethodId == 20) {
-                this.payWithPaypal()
-            }
-        }
-    },
-});
-buycourse.mount("#buyc")
+                      this.payWithFlutterwave()
+                  } else if (this.activeMethodId == 20) {
+                      this.payWithPaypal()
+                  }
+              }
+          },
+      });
+      buycourse.mount("#buyc")
   </script>

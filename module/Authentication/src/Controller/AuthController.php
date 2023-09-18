@@ -533,7 +533,13 @@ class AuthController  extends AbstractActionController
         // 'navMenu' => $this->options->getNavMenu()
     }
 
+    public function editprofileAction()
+    {
+        $viewModel = new ViewModel();
+        // $id = $this->params()->fromRoute()
 
+        return $viewModel;
+    }
 
     public function resetPasswordAction()
     {

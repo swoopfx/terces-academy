@@ -9,8 +9,8 @@
             <div class="row align-items-center">
                 <div class="col col-lg-7">
                     <ul class="breadcrumb_nav unordered_list">
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="course.html">Program</a></li>
+                        <li><a href="">Home</a></li>
+                        <li><a href="">Program</a></li>
                         <li>Business Certificate Program</li>
                     </ul>
                     <h1 class="page_title">
@@ -72,60 +72,60 @@
 
                             </ul>
                         </div>
-                 <?php if(count($data->getCourses())): ?>
-                        <div class="section_heading">
-                            <h2 class="heading_text">
-                                Course Content
-                            </h2>
-                        </div>
-
-
-                        <?php foreach ($data->getCourses() as $key => $course) : ?>
-                            <div class="accordion_wrap mb-5">
-                                <h3 class="details_info_title mb-3">Section <?= $key + 1 ?>. <?= $course->getTitle() ?></h3>
-                                <div class="accordion style_2" id="corse_details_accordion_<?= $key + 1 ?>">
-                                    <?php
-                                    if (count($course->getCourseContent())) :
-                                        foreach ($course->getCourseContent() as $ckey => $content) :
-                                    ?>
-                                            <div class="accordion-item">
-                                                <div class="checkbox_item accordion_item_checked">
-                                                    <input type="checkbox">
-                                                </div>
-                                                <div class="accordion-button collapsed" role="button" data-bs-toggle="collapse" data-bs-target="#collapse_3_<?= $ckey + 1 ?>" aria-expanded="false">
-                                                    Lesson <?php echo ($ckey + 1) . ":  ";
-                                                            echo  $content->getTitle() ?>
-                                                </div>
-                                                <div id="collapse_3_<?= $ckey + 1 ?>" class="accordion-collapse collapse" data-bs-parent="#corse_details_accordion_<?= $key + 1 ?>">
-                                                    <div class="accordion-body">
-                                                        <p class="mb-3">
-                                                            <?= $content->getDescription(); ?>
-                                                        </p>
-                                                        <div class="intro_video mb-3">
-                                                            <div class="video_wrap">
-                                                                <img src="<?= $content->getBanner()->getImageUrl() ?>" alt="Collab – Online Learning Platform">
-                                                                <a class="video_play_btn popup_video" href="https://www.youtube.com/watch?v=7e90gBu4pas">
-                                                                    <span class="icon"><i class="fas fa-play"></i></span>
-                                                                </a>
-                                                            </div>
-                                                        </div>
-                                                        <a class="btn border_dark btn_small" href="#!">
-                                                            <span>
-                                                                <small><img src="assets/images/icon/icon_clip.svg" alt="Collab – Online Learning Platform"> Resources</small>
-                                                                <small><img src="assets/images/icon/icon_clip_white.svg" alt="Collab – Online Learning Platform"> Resources</small>
-                                                            </span>
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                    <?php endforeach;
-                                    endif;
-                                    ?>
-                                </div>
+                        <?php if (count($data->getCourses())) : ?>
+                            <div class="section_heading">
+                                <h2 class="heading_text">
+                                    Course Content
+                                </h2>
                             </div>
 
-                        <?php endforeach; ?>
+
+                            <?php foreach ($data->getCourses() as $key => $course) : ?>
+                                <div class="accordion_wrap mb-5">
+                                    <h3 class="details_info_title mb-3">Section <?= $key + 1 ?>. <?= $course->getTitle() ?></h3>
+                                    <div class="accordion style_2" id="corse_details_accordion_<?= $key + 1 ?>">
+                                        <?php
+                                        if (count($course->getCourseContent())) :
+                                            foreach ($course->getCourseContent() as $ckey => $content) :
+                                        ?>
+                                                <div class="accordion-item">
+                                                    <div class="checkbox_item accordion_item_checked">
+                                                        <input type="checkbox">
+                                                    </div>
+                                                    <div class="accordion-button collapsed" role="button" data-bs-toggle="collapse" data-bs-target="#collapse_3_<?= $ckey + 1 ?>" aria-expanded="false">
+                                                        Lesson <?php echo ($ckey + 1) . ":  ";
+                                                                echo  $content->getTitle() ?>
+                                                    </div>
+                                                    <div id="collapse_3_<?= $ckey + 1 ?>" class="accordion-collapse collapse" data-bs-parent="#corse_details_accordion_<?= $key + 1 ?>">
+                                                        <div class="accordion-body">
+                                                            <p class="mb-3">
+                                                                <?= $content->getDescription(); ?>
+                                                            </p>
+                                                            <div class="intro_video mb-3">
+                                                                <div class="video_wrap">
+                                                                    <img src="<?= $content->getBanner()->getImageUrl() ?>" alt="Collab – Online Learning Platform">
+                                                                    <a class="video_play_btn popup_video" href="https://www.youtube.com/watch?v=7e90gBu4pas">
+                                                                        <span class="icon"><i class="fas fa-play"></i></span>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                            <a class="btn border_dark btn_small" href="#!">
+                                                                <span>
+                                                                    <small><img src="assets/images/icon/icon_clip.svg" alt="Collab – Online Learning Platform"> Resources</small>
+                                                                    <small><img src="assets/images/icon/icon_clip_white.svg" alt="Collab – Online Learning Platform"> Resources</small>
+                                                                </span>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                        <?php endforeach;
+                                        endif;
+                                        ?>
+                                    </div>
+                                </div>
+
+                            <?php endforeach; ?>
                         <?php endif ?>
 
                     </div>

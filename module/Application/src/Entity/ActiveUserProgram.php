@@ -8,6 +8,7 @@ use Application\Entity\Installement;
 use Application\Entity\Programs;
 use Application\Entity\ActiveUserProgramStatus;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * These are the users registtered to a program 
@@ -283,15 +284,7 @@ class ActiveUserProgram
         return $this;
     }
 
-    /**
-     * Get undocumented variable
-     *
-     * @return  Installement
-     */
-    public function getActiveInstallment()
-    {
-        return $this->activeInstallment;
-    }
+
 
     /**
      * Set undocumented variable
@@ -353,5 +346,15 @@ class ActiveUserProgram
         $this->paidInstallment = $paidInstallment;
 
         return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  Collection
+     */
+    public function getActiveInstallment()
+    {
+        return $this->activeInstallment;
     }
 }

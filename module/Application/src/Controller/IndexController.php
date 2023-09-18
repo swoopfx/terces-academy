@@ -216,7 +216,7 @@ class IndexController extends AbstractActionController
 
                 $value = $programEntity->getCost();
                 $div = 4;
-                $flatrate = 200;
+                $flatrate = 100;
                 $amountPayable = $value + $flatrate;
                 $result = array();
                 $dividedValue = $amountPayable / $div; // return decimal aprimate to 2 decimal point

@@ -108,14 +108,14 @@ class Courses
 
     /**
      * Undocumented variable
-     * @ORM\OneToOne(targetEntity="Application\Entity\Quiz", mappedBy="course")
+     * @ORM\OneToOne(targetEntity="Application\Entity\Quiz", mappedBy="course", cascade={"remove"})
      * @var Quiz
      */
     private $quiz;
 
     /**
      * Undocumented variable
-     * @ORM\OneToMany(targetEntity="CourseResource", mappedBy="courses")
+     * @ORM\OneToMany(targetEntity="CourseResource", mappedBy="courses", cascade={"remove"})
      * @var Collection
      */
     private $courseResource;
