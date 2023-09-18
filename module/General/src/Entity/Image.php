@@ -26,7 +26,7 @@ class Image
     private $imageUid;
 
     /**
-     * @ORM\Column(name="image_url", type="string", nullable=true)
+     * @ORM\Column(name="image_url", type="text", nullable=true)
      *
      * @var string
      */
@@ -62,13 +62,13 @@ class Image
 
     /**
      *
-     * @var string @ORM\Column(name="mime_type", type="string", length=100, nullable=true)
+     * @var string @ORM\Column(name="mime_type", type="text", length=100, nullable=true)
      */
     private $mimeType;
 
     /**
      *
-     * @var string @ORM\Column(name="image_ext", type="string", length=45, nullable=true)
+     * @var string @ORM\Column(name="image_ext", type="text", length=45, nullable=true)
      */
     private $docExt;
 

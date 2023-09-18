@@ -42,15 +42,14 @@
         "laminas/laminas-navigation": "^2.15",
         "symfony/console": "^5.4",
         "enqueue/amqp-lib": "^0.10.18",
-        "pusher/pusher-php-server": "^7.2"
+        "pusher/pusher-php-server": "^7.2",
+        "codeception/module-phpbrowser": "*"
     },
     "autoload": {
         "psr-4": {
             "Application\\": "module/Application/src/",
             "General\\": "module/General/src/",
             "Authentication\\": "module/Authentication/src/"
-           
-
         }
     },
     "autoload-dev": {
@@ -92,9 +91,10 @@
     },
     "require-dev": {
         "laminas/laminas-developer-tools": "^2.1.1",
-       
         "laminas/laminas-coding-standard": "^2.5",
         "phpunit/phpunit": "^9.6",
-        "laminas/laminas-test": "^4.7"
+        "laminas/laminas-test": "^4.7",
+        "codeception/module-laminas": "^3.0",
+        "codeception/module-asserts": "^3.0"
     }
 }

@@ -24,6 +24,15 @@ class CourseContent
     private $id;
 
     /**
+     *
+     * @var int 
+     * @ORM\Column(type="integer", unique=true, nullable=false, options={"unsigned"=true})
+     *      
+     *      
+     */
+    private $arrange;
+
+    /**
      * Undocumented variable
      * @ORM\Column(nullable=false)
      * @var string
@@ -96,7 +105,7 @@ class CourseContent
 
     /**
      * Undocumented variable
-     * @ORM\OneToMany(targetEntity="Resources", mappedBy="courseContent")
+     * @ORM\OneToMany(targetEntity="Resources", mappedBy="courseContent", cascade={"remove"})
      * @var Collection
      */
     private $resources;
@@ -116,6 +125,12 @@ class CourseContent
     public function getId()
     {
         return $this->id;
+    }
+
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
     }
 
     /**
@@ -374,6 +389,32 @@ class CourseContent
             $this->resources->add($res);
             $res->setCourseContent($this);
         }
+
+        return $this;
+    }
+
+
+
+    /**
+     * Get the value of arrange
+     *
+     * @return  int
+     */
+    public function getArrange()
+    {
+        return $this->arrange;
+    }
+
+    /**
+     * Set the value of arrange
+     *
+     * @param  int  $arrange
+     *
+     * @return  self
+     */
+    public function setArrange(int $arrange)
+    {
+        $this->arrange = $arrange;
 
         return $this;
     }

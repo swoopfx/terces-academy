@@ -1,0 +1,191 @@
+<?php
+
+/**
+ * @var Laminas\View\Renderer\PhpRenderer $this
+ */
+
+use General\Service\GeneralService;
+
+?>
+<?= $this->doctype() ?>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <?= $this->headTitle('Terces Academy')->setSeparator(' - ')->setAutoEscape(false) ?>
+
+    <?= $this->headMeta()
+        ->appendName('viewport', 'width=device-width, initial-scale=1.0')
+        ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
+    ?>
+
+    <!-- Le styles -->
+    <?= $this->headLink([
+        'rel' => 'shortcut icon',
+        'type' => 'image/vnd.microsoft.icon',
+        'href' => $this->basePath() . '/img/favicon.ico'
+    ])
+
+        ->prependStylesheet($this->basePath("/slim/lib/SpinKit/css/spinkit.css"))
+        ->prependStylesheet($this->basePath('/slim/css/slim.css'))
+        ->prependStylesheet($this->basePath('/slim/lib/rickshaw/css/rickshaw.min.css'))
+        ->prependStylesheet($this->basePath('/slim/lib/chartist/css/chartist.css'))
+        ->prependStylesheet($this->basePath('/slim/lib/Ionicons/css/ionicons.css'))
+        ->prependStylesheet($this->basePath('/slim/lib/font-awesome/css/font-awesome.css'))
+    ?>
+
+
+
+    <link rel="stylesheet" href="/slim/css/slim.css">
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue-toast-notification@3"></script>
+    <link href="https://cdn.jsdelivr.net/npm/vue-toast-notification@3/dist/theme-sugar.css" rel="stylesheet">
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://checkout.flutterwave.com/v3.js"></script>
+
+
+    <!-- Scripts -->
+    <?= $this->headScript() ?>
+</head>
+
+<body>
+    <div class="slim-header">
+        <div class="container">
+            <div class="slim-header-left">
+                <h2 class="slim-logo"><a href="<?php $this->url("admin") ?>"> <img width="143" height="42" src="/assets/images/oie_3QNUOMetbJh7.png" alt="Terces - Online Learning Platform"></a></h2>
+
+                <div class="search-box">
+                    <input type="text" class="form-control" placeholder="Search">
+                    <button class="btn btn-primary"><i class="fa fa-search"></i></button>
+                </div><!-- search-box -->
+            </div><!-- slim-header-left -->
+            <div class="slim-header-right">
+
+
+                <div class="dropdown dropdown-c">
+                    <a href="#" class="logged-user" data-toggle="dropdown">
+                        <img src="http://via.placeholder.com/500x500" alt="">
+
+                        <i class="fa fa-angle-down"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <nav class="nav">
+
+                            <a href="<?= $this->url("logout") ?>" class="nav-link"><i class="icon ion-forward"></i> Sign
+                                Out</a>
+                        </nav>
+                    </div><!-- dropdown-menu -->
+                </div><!-- dropdown -->
+            </div><!-- header-right -->
+        </div><!-- container -->
+    </div><!-- slim-header -->
+
+    <div class="slim-navbar">
+        <div class="container">
+            <ul class="nav">
+                <li class="nav-item with-sub ">
+                    <a class="nav-link" href="<?= $this->url("admin", ["action" => "index"]) ?>">
+                        <i class="icon ion-ios-home-outline"></i>
+                        <span>Dashboard</span>
+                    </a>
+
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="<?= $this->url("admin", ["action" => "program-list"]) ?>">
+                        <i class="icon ion-ios-analytics-outline"></i>
+                        <span>Programs</span>
+                    </a>
+                </li>
+
+                <li class="nav-item with-sub mega-dropdown">
+                    <a class="nav-link" href="<?= $this->url("admin", ["action" => "program-list"]) ?>">
+                        <i class="icon ion-ios-filing-outline"></i>
+                        <span>Programs</span>
+                    </a>
+
+                </li>
+
+                <li class="nav-item with-sub">
+                    <a class="nav-link" href="#" data-toggle="dropdown">
+                        <i class="icon ion-ios-gear-outline"></i>
+                        <span>Users</span>
+                    </a>
+                    <div class="sub-item">
+                        <ul>
+                            <li><a href="<?= $this->url("admin", ["action" => "user-list"]) ?>">Registered User</a></li>
+                            <li><a href="<?php echo $this->url("admin", ["action" => "active-program-lists"]) ?>">Registered
+                                    Courses</a></li>
+                            <li><a href="<?php $this->url("admin", ["action" => "active-program-lists"]) ?>">Active
+                                    Courses</a></li>
+
+                        </ul>
+                    </div><!-- dropdown-menu -->
+                </li>
+                <!-- <li class="nav-item">
+                    <a class="nav-link" href="page-messages.html">
+                        <i class="icon ion-ios-chatboxes-outline"></i>
+                        <span>Messages</span>
+
+                    </a>
+                    <div class="sub-item">
+                        <ul>
+                            <li><a href="form-elements.html">Registered User</a></li>
+                            <li><a href="form-layouts.html">Registered Courses</a></li>
+                            <li><a href="form-validation.html">Form Validation</a></li>
+                            <li><a href="form-wizards.html">Form Wizards</a></li>
+                            <li><a href="form-editor.html">WYSIWYG Editor</a></li>
+                            <li><a href="form-select2.html">Select2</a></li>
+                            <li><a href="form-rangeslider.html">Range Slider</a></li>
+                            <li><a href="form-datepicker.html">Datepicker</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="widgets.html">
+                        <i class="icon ion-ios-analytics-outline"></i>
+                        <span>Widgets</span>
+                    </a>
+                </li> -->
+            </ul>
+        </div><!-- container -->
+    </div><!-- slim-navbar -->
+
+    <div class="slim-mainpanel">
+        <div class="container pd-t-50">
+            <?= $this->content ?>
+
+        </div><!-- container -->
+    </div><!-- slim-mainpanel -->
+
+    <div class="slim-footer">
+        <div class="container">
+            <p>Copyright <?= date("Y") ?> &copy; All Rights Reserved. Terces Academy</p>
+
+        </div><!-- container -->
+    </div><!-- slim-footer -->
+
+    <script src="/slim/lib/jquery/js/jquery.js"></script>
+    <script src="/slim/lib/popper.js/js/popper.js"></script>
+    <script src="/slim/lib/bootstrap/js/bootstrap.js"></script>
+    <script src="/slim/lib/jquery.cookie/js/jquery.cookie.js"></script>
+    <script src="/slim/lib/chartist/js/chartist.js"></script>
+    <script src="/slim/lib/d3/js/d3.js"></script>
+    <script src="/slim/lib/rickshaw/js/rickshaw.min.js"></script>
+    <script src="/slim/lib/jquery.sparkline.bower/js/jquery.sparkline.min.js"></script>
+
+    <script src="/slim/js/ResizeSensor.js"></script>
+    <script src="/slim/js/dashboard.js"></script>
+    <script src="/slim/js/slim.js"></script>
+</body>
+<?= $this->inlineScript()
+    ->prependFile($this->basePath('/slim/js/bootstrap.min.js'))
+    ->prependFile($this->basePath('/slim/js/jquery-3.5.1.min.js')) ?>
+
+
+</html>

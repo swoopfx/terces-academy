@@ -2,8 +2,12 @@
 
 namespace Application\Service;
 
+use Application\Entity\ActiveUserProgram;
+use Application\Entity\ActiveUserProgramStatus;
+use Application\Entity\Installement;
 use Application\Entity\Programs;
 use Application\Entity\Transaction;
+use General\Service\PostMarkService;
 use Application\Entity\TransactionStatus;
 use General\Service\GeneralService;
 use Laminas\Session\Container;
@@ -35,6 +39,13 @@ class TransactionService
      * @var PaypalService
      */
     private $paypalService;
+
+    /**
+     * Undocumented variable
+     *
+     * @var PostMarkService
+     */
+    private $postmarkService;
 
 
     public function hydrateTransaction()
@@ -128,17 +139,213 @@ class TransactionService
             ->setPaypalOrderId($decodedData->id)
             ->setAmount($amount);
 
-      
+
 
         $em->persist($transactionEntity);
         $em->flush();
 
-        
+
         return $rdata;
     }
 
 
-    public function 
+    public function paypalCreateInstallmentOrder($id)
+    {
+        $settings = $this->generalService->getSettings();
+        $buyCourseSession = new Container("buy_course_uuid");
+        $auth = $this->generalService->getAuth()->getIdentity();
+
+        $transactionRef = self::transactionUid();
+        $em = $this->generalService->getEntityManager();
+
+        $programEntity = $em->getRepository(Programs::class)->findOneBy([
+            "uuid" => $buyCourseSession->uuid
+        ]);
+        /**
+         * @var Installement
+         */
+        $installmentEntity = $em->find(Installement::class, $id);
+        /**
+         * This could also be a coupon or calculated amount 
+         */
+        $amount = $installmentEntity->getAmountPayable();
+        $transactionEntity = new Transaction();
+
+        $uuid = Uuid::uuid4();
+
+        $data = [
+            "price" => $amount,
+            "tx_ref" => $transactionRef
+        ];
+
+        $rdata = $this->paypalService->createOrder($data);
+        $decodedData = json_decode($rdata);
+        $transactionEntity->setCreatedOn(new \Datetime())->setIsActive(TRUE)
+            ->setProgram($programEntity)
+            ->setTransactionId($transactionRef)->setUuid($uuid)
+            ->setStatus($em->find(TransactionStatus::class, self::TRANSACTION_STATUS_INITITED))
+            ->setPaypalOrderId($decodedData->id)
+            ->setAmount($amount);
+
+
+
+        $em->persist($transactionEntity);
+        $em->flush();
+
+
+        return $rdata;
+    }
+
+
+    public function paypalConfirmOrder($data)
+    {
+        $em = $this->generalService->getEntityManager();
+        $confirmData = $this->paypalService->capturePayment($data["orderID"]);
+        $auth = $this->generalService->getAuth()->getIdentity();
+        $decodedData = json_decode($confirmData);
+        $transactionEntity = $em->getRepository(Transaction::class)
+            ->findOneBy(["paypalOrderId" => $data["orderID"]]);
+        if ($decodedData->status == "COMPLETED") {
+            /**
+             * @var Transaction
+             */
+            $transactionEntity = $em->getRepository(Transaction::class)
+                ->findOneBy(["paypalOrderId" => $data["orderID"]]);
+            $transactionEntity->setUpdatedOn(new \Datetime())->setPaypalConfirmData($confirmData)->setStatus($em->find(TransactionStatus::class, self::TRANSACTION_STATUS_COMPLETED));
+
+
+            // create Active user Training f
+            $buyCourseSession = new Container("buy_course_uuid");
+            $auth = $this->generalService->getAuth()->getIdentity();
+
+            /**
+             * @var Programs
+             */
+            $programEntity = $em->getRepository(Programs::class)->findOneBy([
+                "uuid" => $buyCourseSession->uuid
+            ]);
+            $activeUserProgramEntity = new ActiveUserProgram();
+            $activeUserProgramEntity->setProgram($programEntity)->setUser($auth)
+                ->setCreatedOn(new \Datetime())
+                ->setIsActive(TRUE)
+                ->setIsInstallement(FALSE)
+                ->setStatus($em->find(ActiveUserProgramStatus::class, GeneralService::ACTIVE_USER_PROGRAM_STATUS_ACQUIRED))
+                ->setUuid(Uuid::uuid4());
+
+            $date = new \Datetime();
+
+            $mail["to"] = $auth->getEmail();
+            $mail["product_name"] = $programEntity->getTitle();
+            $mail["customer_name"] = $auth->getFullname();
+            $mail["tx_ref"] = $transactionEntity->getUuid();
+            $mail["date"] = $date->format('Y-m-d');
+            $mail["amount"] = $transactionEntity->getAmount();
+
+            $this->postmarkService->acquisitionSuccessEmail($mail);
+
+            $em->persist($activeUserProgramEntity);
+            $em->persist($transactionEntity);
+            $em->flush();
+
+
+            // send EMailto customer
+        } else {
+            $transactionEntity->setUpdatedOn(new \Datetime())->setStatus($em->find(TransactionStatus::class, self::TRANSACTION_STATUS_FAILED));
+            $em->persist($transactionEntity);
+            $em->flush();
+            throw new \Exception("Payment was not completed");
+        }
+    }
+
+
+
+    public function paypalConfirmInstallmentOrder($data)
+    {
+        $em = $this->generalService->getEntityManager();
+        $confirmData = $this->paypalService->capturePayment($data["orderID"]);
+
+        $auth = $this->generalService->getAuth()->getIdentity();
+        /**
+         * @var Installement
+         */
+        $installmentEntity = $em->find(Installement::class, $data["uuid"]);
+        $decodedData = json_decode($confirmData);
+        $transactionEntity = $em->getRepository(Transaction::class)
+            ->findOneBy(["paypalOrderId" => $data["orderID"]]);
+        if ($decodedData->status == "COMPLETED") {
+
+
+            /**
+             * @var Transaction
+             */
+            $transactionEntity = $em->getRepository(Transaction::class)
+                ->findOneBy(["paypalOrderId" => $data["orderID"]]);
+            $transactionEntity->setUpdatedOn(new \Datetime())->setPaypalConfirmData($confirmData)->setStatus($em->find(TransactionStatus::class, self::TRANSACTION_STATUS_COMPLETED));
+
+
+            // create Active user Training f
+            $buyCourseSession = new Container("buy_course_uuid");
+            $auth = $this->generalService->getAuth()->getIdentity();
+
+            /**
+             * @var Programs
+             */
+            $programEntity = $em->getRepository(Programs::class)->findOneBy([
+                "uuid" => $buyCourseSession->uuid
+            ]);
+            $activeUserProgramEntity = $em->getRepository(ActiveUserProgram::class)->findOneBy([
+                "user" => $auth->getId(),
+                "program" => $programEntity->getId()
+            ]);
+
+
+
+            if ($activeUserProgramEntity == NULL) {
+                /**
+                 * @var ActiveUserProgram
+                 */
+                $activeUserProgramEntity = new ActiveUserProgram();
+                $activeUserProgramEntity->setProgram($programEntity)->setUser($auth)
+                    ->setCreatedOn(new \Datetime())
+                    ->setIsActive(TRUE)
+                    ->setIsInstallement(FALSE)
+                    ->setStatus($em->find(ActiveUserProgramStatus::class, GeneralService::ACTIVE_USER_PROGRAM_STATUS_ACQUIRED))
+                    ->setIsInstallement(TRUE)
+                    ->setUuid(Uuid::uuid4());
+            }
+            $installmentEntity->setUpdatedOn(new \DateTime())->setIsSettled(TRUE)->setActiveUserProgram($activeUserProgramEntity);
+            $activeUserProgramEntity->setIsInstallement(TRUE)->setUpdatedOn(new \DateTime())->setPaidInstallment($installmentEntity);
+
+            $em->persist($installmentEntity);
+            $date = new \Datetime();
+
+            $mail["to"] = $auth->getEmail();
+            $mail["product_name"] = $programEntity->getTitle();
+            $mail["customer_name"] = $auth->getFullname();
+            $mail["tx_ref"] = $transactionEntity->getUuid();
+            $mail["date"] = $date->format('Y-m-d');
+            $mail["amount"] = $transactionEntity->getAmount();
+
+            $this->postmarkService->acquisitionSuccessEmail($mail);
+
+            $em->persist($activeUserProgramEntity);
+            $em->persist($transactionEntity);
+            $em->flush();
+
+
+            // send EMailto customer
+        } else {
+            $transactionEntity->setUpdatedOn(new \Datetime())->setStatus($em->find(TransactionStatus::class, self::TRANSACTION_STATUS_FAILED));
+            $em->persist($transactionEntity);
+            $em->flush();
+            throw new \Exception("Payment was not completed");
+        }
+    }
+
+
+
+
+    // public function 
 
 
     public static function transactionUid()
@@ -190,6 +397,30 @@ class TransactionService
     public function setPaypalService(PaypalService $paypalService)
     {
         $this->paypalService = $paypalService;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  PostMarkService
+     */
+    public function getPostmarkService()
+    {
+        return $this->postmarkService;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  PostMarkService  $postmarkService  Undocumented variable
+     *
+     * @return  self
+     */
+    public function setPostmarkService(PostMarkService $postmarkService)
+    {
+        $this->postmarkService = $postmarkService;
 
         return $this;
     }

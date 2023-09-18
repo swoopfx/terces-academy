@@ -50,6 +50,20 @@
 
 <body>
     <main class="page_content">
+        <?php
+        $flashMessenger = $this->flashMessenger()
+            ->setMessageOpenFormat('<div%s  role="alert">
+                <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+     <ul><li>')
+
+            ->setMessageCloseString('</div>');
+        ?>
+        <?php echo $flashMessenger->render('error', ['alert', 'alert-dismissable', 'alert-danger']); ?>
+        <?php echo $flashMessenger->render('info', ['alert', 'alert-dismissable', 'alert-info']); ?>
+        <?php echo $flashMessenger->render('default', ['alert', 'alert-dismissable', 'alert-warning']); ?>
+        <?php echo $flashMessenger->render('success', ['alert', 'alert-dismissable', 'alert-success']); ?>
         <?= $this->content ?>
     </main>
     <?= $this->inlineScript()

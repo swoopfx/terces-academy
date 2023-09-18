@@ -16,6 +16,23 @@ class GeneralService
     const GENERAL_TRAINING_CERTIFICATE_PROGRAM = "Business Analysis Certification Program";
 
     const GENERAL_TRAINING_INTERVIEW_PREP = "One on One Interview Prep";
+
+
+    const ACTIVE_USER_PROGRAM_STATUS_ACQUIRED = 100;
+
+    const ACTIVE_USER_PROGRAM_STATUS_STARTED_COURSE = 200;
+
+    const ACTIVE_USER_PROGRAM_STATUS_COMPLETED_COURSE = 300;
+
+    const ACTIVE_USER_PROGRAM_STATUS_CACELED_COURSE = 400;
+
+
+    const COMPANY_NAME = "Terces Academy";
+
+    const COMPANY_ADDRESS = "";
+
+
+
     /**
      * Undocumented variable
      *
@@ -92,7 +109,7 @@ class GeneralService
      * Get undocumented variable
      *
      * @return  Settings
-     */ 
+     */
     public function getSettings()
     {
         return $this->settings;
@@ -104,7 +121,7 @@ class GeneralService
      * @param  Settings  $settings  Undocumented variable
      *
      * @return  self
-     */ 
+     */
     public function setSettings(Settings $settings)
     {
         $this->settings = $settings;

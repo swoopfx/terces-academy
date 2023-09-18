@@ -292,6 +292,7 @@ class AuthController  extends AbstractActionController
                     $this->activeCampaignService->updateContactList($activeCampaignList);
                     $emailData["to"] =  $data["email"];
                     $emailData["link"] = $fulllink;
+                    $emailData["name"] = $data["fullname"];
 
                     $this->postmarkService->sendConfirmEmail($emailData);
 
@@ -532,7 +533,13 @@ class AuthController  extends AbstractActionController
         // 'navMenu' => $this->options->getNavMenu()
     }
 
+    public function editprofileAction()
+    {
+        $viewModel = new ViewModel();
+        // $id = $this->params()->fromRoute()
 
+        return $viewModel;
+    }
 
     public function resetPasswordAction()
     {

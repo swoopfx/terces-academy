@@ -58,12 +58,12 @@ class Resources
      */
     private $resourceFile;
 
-    /**
-     * Undocumented variable
-     * @ORM\Column(type="text", nullable=true)
-     * @var string
-     */
-    private $resourceDesc;
+    // /**
+    //  * Undocumented variable
+    //  * @ORM\Column(type="text", nullable=true)
+    //  * @var string
+    //  */
+    // private $resourceDesc;
 
     /**
      * Undocumented variable

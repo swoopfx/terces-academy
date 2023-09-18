@@ -1,0 +1,300 @@
+  <?php echo $this->headtitle("installment");
+
+    ?>
+  <script src="https://www.paypal.com/sdk/js?client-id=test&currency=USD"></script>
+
+
+  <!-- Call To Action Section - Start
+        ================================================== -->
+  <section class="calltoaction_section section_space_lg bg_dark decoration_wrap">
+      <div class="container">
+          <div class="row align-items-center">
+              <div id="buyi" class="col col-lg-7">
+
+
+                  <h2 class="heading_text text-white">
+                      Select Payment Methods
+                  </h2>
+                  <br>
+                  <div class="widget course_list_wrap">
+
+                      <?php foreach ($data as $key => $da) :
+
+                        ?>
+                          <div class="course_card list_layout">
+
+                              <div class="item_content">
+
+
+                                  <h3 class="item_title">
+
+                                      <?= $this->currencyFormat($da->getAmountPayable(), "USD") ?> Payabled on
+                                      <?= $this->dateFormat($da->getExpirationDate(), IntlDateFormatter::LONG, IntlDateFormatter::NONE); ?>
+
+                                  </h3>
+                                  <?php if ($da->getIsSettled()) : ?>
+                                      <span class="btn_text">PAID</span>
+                                  <?php else : ?>
+                                      <a class="btn_unfill" @click="activatePayment('<?= $da->getUuid() ?>')">
+                                          <?php
+                                            $thispayment = $da->getAmountPayable();
+                                            $thispaymentDate = $da->getExpirationDate();
+                                            ?>
+                                          <!--  <span class="btn_text">CLICK TO PAY</span> -->
+                                      </a>
+                                  <?php endif; ?>
+
+
+                              </div>
+                          </div>
+                      <?php
+                            if ($da->getIsSettled() == false) {
+
+                                break;
+                            }
+
+                        endforeach; ?>
+                      <!-- <ul class="course_list unordered_list_block">
+
+                          <li v-for="dat in paymentMethod">
+
+                              <div class="comment_item">
+                                  <div class="comment_author">
+                                      <div class="author_thumbnail">
+                                          <img :src="dat.image" alt="Terces – Online Learning Platform">
+                                      </div>
+                                      <div class="author_content">
+                                          <a href="#" @click="selectMethod(dat.method, dat.id)">
+                                              <h4 class="author_name"></h4>
+                                          </a>
+
+                                      </div>
+                                  </div>
+                                  <p></p>
+
+                              </div>
+
+                              <br>
+                          </li>
+
+                      </ul> -->
+
+
+
+
+
+                  </div>
+              </div>
+              <div class="col col-lg-5">
+                  <div class="col col-lg-12">
+                      <div class="pricing_card text-center tilt">
+                          <h3 class="card_heading">Amount Payable</h3>
+                          <div class="pricing_wrap">
+                              <span class="price_value"><sup><?= $this->currencyFormat(($thispayment ?? 0), "USD")
+                                                                ?></span>
+                              <small class="d-block"></small>
+                              <?= $this->dateFormat(($thispaymentDate ?? 0), IntlDateFormatter::LONG, IntlDateFormatter::NONE); ?>
+                              </small>
+
+                          </div>
+                          <hr>
+
+                          <div class="btn_wrap pb-0">
+                              <?php if ($this->identity()) : ?>
+
+                                  <div id="paypal-button-container"></div>
+                              <?php else : ?>
+                                  <a class="btn border_dark" href="<?= $this->url("app", ["action" => "refer"]) ?>">
+                                      <span>
+                                          <small>Pay Now</small>
+
+                                      </span>
+                                  </a>
+                              <?php endif; ?>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+  </section>
+  <!-- Call To Action Section - End
+        ================================================== -->
+
+  <script>
+      paypal.Buttons({
+          // Order is created on the server and the order id is returned
+          createOrder() {
+              return fetch("/app/paypal-create-installment-order", {
+                      method: "POST",
+                      headers: {
+                          "Content-Type": "application/json",
+                      },
+                      // use the "body" param to optionally pass additional order information
+                      // like product skus and quantities
+                      body: JSON.stringify({
+                          uuid: <?= $da->getId() ?>
+                      }),
+                  })
+                  .then((response) => response.json())
+                  .then((order) => order.id);
+          },
+          // Finalize the transaction on the server after payer approval
+          onApprove(data) {
+              return fetch("/app/paypal-capture-installment-payment", {
+                      method: "POST",
+                      headers: {
+                          "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify({
+                          orderID: data.orderID,
+                          uuid: <?= $da->getId() ?>
+                      })
+                  })
+                  .then((response) => {
+                      if (response.status == 201) {
+                          window.location.href = "/";
+                      } else if (response.status == 400) {
+                          Swal.fire({
+                              title: "Something went wrong",
+
+                              type: "error",
+                          })
+                      }
+                  })
+                  // .then((orderData) => {
+                  //     // Successful capture! For dev/demo purposes:
+                  //     // console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+                  //     // const transaction = orderData.purchase_units[0].payments.captures[0];
+                  //     // alert(`Transaction ${transaction.status}: ${transaction.id}\n\nSee console for all available details`);
+                  //     // When ready to go live, remove the alert and show a success message within this page. For example:
+                  //     // const element = document.getElementById('paypal-button-container');
+                  //     // element.innerHTML = '<h3>Thank you for your payment!</h3>';
+                  //     // Or go to another URL:  window.location.href = 'thank_you.html';
+                  // })
+                  .catch(err => {
+                      Swal.fire({
+                          title: "Something went wrong",
+                          type: "error",
+                      })
+                  });
+          }
+      }).render('#paypal-button-container');
+
+      const buycourse = Vue.createApp({
+          data() {
+              return {
+                  paymentMethod: [],
+                  activePaymentMethod: "",
+                  activeMethodId: 0,
+                  courseUuid: "",
+                  isPaying: false,
+
+                  isActivatePayment: false,
+                  activationData: [],
+              }
+          },
+
+          mounted() {
+              this.getPaymentMethod();
+          },
+
+          methods: {
+
+              activatePayment(uuid) {
+                  if (uuid == NULL) {
+
+                  } else {
+                      let formData = new FormData();
+                      formData.append("uuid", uuid);
+                      axios.post("/installment-payment", formData).then((result) => {
+                          if (result.status == 200) {
+                              this.activationData = res.data.data;
+                              this.isActivatePayment = TRUE;
+                          }
+                      }).catch((err) => {
+
+                      });
+                  }
+
+              },
+              getPaymentMethod() {
+                  axios.get("/app/get-payment-methods").then(res => {
+                      if (res.status == 200) {
+                          this.paymentMethod = res.data.data;
+                          this.activePaymentMethod = res.data.data[0].method;
+                          this.activeMethodId = res.data.data[0].id;
+                      }
+                  }).catch(err => {
+
+                  });
+              },
+
+              selectMethod(e, r) {
+                  this.activePaymentMethod = e;
+                  this.activeMethodId = r;
+                  console.log(this.actieMethodId);
+              },
+
+              payWithFlutterwave() {
+                  this.isPaying = true;
+                  axios.get("/app/pre-transaction").then(res => {
+
+                      if (res.status == 201) {
+                          resData = res.data.data;
+                          FlutterwaveCheckout({
+                              public_key: resData.public_key,
+                              tx_ref: resData.tx_ref,
+                              amount: resData.amount,
+                              currency: "USD",
+                              payment_options: "card",
+                              //   redirect_url: "https://glaciers.titanic.com/handle-flutterwave-payment",
+                              meta: {
+                                  consumer_id: 23,
+                                  consumer_mac: resData.customer.uuid,
+                              },
+                              customer: {
+                                  email: resData.customer.email,
+                                  //   phone_number: "08102909304",
+                                  name: resData.customer.fullname,
+                              },
+                              callback: function(response) { // specified callback function
+                                  if (response.status == "successful") {
+                                      cutomerboard.tx_ref = response.tx_ref;
+                                      cutomerboard.amountPayed = response.amount;
+                                      cutomerboard.concludeNewPayment();
+                                  } else {
+                                      // set error
+                                  }
+                              },
+                              customizations: {
+                                  title: "Terces Academy",
+                                  description: resData.description,
+                                  logo: "https://academy.tercesjobs.com/assets/images/oie_3QNUOMetbJh7.png",
+                              },
+                          });
+                      }
+                  }).catch()
+
+
+
+              },
+
+              payWithPaypal() {
+
+              },
+
+              pay() {
+
+                  if (this.activeMethodId == 10) {
+
+                      this.payWithFlutterwave()
+                  } else if (this.activeMethodId == 20) {
+                      this.payWithPaypal()
+                  }
+              }
+          },
+      });
+      buycourse.mount("#buyi")
+  </script>

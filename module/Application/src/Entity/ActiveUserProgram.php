@@ -4,9 +4,14 @@ namespace Application\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Authentication\Entity\User;
+use Application\Entity\Installement;
 use Application\Entity\Programs;
+use Application\Entity\ActiveUserProgramStatus;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
+ * These are the users registtered to a program 
  * @ORM\Entity
  * @ORM\Table(name="active_user_program")
  */
@@ -58,6 +63,48 @@ class ActiveUserProgram
      * @var \Datetime
      */
     private $updatedOn;
+
+    /**
+     * Undocumented variable
+     * @ORM\Column(nullable=false)
+     * @var string
+     */
+    private $uuid;
+
+    /**
+     * Undocumented variable
+     * @ORM\ManyToOne(targetEntity="Application\Entity\ActiveUserProgramStatus")
+     * @var ActiveUserProgramStatus
+     */
+    private $status;
+
+    /**
+     * Undocumented variable
+     * @ORM\Column(type="boolean", options={"default":0})
+     * @var bool
+     */
+    private $isInstallement;
+
+    /**
+     * Undocumented variable
+     * @ORM\OneToMany(targetEntity="Application\Entity\Installement", mappedBy="activeUserProgram")
+     * @var Collection
+     */
+    private $activeInstallment;
+
+    /**
+     * Undocumented variable
+     * ManyToOne(targetEntity="Application\Entity\Installement")
+     * @var Installement
+     */
+    private $paidInstallment;
+
+
+    public function __construct()
+    {
+        $this->activeInstallment = new ArrayCollection();
+    }
+
 
     /**
      * Get @ORM\Column(name="id", type="integer", nullable=false, options={"unsigned"=true})
@@ -187,5 +234,127 @@ class ActiveUserProgram
         $this->updatedOn = $updatedOn;
 
         return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  string
+     */
+    public function getUuid()
+    {
+        return $this->uuid;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  string  $uuid  Undocumented variable
+     *
+     * @return  self
+     */
+    public function setUuid(string $uuid)
+    {
+        $this->uuid = $uuid;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  ActiveUserProgramStatus
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  ActiveUserProgramStatus  $status  Undocumented variable
+     *
+     * @return  self
+     */
+    public function setStatus(ActiveUserProgramStatus $status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  Installement  $activeInstallment  Undocumented variable
+     *
+     * @return  self
+     */
+    public function setActiveInstallment(Installement $activeInstallment)
+    {
+        $this->activeInstallment = $activeInstallment;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  bool
+     */
+    public function getIsInstallement()
+    {
+        return $this->isInstallement;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  bool  $isInstallement  Undocumented variable
+     *
+     * @return  self
+     */
+    public function setIsInstallement(bool $isInstallement)
+    {
+        $this->isInstallement = $isInstallement;
+
+        return $this;
+    }
+
+    /**
+     * Get manyToOne(targetEntity="Application\Entity\Installement")
+     *
+     * @return  Installement
+     */
+    public function getPaidInstallment()
+    {
+        return $this->paidInstallment;
+    }
+
+    /**
+     * 
+     *
+     * @param  Installement  $paidInstallment  ManyToOne(targetEntity="Application\Entity\Installement")
+     *
+     * @return  self
+     */
+    public function setPaidInstallment(Installement $paidInstallment)
+    {
+        $this->paidInstallment = $paidInstallment;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  Collection
+     */
+    public function getActiveInstallment()
+    {
+        return $this->activeInstallment;
     }
 }

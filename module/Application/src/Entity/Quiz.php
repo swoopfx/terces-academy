@@ -4,6 +4,9 @@ namespace Application\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Application\Entity\Courses;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Application\Entity\QuizQuestion;
 
 
 /**
@@ -24,10 +27,17 @@ class Quiz
 
     /**
      * Undocumented variable
-     * @ORM\ManyToOne(targetEntity="Application\Entity\Courses", inversedBy="quiz")
+     * @ORM\OneToOne(targetEntity="Application\Entity\Courses", inversedBy="quiz")
      * @var Courses
      */
     private $course;
+
+    /**
+     * Undocumented variable
+     * @ORM\OneToMany(targetEntity="QuizQuestion", mappedBy="quiz")
+     * @var Collection
+     */
+    private $questions;
 
     /**
      * Undocumented variable
@@ -37,34 +47,26 @@ class Quiz
     private $uuid;
 
 
-    /**
-     * Undocumented variable
-     * @ORM\Column(nullable=false, unique=true)
-     * @var string
-     */
-    private $quizId;
-
-
-    /**
-     * Undocumented variable
-     * @ORM\Column(type="text", nullable=true)
-     * @var string
-     */
-    private $title;
 
     /**
      * Undocumented variable
      * @ORM\Column(type="datetime")
-     * @var string
+     * @var \Datetime
      */
     private $createdOn;
 
     /**
      * Undocumented variable
      * @ORM\Column(type="datetime")
-     * @var string
+     * @var \Datetime
      */
     private $updatedOn;
+
+
+    public function __construct()
+    {
+        $this->questions = new ArrayCollection();
+    }
 
     /**
      * Get @ORM\Column(name="id", type="integer")
@@ -129,54 +131,6 @@ class Quiz
      *
      * @return  string
      */
-    public function getQuizId()
-    {
-        return $this->quizId;
-    }
-
-    /**
-     * Set undocumented variable
-     *
-     * @param  string  $quizId  Undocumented variable
-     *
-     * @return  self
-     */
-    public function setQuizId(string $quizId)
-    {
-        $this->quizId = $quizId;
-
-        return $this;
-    }
-
-    /**
-     * Get undocumented variable
-     *
-     * @return  string
-     */
-    public function getTitle()
-    {
-        return $this->title;
-    }
-
-    /**
-     * Set undocumented variable
-     *
-     * @param  string  $title  Undocumented variable
-     *
-     * @return  self
-     */
-    public function setTitle(string $title)
-    {
-        $this->title = $title;
-
-        return $this;
-    }
-
-    /**
-     * Get undocumented variable
-     *
-     * @return  string
-     */
     public function getCreatedOn()
     {
         return $this->createdOn;
@@ -189,10 +143,10 @@ class Quiz
      *
      * @return  self
      */
-    public function setCreatedOn(string $createdOn)
+    public function setCreatedOn($createdOn)
     {
         $this->createdOn = $createdOn;
-
+        $this->updatedOn = $createdOn;
         return $this;
     }
 
@@ -217,6 +171,25 @@ class Quiz
     {
         $this->updatedOn = $updatedOn;
 
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  Collection
+     */
+    public function getQuestions()
+    {
+        return $this->questions;
+    }
+
+    public function addQuestions($question)
+    {
+        if (!$this->questions->contains($question)) {
+            $this->questions->add($question);
+            // $question-
+        }
         return $this;
     }
 }

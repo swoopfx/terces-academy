@@ -20,7 +20,8 @@
         <div class="tabs_wrapper">
             <ul class="nav" role="tablist">
                 <li role="presentation">
-                    <button class="active" data-bs-toggle="tab" data-bs-target="#teb_hr" type="button" role="tab" aria-selected="true">
+                    <button class="active" data-bs-toggle="tab" data-bs-target="#teb_hr" type="button" role="tab"
+                        aria-selected="true">
                         <i class="fas fa-users"></i>
                         <span>Business Analysis</span>
                     </button>
@@ -52,7 +53,7 @@
 
                                     </ul>
                                     <h3 class="item_title">
-                                        <a href="course_details.html">
+                                        <a href="">
                                             {{cou.program.title}}
                                         </a>
                                     </h3>
@@ -84,27 +85,27 @@
 
 
 <script>
-    const listee = Vue.createApp({
-        data() {
-            return {
-                courses: [],
-            }
-        },
-        mounted() {
-            this.getList();
-        },
-        methods: {
-            getList() {
+const listee = Vue.createApp({
+    data() {
+        return {
+            courses: [],
+        }
+    },
+    mounted() {
+        this.getList();
+    },
+    methods: {
+        getList() {
 
-                axios.get("/app/get-all-programs").then(res => {
-                    if (res.status = 200) {
-                        this.courses = res.data.data
-                    }
-                }).catch(err => {
+            axios.get("/app/get-all-programs").then(res => {
+                if (res.status = 200) {
+                    this.courses = res.data.data
+                }
+            }).catch(err => {
 
-                });
-            }
-        },
-    });
-    listee.mount("#csr")
+            });
+        }
+    },
+});
+listee.mount("#csr")
 </script>
