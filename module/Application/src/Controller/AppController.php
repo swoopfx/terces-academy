@@ -14,6 +14,7 @@ use Doctrine\ORM\EntityManager;
 use DoctrineModule\Validator\NoObjectExists;
 use Laminas\Session\Container;
 use Application\Service\TransactionService;
+use Application\Service\PaystackService;
 
 class AppController extends  AbstractActionController
 {
@@ -39,6 +40,20 @@ class AppController extends  AbstractActionController
      * @var TransactionService
      */
     private $transactionService;
+
+    /**
+     * Undocumented variable
+     *
+     * @var array
+     */
+    private $paystackConfig;
+
+    /**
+     * Undocumented variable
+     *
+     * @var PaystackService
+     */
+    private $paystackService;
 
     public function indexAction()
     {
@@ -183,6 +198,66 @@ class AppController extends  AbstractActionController
         $jsonModel->setVariables([
             "data" => $data
         ]);
+        return $jsonModel;
+    }
+
+    public function getPaystackPublicKeyAction()
+    {
+        $jsonModel = new JsonModel();
+        $jsonModel->setVariables([
+            "public_key" => $this->paystackConfig["public_key"]
+        ]);
+        return $jsonModel;
+    }
+
+    public function initPaystackAction()
+    {
+        $jsonModel = new JsonModel();
+
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+
+        try {
+            $data = $this->paystackService->intiatializeTransaction();
+            $data["public_key"] = $this->paystackConfig["public_key"];
+            $jsonModel->setVariables($data);
+            $response->setStatusCode(201);
+        } catch (\Throwable $th) {
+            $response->setStatusCode(400);
+            $jsonModel->setVariables([
+                "trace" => $th->getTrace(),
+                "message" => $th->getMessage()
+            ]);
+        }
+
+        return $jsonModel;
+    }
+
+
+    public function verifyPaystackAction()
+    {
+        $jsonModel = new JsonModel();
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        if ($request->isPost()) {
+            $post  = $request->getPost()->toArray();
+
+            try {
+                if ($post["reference"] == NULL) {
+                    throw new \Exception("Absent payment reference");
+                }
+                $data = $this->paystackService->verifyTrasaction($post);
+                $response->setStatusCode(201);
+                $jsonModel->setVariables([]);
+            } catch (\Throwable $th) {
+                //throw $th;
+                $response->setStatusCode(400);
+                $jsonModel->setVariables([
+                    "trace" => $th->getTrace(),
+                    "message" => $th->getMessage()
+                ]);
+            }
+        }
         return $jsonModel;
     }
 
@@ -394,6 +469,54 @@ class AppController extends  AbstractActionController
     public function setTransactionService(TransactionService $transactionService)
     {
         $this->transactionService = $transactionService;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  array
+     */
+    public function getPaystackConfig()
+    {
+        return $this->paystackConfig;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  array  $paystackConfig  Undocumented variable
+     *
+     * @return  self
+     */
+    public function setPaystackConfig(array $paystackConfig)
+    {
+        $this->paystackConfig = $paystackConfig;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  PaystackService
+     */
+    public function getPaystackService()
+    {
+        return $this->paystackService;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  PaystackService  $paystackService  Undocumented variable
+     *
+     * @return  self
+     */
+    public function setPaystackService(PaystackService $paystackService)
+    {
+        $this->paystackService = $paystackService;
 
         return $this;
     }

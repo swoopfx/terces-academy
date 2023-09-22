@@ -1,12 +1,10 @@
   <?php echo $this->headtitle("Buy Course");
 
     ?>
-  <script src="https://www.paypal.com/sdk/js?client-id=test&currency=USD"></script>
-
 
   <!-- Call To Action Section - Start
         ================================================== -->
-  <section class="calltoaction_section section_space_lg bg_dark decoration_wrap">
+  <section id="buyc" class="calltoaction_section section_space_lg bg_dark decoration_wrap">
       <div class="container">
           <div class="row align-items-center">
               <div class="col col-lg-7">
@@ -69,7 +67,14 @@
                           <div class="btn_wrap pb-0">
                               <?php if ($this->identity()) : ?>
 
-                                  <div id="paypal-button-container"></div>
+                                  <!-- <div id="paypal-button-container"></div> -->
+
+                                  <button class="btn border_dark" @click=" payWithPaystack()">
+                                      <span>
+                                          <small>Pay Now</small>
+
+                                      </span>
+                                  </button>
                               <?php else : ?>
                                   <a class="btn border_dark" href="<?= $this->url("app", ["action" => "refer"]) ?>">
                                       <span>
@@ -88,68 +93,68 @@
   </section>
   <!-- Call To Action Section - End
         ================================================== -->
-
+  <script src="https://js.paystack.co/v2/inline.js"></script>
   <script>
-      paypal.Buttons({
-          // Order is created on the server and the order id is returned
-          createOrder() {
-              return fetch("/app/paypal-create-order", {
-                      method: "POST",
-                      headers: {
-                          "Content-Type": "application/json",
-                      },
-                      // use the "body" param to optionally pass additional order information
-                      // like product skus and quantities
-                      body: JSON.stringify({
-                          //   cart: [{
-                          //       sku: "YOUR_PRODUCT_STOCK_KEEPING_UNIT",
-                          //       quantity: "YOUR_PRODUCT_QUANTITY",
-                          //   }, ],
-                      }),
-                  })
-                  .then((response) => response.json())
-                  .then((order) => order.id);
-          },
-          // Finalize the transaction on the server after payer approval
-          onApprove(data) {
-              return fetch("/app/paypal-capture-payment", {
-                      method: "POST",
-                      headers: {
-                          "Content-Type": "application/json",
-                      },
-                      body: JSON.stringify({
-                          orderID: data.orderID
-                      })
-                  })
-                  .then((response) => {
-                      if (response.status == 201) {
-                          window.location.href = "/";
-                      } else if (response.status == 400) {
-                          Swal.fire({
-                              title: "Something went wrong",
+      //   paypal.Buttons({
+      //       // Order is created on the server and the order id is returned
+      //       createOrder() {
+      //           return fetch("/app/paypal-create-order", {
+      //                   method: "POST",
+      //                   headers: {
+      //                       "Content-Type": "application/json",
+      //                   },
+      //                   // use the "body" param to optionally pass additional order information
+      //                   // like product skus and quantities
+      //                   body: JSON.stringify({
+      //                       //   cart: [{
+      //                       //       sku: "YOUR_PRODUCT_STOCK_KEEPING_UNIT",
+      //                       //       quantity: "YOUR_PRODUCT_QUANTITY",
+      //                       //   }, ],
+      //                   }),
+      //               })
+      //               .then((response) => response.json())
+      //               .then((order) => order.id);
+      //       },
+      //       // Finalize the transaction on the server after payer approval
+      //       onApprove(data) {
+      //           return fetch("/app/paypal-capture-payment", {
+      //                   method: "POST",
+      //                   headers: {
+      //                       "Content-Type": "application/json",
+      //                   },
+      //                   body: JSON.stringify({
+      //                       orderID: data.orderID
+      //                   })
+      //               })
+      //               .then((response) => {
+      //                   if (response.status == 201) {
+      //                       window.location.href = "/";
+      //                   } else if (response.status == 400) {
+      //                       Swal.fire({
+      //                           title: "Something went wrong",
 
-                              type: "error",
-                          })
-                      }
-                  })
-                  // .then((orderData) => {
-                  //     // Successful capture! For dev/demo purposes:
-                  //     // console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
-                  //     // const transaction = orderData.purchase_units[0].payments.captures[0];
-                  //     // alert(`Transaction ${transaction.status}: ${transaction.id}\n\nSee console for all available details`);
-                  //     // When ready to go live, remove the alert and show a success message within this page. For example:
-                  //     // const element = document.getElementById('paypal-button-container');
-                  //     // element.innerHTML = '<h3>Thank you for your payment!</h3>';
-                  //     // Or go to another URL:  window.location.href = 'thank_you.html';
-                  // })
-                  .catch(err => {
-                      Swal.fire({
-                          title: "Something went wrong",
-                          type: "error",
-                      })
-                  });
-          }
-      }).render('#paypal-button-container');
+      //                           type: "error",
+      //                       })
+      //                   }
+      //               })
+      //               // .then((orderData) => {
+      //               //     // Successful capture! For dev/demo purposes:
+      //               //     // console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+      //               //     // const transaction = orderData.purchase_units[0].payments.captures[0];
+      //               //     // alert(`Transaction ${transaction.status}: ${transaction.id}\n\nSee console for all available details`);
+      //               //     // When ready to go live, remove the alert and show a success message within this page. For example:
+      //               //     // const element = document.getElementById('paypal-button-container');
+      //               //     // element.innerHTML = '<h3>Thank you for your payment!</h3>';
+      //               //     // Or go to another URL:  window.location.href = 'thank_you.html';
+      //               // })
+      //               .catch(err => {
+      //                   Swal.fire({
+      //                       title: "Something went wrong",
+      //                       type: "error",
+      //                   })
+      //               });
+      //       }
+      //   }).render('#paypal-button-container');
 
       const buycourse = Vue.createApp({
           data() {
@@ -159,11 +164,16 @@
                   activeMethodId: 0,
                   courseUuid: "",
                   isPaying: false,
+                  paystack_public_key: "",
+                  paystack_amount: "",
+                  paystack_ref: "",
+                  paystack_email: "",
               }
           },
 
           mounted() {
               this.getPaymentMethod();
+              this.getPaystackPublicKey();
           },
 
           methods: {
@@ -175,6 +185,18 @@
                           this.activeMethodId = res.data.data[0].id;
                       }
                   }).catch(err => {
+
+                  });
+              },
+
+              getPaystackPublicKey() {
+                  axios.get("/app/get-paystack-public-key").then((result) => {
+                      if (result.status == 200) {
+                          this.paystack_public_key = result.data.public_key;
+
+
+                      }
+                  }).catch((err) => {
 
                   });
               },
@@ -226,6 +248,60 @@
                   }).catch()
 
 
+
+              },
+
+              payWithPaystack() {
+                  this.isPaying = true;
+                  axios.get("/app/init-paystack").then((result) => {
+                      if (result.status == 201) {
+                          this.paystack_ref = result.data.ref;
+                          this.paystack_email = result.data.email;
+                          this.paystack_amount = result.data.amount;
+                          this.paystack_public_key = result.data.public_key;
+                          const paystack = new PaystackPop();
+                          paystack.newTransaction({
+                              // other params
+                              //   key: this.paystack_public_key,
+                              //   ref: this.paystack_ref,
+                              //   email: this.paystack_email,
+                              //   amount: paystack_amount,
+
+                              key: this.paystack_public_key,
+                              email: this.paystack_email,
+                              amount: this.paystack_amount,
+                            //   currency: "USD",
+                              ref: this.paystack_ref,
+
+                              onSuccess: (transaction) => {
+                                  // Payment complete! Reference: transaction.reference 
+                                  let formData = new FormData();
+                                  formData.append("reference", transaction.reference);
+                                  axios.post("/app/verify-paystack", formData).then((result) => {
+
+                                      if (result.status == 201) {
+                                          Swal.fire({
+                                              icon: "success",
+                                              title: "Success",
+                                              text: "You have successfully subscribed to a course"
+                                          }).then(res => {
+                                              window.location.href = "/";
+                                          })
+                                      }
+                                  }).catch((err) => {
+
+                                  });
+                              },
+                              onCancel: () => {
+                                  // user closed popup
+                                  window.location.reload();
+                              }
+                          });
+                      }
+
+                  }).catch((err) => {
+
+                  });
 
               },
 

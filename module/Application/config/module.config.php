@@ -12,6 +12,8 @@ use Application\Controller\Factory\IndexControllerFactory;
 use Application\Service\Factory\TransactionServiceFactory;
 use Application\Service\PaypalService;
 use Application\Service\Factory\PaypalServiceFactory;
+use Application\Service\Factory\PaystackServiceFactory;
+use Application\Service\PaystackService;
 use Application\Service\TransactionService;
 use Application\View\Factory\IsSuscribedFactory;
 use Application\View\IsSubscribed;
@@ -105,7 +107,8 @@ return [
     "service_manager" => [
         "factories" => [
             TransactionService::class => TransactionServiceFactory::class,
-            PaypalService::class => PaypalServiceFactory::class
+            PaypalService::class => PaypalServiceFactory::class,
+            PaystackService::class => PaystackServiceFactory::class
         ]
     ],
     'view_manager' => [

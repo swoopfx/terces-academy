@@ -5,6 +5,7 @@ namespace Application\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Application\Entity\Programs;
 use Application\Entity\TransactionStatus;
+use Authentication\Entity\User;
 
 /**
  * @ORM\Entity
@@ -111,6 +112,20 @@ class Transaction
      * @var string
      */
     private $paypalConfirmData;
+
+    /**
+     * Undocumented variable
+     * @ORM\ManytoOne(targetEntity="Authentication\Entity\User")
+     * @var User
+     */
+    private $user;
+
+    /**
+     * Undocumented variable
+     * @ORM\Column(nullable=true)
+     * @var string
+     */
+    private $paystackData;
 
 
     /**
@@ -427,6 +442,54 @@ class Transaction
     public function setPaypalConfirmData(string $paypalConfirmData)
     {
         $this->paypalConfirmData = $paypalConfirmData;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  User
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  User  $user  Undocumented variable
+     *
+     * @return  self
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  string
+     */
+    public function getPaystackData()
+    {
+        return $this->paystackData;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  string  $paystackData  Undocumented variable
+     *
+     * @return  self
+     */
+    public function setPaystackData(string $paystackData)
+    {
+        $this->paystackData = $paystackData;
 
         return $this;
     }

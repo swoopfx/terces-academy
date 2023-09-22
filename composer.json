@@ -43,7 +43,8 @@
         "symfony/console": "^5.4",
         "enqueue/amqp-lib": "^0.10.18",
         "pusher/pusher-php-server": "^7.2",
-        "codeception/module-phpbrowser": "*"
+        "codeception/module-phpbrowser": "*",
+        "yabacon/paystack-php": "^2.2"
     },
     "autoload": {
         "psr-4": {
