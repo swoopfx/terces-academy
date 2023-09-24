@@ -178,6 +178,29 @@ class IndexController extends AbstractActionController
         return $viewModel;
     }
 
+    public function buyCourseNairaAction()
+    {
+        $viewModel =  new ViewModel();
+        $request = $this->getRequest();
+        $uuid = $this->params()->fromRoute("id", NULL);
+        if ($uuid == NULL) {
+            return $this->redirect()->toRoute("home");
+        }
+        $buyCourseSession = new Container("buy_course_uuid");
+        $buyCourseSession->uuid = $uuid;
+        $em = $this->entityManager;
+        $data =  $em->getRepository(Programs::class)->findOneBy([
+            "uuid" => $uuid
+        ]);
+        $paymentMethod = $em->getRepository(PaymentMethod::class)->findAll();
+
+        $viewModel->setVariables([
+            "data" => $data,
+            "method" => $paymentMethod
+        ]);
+        return $viewModel;
+    }
+
 
     public function generateInstallmentsAction()
     {

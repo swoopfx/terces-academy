@@ -2,6 +2,7 @@
 
 namespace Application\Controller;
 
+use Application\Entity\InteracPayment;
 use Application\Entity\NewsLetter;
 use Application\Entity\PaymentMethod;
 use Application\Entity\Programs;
@@ -15,6 +16,8 @@ use DoctrineModule\Validator\NoObjectExists;
 use Laminas\Session\Container;
 use Application\Service\TransactionService;
 use Application\Service\PaystackService;
+use Ramsey\Uuid\Uuid;
+use General\Service\PostMarkService;
 
 class AppController extends  AbstractActionController
 {
@@ -54,6 +57,13 @@ class AppController extends  AbstractActionController
      * @var PaystackService
      */
     private $paystackService;
+
+    /**
+     * Undocumented variable
+     *
+     * @var PostMarkService
+     */
+    private $postmarkService;
 
     public function indexAction()
     {
@@ -233,6 +243,29 @@ class AppController extends  AbstractActionController
         return $jsonModel;
     }
 
+    public function initPaystackNairaAction()
+    {
+        $jsonModel = new JsonModel();
+
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+
+        try {
+            $data = $this->paystackService->intiatializeTransactionNaira();
+            $data["public_key"] = $this->paystackConfig["public_key"];
+            $jsonModel->setVariables($data);
+            $response->setStatusCode(201);
+        } catch (\Throwable $th) {
+            $response->setStatusCode(400);
+            $jsonModel->setVariables([
+                "trace" => $th->getTrace(),
+                "message" => $th->getMessage()
+            ]);
+        }
+
+        return $jsonModel;
+    }
+
 
     public function verifyPaystackAction()
     {
@@ -260,6 +293,121 @@ class AppController extends  AbstractActionController
         }
         return $jsonModel;
     }
+
+    public function sendInteracAction()
+    {
+        $jsonModel = new JsonModel();
+        $request = $this->getRequest();
+        $em = $this->entityManager;
+        $response = $this->getResponse();
+        if ($request->isPost()) {
+            $post = $request->getPost()->toArray();
+            $inputFilter = new InputFilter();
+            $inputFilter->add([
+                'name' => 'email',
+                'required' => true,
+                'break_chain_on_failure' => true,
+                'allow_empty' => false,
+                'filters' => [
+                    [
+                        'name' => 'StripTags'
+                    ],
+                    [
+                        'name' => 'StringTrim'
+                    ]
+                ],
+                'validators' => [
+                    [
+                        'name' => 'NotEmpty',
+                        'options' => [
+                            'messages' => [
+                                'isEmpty' => 'Interac Email is required'
+                            ]
+                        ]
+                    ],
+
+                ]
+            ]);
+
+            $inputFilter->add([
+                'name' => 'amount',
+                'required' => true,
+                'break_chain_on_failure' => true,
+                'allow_empty' => false,
+                'filters' => [
+                    [
+                        'name' => 'StripTags'
+                    ],
+                    [
+                        'name' => 'StringTrim'
+                    ]
+                ],
+                'validators' => [
+                    [
+                        'name' => 'NotEmpty',
+                        'options' => [
+                            'messages' => [
+                                'isEmpty' => 'Amount paid is required'
+                            ]
+                        ]
+                    ],
+
+                ]
+            ]);
+
+            $inputFilter->setData($post);
+            if ($inputFilter->isValid()) {
+                try {
+                    $auth = $this->identity();
+                    $values = $inputFilter->getValues();
+                    $interacEntity = new InteracPayment();
+                    $interacEntity->setUuid(Uuid::uuid4())
+                        ->setCreatedOn(new \Datetime())
+                        ->setUser($auth)
+                        ->setInteracEmail($values["email"])
+                        ->setAmount($values["amount"]);
+
+                    $em->persist($interacEntity);
+                    $em->flush();
+
+                    $adminMail = [
+                        "to" => "app@tercesjobs.com",
+                        "sender_name" => $auth->getFullname(),
+                        "amount" => $values["amount"],
+                        "admin" => "Terces Academy"
+                    ];
+
+                    $adminMail2 = [
+                        "to" => "Emuveyanoghenetejiri@gmail.com",
+                        "sender_name" => $auth->getFullname(),
+                        "amount" => $values["amount"],
+                        "admin" => "Terces Academy"
+                    ];
+
+                    $customerMail = [
+                        "to" => $auth->getEmail(),
+                        "customer" => $auth->getFullname(),
+                        "amount" => $values["amount"],
+                    ];
+
+                    $this->postmarkService->initiatedInteracPaymentForAdmin($adminMail);
+                    $this->postmarkService->initiatedInteracPaymentForAdmin($adminMail2);
+                    $this->postmarkService->initiatedInteracPaymentForCustomer($customerMail);
+
+
+                    $response->setStatusCode(201);
+                } catch (\Throwable $th) {
+                    $response->setStatusCode(400);
+                    $jsonModel->setVariables([
+                        "message" => $th->getMessage()
+                    ]);
+                }
+            }
+        }
+        return $jsonModel;
+    }
+
+
 
 
     public function preTransactionAction()
@@ -517,6 +665,30 @@ class AppController extends  AbstractActionController
     public function setPaystackService(PaystackService $paystackService)
     {
         $this->paystackService = $paystackService;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  PostMarkService
+     */
+    public function getPostmarkService()
+    {
+        return $this->postmarkService;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  PostMarkService  $postmarkService  Undocumented variable
+     *
+     * @return  self
+     */
+    public function setPostmarkService(PostMarkService $postmarkService)
+    {
+        $this->postmarkService = $postmarkService;
 
         return $this;
     }

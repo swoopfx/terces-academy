@@ -51,6 +51,13 @@ class PaystackService
      */
     private $postmarkService;
 
+    /**
+     * Undocumented variable
+     *
+     * @var string
+     */
+    private $usdExchaageRate;
+
 
     public function intiatializeTransaction()
     {
@@ -80,6 +87,88 @@ class PaystackService
 
         $data = [
             "amount" => $amount,
+            "ref" => $transactionRef,
+            "email" => $auth->getEmail(),
+            "fullname" => $auth->getFullname(),
+
+        ];
+
+
+        // $endPoint = "{$this->baseEndpoint}/transaction/initialize";
+
+        // $client = new Client();
+        // $headers["Content-Type"] = "application/json";
+        // $paystackAmount = $amount * 100;
+        // $body = [
+        //     "amount" => $paystackAmount,
+        //     "email" => $auth->getEmail(),
+        //     "currency" => "USD",
+        //     "callback_url" => "",
+        //     "channels" => ["card"]
+
+        // ];
+        // $headers["Authorization"] = "Bearer " . $this->secretKey;
+        // $client->setHeaders($headers);
+        // $client->setMethod("POST");
+        // $client->setRawBody(json_encode($body));
+        // //         $client->setParameterGet($getBody);
+        // $client->setUri($endPoint);
+
+        // $response = $client->send();
+
+        // if ($response->isSuccess()) {
+        // send transaction email here
+
+
+        // $rdata = $this->paypalService->createOrder($data);
+        // $decodedData = json_decode($rdata);
+        $transactionEntity->setCreatedOn(new \Datetime())->setIsActive(TRUE)
+            ->setProgram($programEntity)
+            ->setTransactionId($transactionRef)->setUuid($uuid)
+            ->setStatus($em->find(TransactionStatus::class, TransactionService::TRANSACTION_STATUS_INITITED))
+            ->setUser($auth)
+            // ->setPaystackData()
+            ->setAmount($amount);
+        $em->persist($transactionEntity);
+        $em->flush();
+
+
+        return $data;
+        // } else {
+        //     throw new \Exception("Could not get transaction status");
+        // }
+    }
+
+
+
+    public function intiatializeTransactionNaira()
+    {
+        // $settings = $this->generalService->getSettings();
+        $buyCourseSession = new Container("buy_course_uuid");
+        /**
+         * @var User
+         */
+        $auth = $this->generalService->getAuth()->getIdentity();
+
+        $transactionRef = TransactionService::transactionUid();
+        $em = $this->generalService->getEntityManager();
+        /**
+         * @var Programs
+         */
+        $programEntity = $em->getRepository(Programs::class)->findOneBy([
+            "uuid" => $buyCourseSession->uuid
+        ]);
+        /**
+         * This could also be a coupon or calculated amount 
+         */
+        $amount = $programEntity->getCost();
+        $transactionEntity = new Transaction();
+
+        $uuid = Uuid::uuid4();
+
+
+        $data = [
+            "amount" => $amount * $this->usdExchaageRate,
             "ref" => $transactionRef,
             "email" => $auth->getEmail(),
             "fullname" => $auth->getFullname(),
@@ -206,9 +295,7 @@ class PaystackService
                 $em->flush();
                 throw new \Exception("Payment was not completed");
             }
-            
-        } 
-        else {
+        } else {
             throw new \Exception($response);
         }
     }
@@ -349,6 +436,20 @@ class PaystackService
     public function setPostmarkService(PostMarkService $postmarkService)
     {
         $this->postmarkService = $postmarkService;
+
+        return $this;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  string  $usdExchaageRate  Undocumented variable
+     *
+     * @return  self
+     */
+    public function setUsdExchaageRate(string $usdExchaageRate)
+    {
+        $this->usdExchaageRate = $usdExchaageRate;
 
         return $this;
     }

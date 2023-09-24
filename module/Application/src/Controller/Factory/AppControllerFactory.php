@@ -7,6 +7,7 @@ use Application\Service\PaystackService;
 use Application\Service\TransactionService;
 use General\Service\ActiveCampaignService;
 use General\Service\GeneralService;
+use General\Service\PostMarkService;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Psr\Container\ContainerInterface;
 
@@ -22,12 +23,14 @@ class AppControllerFactory implements FactoryInterface
          */
         $paystackService = $container->get(PaystackService::class);
         $generalService = $container->get(GeneralService::class);
+        $postmarkService = $container->get(PostMarkService::class);
         $activeCampaignService = $container->get(ActiveCampaignService::class);
         $transactionService = $container->get(TransactionService::class);
         $ctr->setEntityManager($generalService->getEntityManager())
             ->setTransactionService($transactionService)
             ->setPaystackConfig($paystackService->getPaystackConfig())
             ->setPaystackService($paystackService)
+            ->setPostmarkService($postmarkService)
             ->setActiveCampaignService($activeCampaignService);
         return $ctr;
     }

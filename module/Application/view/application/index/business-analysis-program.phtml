@@ -327,12 +327,53 @@ $f = new \NumberFormatter("en", NumberFormatter::SPELLOUT);
                 <div class="modal-body pd-25">
 
                     <div class="card card-body">
-                        <div class="callbox_wrap">
+                        <div v-if="isInteracPayment" class="callbox_wrap">
+                            <?php if ($this->identity() != NULL) :  ?>
+                                <ul class="info_list unordered_list_block text-start">
+                                    <li>
+                                        <i class="fas fa-caret-right"></i>
+                                        <span>Transfer the equivalent to interac account <strong>Emuveyanoghenetejiri@gmail.com</strong></span>
+                                    </li>
+                                    <li>
+                                        <i class="fas fa-caret-right"></i>
+                                        <span>Fill and submit the Payment form </span>
+                                    </li>
+                                    <li>
+                                        <i class="fas fa-caret-right"></i>
+                                        <span>Checking 5 Homework</span>
+                                    </li>
+                                    <li>
+                                        <i class="fas fa-caret-right"></i>
+                                        <span>Mentor Consultation </span>
+                                    </li>
+                                </ul>
+                                <div class="form_item">
+                                    <input v-model="interac_amount" type="email" name="email" placeholder="Amount Paid">
+                                </div>
+                                <div class="form_item">
+                                    <input v-model="interac_email" type="email" name="email" placeholder="Email Payment From">
+                                </div>
+                                <button :disabled="isSendingInterac" @click="confirmInteracPayment()" type="submit" class="btn btn_dark mb-5">
+                                    <span>
+                                        <small>Confirm Payment</small>
+                                        <small>Confirm Payment</small>
+                                    </span>
+                                </button>
+                            <?php else : ?>
+                                <a class="btn btn_dark w-100" href="<?= $this->url("login")  ?>">
+                                    <span>
+                                        <small>Login</small>
+                                        <small>Login</small>
+                                    </span>
+                                </a>
+                            <?php endif; ?>
+                        </div>
+                        <div v-else class="callbox_wrap">
                             <!--   <h3 class="widget_title">Get More Benefits with Our Plans</h3> -->
                             <a class="btn border_dark w-100" href=" <?= $this->url("application", ["action" => "buy-course", "id" => $data->getUuid()]) ?>">
                                 <span>
-                                    <small>Pay Once</small>
-                                    <small>Pay Once</small>
+                                    <small>Pay Once (USD)</small>
+                                    <small>Pay Once (USD)</small>
                                 </span>
                             </a>
                             <a class="btn btn_dark w-100" href="<?= ($this->identity() == NULL ? $this->url("login") : $this->url("application", ["action" => "generate-installments", "id" => $this->identity()->getUuid()], [
@@ -341,8 +382,20 @@ $f = new \NumberFormatter("en", NumberFormatter::SPELLOUT);
                                                                     ],
                                                                 ])) ?>">
                                 <span>
-                                    <small>Pay 4 installments</small>
-                                    <small>Pay 4 installments</small>
+                                    <small>Pay 4 installments (USD)</small>
+                                    <small>Pay 4 installments (USD)</small>
+                                </span>
+                            </a>
+                            <button class="btn btn_dark w-100" @click="toggleinterac()">
+                                <span>
+                                    <small>Pay with Interac (USD)</small>
+                                    <small>Pay with Interac (USD)</small>
+                                </span>
+                            </button>
+                            <a class="btn border_dark w-100" href="<?= $this->url("application", ["action" => "buy-course-naira", "id" => $data->getUuid()]) ?>">
+                                <span>
+                                    <small>Pay in Naira</small>
+                                    <small>Pay in Naira</small>
                                 </span>
                             </a>
                         </div>
@@ -365,19 +418,28 @@ $f = new \NumberFormatter("en", NumberFormatter::SPELLOUT);
             return {
                 aResources: [],
                 courseResouces: [],
+                isInteracPayment: false,
                 // ll: "Pleee",
                 quizList: [],
                 quizCountInit: 0,
                 questionCount: 0,
                 // activeQuizPage:0
+                isSendingInterac: false,
+                interac_amount: "",
+                interac_email: "",
             }
         },
 
         methods: {
 
+            toggleinterac() {
+                this.isInteracPayment = !this.isInteracPayment;
+            },
+
             checkAnswer() {
 
             },
+
             quizNextPage() {
 
                 this.quizCountInit++;
@@ -441,6 +503,44 @@ $f = new \NumberFormatter("en", NumberFormatter::SPELLOUT);
 
             submitQuiz(courseid) {
 
+            },
+
+            confirmInteracPayment() {
+                this.isSendingInterac = true;
+                if (this.interac_amount == "" || this.interac_email == "") {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Empty Field",
+                        text: "A required field is empty"
+                    });
+                } else {
+                    let formData = new FormData();
+                    formData.append("email", this.interac_email);
+                    formData.append("amount", this.interac_amount);
+                    axios.post("/app/send-interac", formData).then((result) => {
+                        if (result.status == 201) {
+                            Swal.fire({
+                                icon: "success",
+                                title: "Payment Sent",
+                                text: "A payment confirmation request has been sent to administrator. We should have processed your payment in about 2 working days"
+                            }).then(result => {
+
+                                if (result.isConfirmed) {
+                                    window.location.reload()
+                                }
+                            });
+                            this.isSendingInterac = false;
+                        }
+
+                    }).catch((err) => {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Ooops",
+                            text: "Somthing went wrong"
+                        });
+                        this.isSendingInterac = false;
+                    });
+                }
             },
         },
     });

@@ -66,6 +66,48 @@ class PostMarkService
         );
     }
 
+    public function initiatedInteracPaymentForAdmin($data)
+    {
+        // Send an email:
+        $sendResult = $this->postmarkClient->sendEmailWithTemplate(
+            "app@tercesjobs.com",
+            $data["to"],
+            33260477,
+            [
+
+                "sender_name" => $data["sender_name"],
+                "admin" => "Admin",
+
+
+                "amount" => $data["amount"],
+
+                "company_name" => GeneralService::COMPANY_NAME,
+                "company_address" => GeneralService::COMPANY_ADDRESS,
+
+            ]
+        );
+    }
+
+    public function initiatedInteracPaymentForCustomer($data)
+    {
+        // Send an email:
+        $sendResult = $this->postmarkClient->sendEmailWithTemplate(
+            "app@tercesjobs.com",
+            $data["to"],
+            33260480,
+            [
+
+                "customer" => $data["customer"],
+
+                "amount" => $data["amount"],
+
+                "company_name" => GeneralService::COMPANY_NAME,
+                "company_address" => GeneralService::COMPANY_ADDRESS,
+
+            ]
+        );
+    }
+
     /**
      * Get undocumented variable
      *

@@ -253,7 +253,7 @@
 
               payWithPaystack() {
                   this.isPaying = true;
-                  axios.get("/app/init-paystack").then((result) => {
+                  axios.get("/app/init-paystack-naira").then((result) => {
                       if (result.status == 201) {
                           this.paystack_ref = result.data.ref;
                           this.paystack_email = result.data.email;
@@ -269,15 +269,15 @@
 
                               key: this.paystack_public_key,
                               email: this.paystack_email,
-                              amount: this.paystack_amount * 100,
-                              //   currency: "USD",
+                              amount: this.paystack_amount ,
+                            //   currency: "USD",
                               ref: this.paystack_ref,
 
                               onSuccess: (transaction) => {
                                   // Payment complete! Reference: transaction.reference 
                                   let formData = new FormData();
                                   formData.append("reference", transaction.reference);
-                                  formData.append("currency", "USD");
+                                  formData.append("currency", "NGN");
                                   axios.post("/app/verify-paystack", formData).then((result) => {
 
                                       if (result.status == 201) {

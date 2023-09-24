@@ -24,6 +24,7 @@ class PaystackServiceFactory implements FactoryInterface
             ->setGeneralService($generalService)
             ->setEntityManager($em)
             ->setBaseEndpoint($baseEndpoint)
+            ->setUsdExchaageRate($config["naira_per_usd"])
             ->setPostmarkService($postMarkService)
             ->setPublicKey($paystackConfig["public_key"])
             ->setSecretKey($paystackConfig["secret_key"]);
