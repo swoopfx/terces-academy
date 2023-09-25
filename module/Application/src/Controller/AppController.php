@@ -355,6 +355,32 @@ class AppController extends  AbstractActionController
                 ]
             ]);
 
+            $inputFilter->add([
+                'name' => 'program',
+                'required' => true,
+                'break_chain_on_failure' => true,
+                'allow_empty' => false,
+                'filters' => [
+                    [
+                        'name' => 'StripTags'
+                    ],
+                    [
+                        'name' => 'StringTrim'
+                    ]
+                ],
+                'validators' => [
+                    [
+                        'name' => 'NotEmpty',
+                        'options' => [
+                            'messages' => [
+                                'isEmpty' => 'Program paid is required'
+                            ]
+                        ]
+                    ],
+
+                ]
+            ]);
+
             $inputFilter->setData($post);
             if ($inputFilter->isValid()) {
                 try {
@@ -364,6 +390,7 @@ class AppController extends  AbstractActionController
                     $interacEntity->setUuid(Uuid::uuid4())
                         ->setCreatedOn(new \Datetime())
                         ->setUser($auth)
+                        ->setProgram($em->find(Programs::class, $values["program"]))
                         ->setInteracEmail($values["email"])
                         ->setAmount($values["amount"]);
 

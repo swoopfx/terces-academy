@@ -52,18 +52,13 @@
                       <div class="pricing_card text-center tilt">
                           <h3 class="card_heading">Amount Payable</h3>
                           <div class="pricing_wrap">
-                              <span class="price_value"><sup><?= $this->currencyFormat($data->getCost(), "USD") ?></span>
+                              <span class="price_value"><sup><?= $this->currencyFormat($data->getCost(), "USD") ?></span><br>
+                              <span class="price_value"><sup> &#8358; <?= $data->getCost() * 980 ?></span>
                               <small class="d-block"></small> <?= $data->getTitle(); ?></small>
 
                           </div>
-                          <hr>
-                          <ul class="info_list unordered_list_block text-start">
-                              <li>
-                                  <i class="fas fa-caret-right"></i>
-
-                              </li>
-
-                          </ul>
+                        
+                         
                           <div class="btn_wrap pb-0">
                               <?php if ($this->identity()) : ?>
 
@@ -269,8 +264,8 @@
 
                               key: this.paystack_public_key,
                               email: this.paystack_email,
-                              amount: this.paystack_amount ,
-                            //   currency: "USD",
+                              amount: this.paystack_amount,
+                              //   currency: "USD",
                               ref: this.paystack_ref,
 
                               onSuccess: (transaction) => {

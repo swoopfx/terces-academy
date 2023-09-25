@@ -4,6 +4,7 @@ namespace Application\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Authentication\Entity\User;
+use Application\Entity\Programs;
 
 /**
  * Undocumented class
@@ -41,6 +42,13 @@ class InteracPayment
      * @var string
      */
     private $interacEmail;
+
+    /**
+     * Undocumented variable
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Programs")
+     * @var Programs
+     */
+    private $program;
 
     /**
      * Undocumented variable
@@ -306,6 +314,30 @@ class InteracPayment
     public function setInteracEmail(string $interacEmail)
     {
         $this->interacEmail = $interacEmail;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  Programs
+     */ 
+    public function getProgram()
+    {
+        return $this->program;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  Programs  $program  Undocumented variable
+     *
+     * @return  self
+     */ 
+    public function setProgram(Programs $program)
+    {
+        $this->program = $program;
 
         return $this;
     }

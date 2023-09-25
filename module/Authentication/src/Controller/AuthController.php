@@ -313,7 +313,7 @@ class AuthController  extends AbstractActionController
             } else {
                 $jsonModel->setVariables([
                     "success" => false,
-                    "message" => $inputFilter->getMessages()
+                    "message" => "Please use another email"
                 ]);
                 $response->setStatusCode(400);
                 return $jsonModel;

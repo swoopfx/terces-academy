@@ -57,13 +57,7 @@
 
                           </div>
                           <hr>
-                          <ul class="info_list unordered_list_block text-start">
-                              <li>
-                                  <i class="fas fa-caret-right"></i>
-
-                              </li>
-
-                          </ul>
+                          
                           <div class="btn_wrap pb-0">
                               <?php if ($this->identity()) : ?>
 
@@ -270,7 +264,7 @@
                               key: this.paystack_public_key,
                               email: this.paystack_email,
                               amount: this.paystack_amount * 100,
-                              //   currency: "USD",
+                              currency: "USD",
                               ref: this.paystack_ref,
 
                               onSuccess: (transaction) => {

@@ -8,6 +8,7 @@ $f = new \NumberFormatter("en", NumberFormatter::SPELLOUT);
 <div id="bana">
     <!-- Page Section - Start
         ================================================== -->
+    <input type="hidden" ref="programId" :value="<?= $data->getId() ?>">
     <section class="page_banner">
         <div class="container">
             <div class="content_wrapper">
@@ -263,7 +264,7 @@ $f = new \NumberFormatter("en", NumberFormatter::SPELLOUT);
                             <div class="item_price">
                                 <span class="sale_price"><?= $this->currencyFormat($data->getCost(), "USD") ?></span>
                             </div>
-                            <a data-toggle="modal" data-target="#modalPayment" href="<?= $this->url("application", ["action" => "buy-course", "id" => $data->getUuid()]) ?>" class="btn btn_dark">
+                            <a data-toggle="modal" data-target="#modalPayment" class="btn btn_dark">
                                 <span>
                                     <small>Get Course</small>
                                     <small>Get Course</small>
@@ -338,14 +339,14 @@ $f = new \NumberFormatter("en", NumberFormatter::SPELLOUT);
                                         <i class="fas fa-caret-right"></i>
                                         <span>Fill and submit the Payment form </span>
                                     </li>
-                                    <li>
+                                    <!-- <li>
                                         <i class="fas fa-caret-right"></i>
                                         <span>Checking 5 Homework</span>
                                     </li>
                                     <li>
                                         <i class="fas fa-caret-right"></i>
                                         <span>Mentor Consultation </span>
-                                    </li>
+                                    </li>-->
                                 </ul>
                                 <div class="form_item">
                                     <input v-model="interac_amount" type="email" name="email" placeholder="Amount Paid">
@@ -517,6 +518,7 @@ $f = new \NumberFormatter("en", NumberFormatter::SPELLOUT);
                     let formData = new FormData();
                     formData.append("email", this.interac_email);
                     formData.append("amount", this.interac_amount);
+                    formData.append("program", this.$refs.programId.value);
                     axios.post("/app/send-interac", formData).then((result) => {
                         if (result.status == 201) {
                             Swal.fire({

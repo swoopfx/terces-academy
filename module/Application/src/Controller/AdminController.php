@@ -3,9 +3,11 @@
 namespace Application\Controller;
 
 use Application\Entity\ActiveUserProgram;
+use Application\Entity\ActiveUserProgramStatus;
 use Application\Entity\CourseContent;
 use Application\Entity\CourseResource;
 use Application\Entity\Courses;
+use Application\Entity\InteracPayment;
 use Application\Entity\Programs;
 use Application\Entity\Quiz;
 use Application\Entity\QuizAnswer;
@@ -53,6 +55,189 @@ class AdminController extends AbstractActionController
     {
         $response = parent::onDispatch($e);
         $this->layout()->setTemplate("admin-layout");
+    }
+
+    public function interacPaymentAction()
+    {
+        $viewModel = new ViewModel();
+        $em = $this->entityManager;
+        $response = $this->getResponse();
+        try {
+            $order = ($this->params()->fromQuery("order", NULL) == null ? "DESC" : "ASC");
+            $pageCount = ($this->params()->fromQuery("page_count", 40) > 100 ? 100 : $this->params()->fromQuery("page_count", 40));
+            $orderBy = $this->params()->fromQuery("order_by", "id");
+            $query = $this->entityManager->createQueryBuilder()->select([
+                "i", "u", "p"
+            ])->from(InteracPayment::class, "i")
+                ->leftJoin("i.user", "u")
+                ->leftJoin("i.program", "p")
+                ->orderBy("i.{$orderBy}", $order)
+                ->getQuery()
+                ->setHydrationMode(Query::HYDRATE_ARRAY);
+
+            $paginator = new Paginator($query);
+            $totalItems = count($paginator);
+
+            $currentPage = ($this->params()->fromQuery("page")) ?: 1;
+            $totalPageCount = ceil($totalItems / $pageCount);
+            $nextPage = (($currentPage < $totalPageCount) ? $currentPage + 1 : $totalPageCount);
+            $previousPage = (($currentPage > 1) ? $currentPage - 1 : 1);
+
+            $records = $paginator->getQuery()->setFirstResult($pageCount * ($currentPage - 1))
+                // ->setMaxResults($pageCount)
+                ->getResult(Query::HYDRATE_ARRAY);
+
+            $viewModel->setVariables([
+                "previous_page" => $previousPage,
+                "next_page" => $nextPage,
+                "data" => $records
+            ]);
+        } catch (\Throwable $th) {
+
+            $response->setStatusCode(400);
+            $viewModel->setVariables([
+                "success" => FALSE
+            ]);
+        }
+        return $viewModel;
+    }
+
+    public function confirmInteracPaymentAction()
+    {
+        $jsonModel = new JsonModel();
+        $request = $this->getRequest();
+        $em = $this->entityManager;
+        $response = $this->getResponse();
+        if ($request->isPost()) {
+            $post = $request->getPost()->toArray();
+            $inputFilter = new InputFilter();
+            $inputFilter->add([
+                'name' => 'interac',
+                'required' => true,
+                'break_chain_on_failure' => true,
+                'allow_empty' => false,
+                'filters' => [
+                    [
+                        'name' => 'StripTags'
+                    ],
+                    [
+                        'name' => 'StringTrim'
+                    ]
+                ],
+                'validators' => [
+                    [
+                        'name' => 'NotEmpty',
+                        'options' => [
+                            'messages' => [
+                                'isEmpty' => 'Interac Id is required'
+                            ]
+                        ]
+                    ],
+
+                ]
+            ]);
+            $inputFilter->setData($post);
+            if ($inputFilter->isValid()) {
+                try {
+                    $values = $inputFilter->getValues();
+                    /**
+                     * @var InteracPayment
+                     */
+                    $interacEntity = $em->find(InteracPayment::class, $values["interac"]);
+                    $interacEntity->setIsConfirmed(TRUE)->setUpdatedOn(new \Datetime());
+                    $activeUserProgram = new ActiveUserProgram();
+                    $activeUserProgram->setCreatedOn(new \Datetime)
+                        ->setUser($interacEntity->getUser())
+                        ->setProgram($interacEntity->getProgram())
+                        ->setIsActive(TRUE)->setUuid(Uuid::uuid4())
+                        ->setIsInstallement(FALSE)
+                        ->setStatus($em->find(ActiveUserProgramStatus::class, GeneralService::ACTIVE_USER_PROGRAM_STATUS_ACQUIRED));
+
+                    $em->persist($activeUserProgram);
+                    $em->persist($interacEntity);
+                    $em->flush();
+
+                    $response->setStatusCode(201);
+                } catch (\Throwable $th) {
+                    $response->setStatusCode(400);
+                    $jsonModel->setVariables([
+                        "message" => $th->getMessage(),
+                        "trace" => $th->getTrace()
+                    ]);
+                }
+            } else {
+            }
+        }
+        return $jsonModel;
+    }
+
+    public function rejectInteracPaymentAction()
+    {
+        $jsonModel = new JsonModel();
+        $request = $this->getRequest();
+        $em = $this->entityManager;
+        $response = $this->getResponse();
+        if ($request->isPost()) {
+            $post = $request->getPost()->toArray();
+            $inputFilter = new InputFilter();
+            $inputFilter->add([
+                'name' => 'interac',
+                'required' => true,
+                'break_chain_on_failure' => true,
+                'allow_empty' => false,
+                'filters' => [
+                    [
+                        'name' => 'StripTags'
+                    ],
+                    [
+                        'name' => 'StringTrim'
+                    ]
+                ],
+                'validators' => [
+                    [
+                        'name' => 'NotEmpty',
+                        'options' => [
+                            'messages' => [
+                                'isEmpty' => 'Interac Id is required'
+                            ]
+                        ]
+                    ],
+
+                ]
+            ]);
+            $inputFilter->setData($post);
+            if ($inputFilter->isValid()) {
+                try {
+                    $values = $inputFilter->getValues();
+                    /**
+                     * @var InteracPayment
+                     */
+                    $interacEntity = $em->find(InteracPayment::class, $values["interac"]);
+                    $interacEntity->setIsFailed(TRUE)->setUpdatedOn(new \Datetime());
+                    // $activeUserProgram = new ActiveUserProgram();
+                    // $activeUserProgram->setCreatedOn(new \Datetime)
+                    //     ->setUser($interacEntity->getUser())
+                    //     ->setProgram($interacEntity->getProgram())
+                    //     ->setIsActive(TRUE)->setUuid(Uuid::uuid4())
+                    //     ->setIsInstallement(FALSE)
+                    //     ->setStatus($em->find(ActiveUserProgramStatus::class, GeneralService::ACTIVE_USER_PROGRAM_STATUS_ACQUIRED));
+
+                    // $em->persist($activeUserProgram);
+                    $em->persist($interacEntity);
+                    $em->flush();
+
+                    $response->setStatusCode(201);
+                } catch (\Throwable $th) {
+                    $response->setStatusCode(400);
+                    $jsonModel->setVariables([
+                        "message" => $th->getMessage(),
+                        "trace" => $th->getTrace()
+                    ]);
+                }
+            } else {
+            }
+        }
+        return $jsonModel;
     }
 
     public function indexAction()
