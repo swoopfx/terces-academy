@@ -18,6 +18,7 @@ use Application\Service\TransactionService;
 use Application\Service\PaystackService;
 use Ramsey\Uuid\Uuid;
 use General\Service\PostMarkService;
+use Application\Service\StripeService;
 
 class AppController extends  AbstractActionController
 {
@@ -64,6 +65,13 @@ class AppController extends  AbstractActionController
      * @var PostMarkService
      */
     private $postmarkService;
+
+    /**
+     * Undocumented variable
+     *
+     * @var StripeService
+     */
+    private $stripeService;
 
     public function indexAction()
     {
@@ -435,6 +443,78 @@ class AppController extends  AbstractActionController
     }
 
 
+    public function initiateStripePaymentAction()
+    {
+        $jsonModel = new JsonModel();
+
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+
+        if ($request->isPost()) {
+            try {
+                // $data = $this->paystackService->intiatializeTransaction();
+                $data = $this->stripeService->init();
+                // $data["public_key"] = $this->paystackConfig["public_key"];
+
+                $intentSession = new Container("intent_session");
+                $intentSession->intent = $data["clientSecret"];
+                $response->getHeaders()->addHeaderLine('Content-Type', 'application/json');
+                $response->setContent(json_encode($data));
+                return $response;
+            } catch (\Throwable $th) {
+                $response->setStatusCode(400);
+                // $jsonModel->setVariables([
+                //     "trace" => $th->getTrace(),
+                //     "message" => $th->getMessage()
+                // ]);
+                var_dump($th->getMessage());
+                return $response;
+            }
+        }
+
+
+        return $jsonModel;
+    }
+
+    public function finalizeStripePaymentAction()
+    {
+        $viewModel = new ViewModel();
+
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        $query = $this->params()->fromQuery();
+        $intentSession = new Container("intent_session");
+        if ($intentSession->intent == $query["payment_intent_client_secret"]) {
+            try {
+                // $data = $this->paystackService->intiatializeTransaction();\
+
+                $data = $this->stripeService->final();
+                return $this->redirect()->toRoute("app", ["action" => "stripe-success"]);
+            } catch (\Throwable $th) {
+                $response->setStatusCode(400);
+                $viewModel->setVariables([
+                    "trace" => $th->getTrace(),
+                    "message" => $th->getMessage()
+                ]);
+                return $this->redirect()->toRoute("app", ["action" => "stripe-error"]);
+            }
+        } else {
+            return $this->redirect()->toRoute("app", ["action" => "stripe-error"]);
+        }
+        return $this->redirect()->toRoute("app", ["action" => "stripe-error"]);
+    }
+
+    public function stripeSuccessAction()
+    {
+        $viewModel = new ViewModel();
+        return $viewModel;
+    }
+
+    public function stripeErrorAction()
+    {
+        $viewModel = new ViewModel();
+        return $viewModel;
+    }
 
 
     public function preTransactionAction()
@@ -716,6 +796,30 @@ class AppController extends  AbstractActionController
     public function setPostmarkService(PostMarkService $postmarkService)
     {
         $this->postmarkService = $postmarkService;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  StripeService
+     */
+    public function getStripeService()
+    {
+        return $this->stripeService;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  StripeService  $stripeService  Undocumented variable
+     *
+     * @return  self
+     */
+    public function setStripeService(StripeService $stripeService)
+    {
+        $this->stripeService = $stripeService;
 
         return $this;
     }

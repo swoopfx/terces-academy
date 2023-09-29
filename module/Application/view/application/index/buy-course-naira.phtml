@@ -57,8 +57,8 @@
                               <small class="d-block"></small> <?= $data->getTitle(); ?></small>
 
                           </div>
-                        
-                         
+
+
                           <div class="btn_wrap pb-0">
                               <?php if ($this->identity()) : ?>
 
@@ -211,8 +211,8 @@
                           FlutterwaveCheckout({
                               public_key: resData.public_key,
                               tx_ref: resData.tx_ref,
-                              amount: resData.amount,
-                              currency: "USD",
+                              amount: resData.amount ,
+                              //   currency: "USD",
                               payment_options: "card",
                               //   redirect_url: "https://glaciers.titanic.com/handle-flutterwave-payment",
                               meta: {
@@ -264,7 +264,7 @@
 
                               key: this.paystack_public_key,
                               email: this.paystack_email,
-                              amount: this.paystack_amount,
+                              amount: this.paystack_amount * 100,
                               //   currency: "USD",
                               ref: this.paystack_ref,
 

@@ -13,7 +13,9 @@ use Application\Service\Factory\TransactionServiceFactory;
 use Application\Service\PaypalService;
 use Application\Service\Factory\PaypalServiceFactory;
 use Application\Service\Factory\PaystackServiceFactory;
+use Application\Service\Factory\StripeServiceFactory;
 use Application\Service\PaystackService;
+use Application\Service\StripeService;
 use Application\Service\TransactionService;
 use Application\View\Factory\IsSuscribedFactory;
 use Application\View\IsSubscribed;
@@ -108,7 +110,8 @@ return [
         "factories" => [
             TransactionService::class => TransactionServiceFactory::class,
             PaypalService::class => PaypalServiceFactory::class,
-            PaystackService::class => PaystackServiceFactory::class
+            PaystackService::class => PaystackServiceFactory::class,
+            StripeService::class => StripeServiceFactory::class,
         ]
     ],
     'view_manager' => [

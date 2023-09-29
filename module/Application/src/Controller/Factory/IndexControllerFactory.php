@@ -13,7 +13,8 @@ class IndexControllerFactory implements FactoryInterface
     {
         $ctr = new IndexController();
         $generalService = $container->get(GeneralService::class);
-        $ctr->setEntityManager($generalService->getEntityManager());
+        $config = $container->get("config");
+        $ctr->setEntityManager($generalService->getEntityManager())->setConfig($config);
         return $ctr;
     }
 }

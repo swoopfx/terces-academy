@@ -32,6 +32,13 @@ class IndexController extends AbstractActionController
      */
     private $entityManager;
 
+    /**
+     * Undocumented variable
+     *
+     * @var array
+     */
+    private $config;
+
     public function indexAction()
     {
         return new ViewModel();
@@ -173,7 +180,9 @@ class IndexController extends AbstractActionController
 
         $viewModel->setVariables([
             "data" => $data,
-            "method" => $paymentMethod
+            "user" => $this->identity(),
+            "method" => $paymentMethod, 
+            "public_key"=>$this->config["stripe"]["publishable_key"]
         ]);
         return $viewModel;
     }
@@ -423,6 +432,30 @@ class IndexController extends AbstractActionController
     public function setEntityManager(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  array
+     */ 
+    public function getConfig()
+    {
+        return $this->config;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  array  $config  Undocumented variable
+     *
+     * @return  self
+     */ 
+    public function setConfig(array $config)
+    {
+        $this->config = $config;
 
         return $this;
     }
