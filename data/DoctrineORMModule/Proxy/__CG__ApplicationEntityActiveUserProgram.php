@@ -349,17 +349,6 @@ class ActiveUserProgram extends \Application\Entity\ActiveUserProgram implements
     /**
      * {@inheritDoc}
      */
-    public function getActiveInstallment()
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getActiveInstallment', []);
-
-        return parent::getActiveInstallment();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public function setActiveInstallment(\Application\Entity\Installement $activeInstallment)
     {
 
@@ -410,6 +399,17 @@ class ActiveUserProgram extends \Application\Entity\ActiveUserProgram implements
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'setPaidInstallment', [$paidInstallment]);
 
         return parent::setPaidInstallment($paidInstallment);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getActiveInstallment()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getActiveInstallment', []);
+
+        return parent::getActiveInstallment();
     }
 
 }

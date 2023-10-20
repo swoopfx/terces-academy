@@ -9,6 +9,7 @@ $f = new \NumberFormatter("en", NumberFormatter::SPELLOUT);
     <!-- Page Section - Start
         ================================================== -->
     <input type="hidden" ref="programId" :value="<?= $data->getId() ?>">
+    <input type="hidden" ref="puuuid" value=<?= $data->getUuid() ?>>
     <section class="page_banner">
         <div class="container">
             <div class="content_wrapper">
@@ -369,9 +370,13 @@ $f = new \NumberFormatter("en", NumberFormatter::SPELLOUT);
                                 </a>
                             <?php endif; ?>
                         </div>
+
                         <div v-else class="callbox_wrap">
+                            <div class="form_item">
+                                <input v-model="coupon" type="text" placeholder="Coupon">
+                            </div>
                             <!--   <h3 class="widget_title">Get More Benefits with Our Plans</h3> -->
-                            <a class="btn border_dark w-100" href=" <?= $this->url("application", ["action" => "buy-course", "id" => $data->getUuid()]) ?>">
+                            <a class="btn border_dark w-100" :href="generateBuyNowUrl()">
                                 <span>
                                     <small>Pay Once (USD)</small>
                                     <small>Pay Once (USD)</small>
@@ -428,10 +433,29 @@ $f = new \NumberFormatter("en", NumberFormatter::SPELLOUT);
                 isSendingInterac: false,
                 interac_amount: "",
                 interac_email: "",
+
+                coupon: "",
             }
         },
 
+        mounted() {
+            this.generateBuyNowUrl();
+        },
+
         methods: {
+
+            generateBuyNowUrl() {
+                let vvv = '<?= $data->getUuid() ?>';
+                let vrr = this.coupon;
+                if(vrr != ""){
+                    return `/buy-course/${vvv}?poc=${vrr}`;
+                }else{
+                    return `/buy-course/${vvv}`;
+                }
+               
+
+                // alert(this.$refs.puuuid.value);
+            },
 
             toggleinterac() {
                 this.isInteracPayment = !this.isInteracPayment;

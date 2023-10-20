@@ -3,6 +3,7 @@
 namespace Application\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Authentication\Entity\User;
 
 /**
  * Undocumented class
@@ -20,7 +21,19 @@ class InternshipRegister
      */
     private $id;
 
+    /**
+     * Undocumented variable
+     * @ORM\ManyToOne(targetEntity="Authentication\Entity\User")
+     * @var User
+     */
     private $user;
+
+    /**
+     * Undocumented variable
+     *
+     * @var [type]
+     */
+    private $cohort;
 
     private $createdOn;
 

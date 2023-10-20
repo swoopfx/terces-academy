@@ -452,8 +452,10 @@ class AppController extends  AbstractActionController
 
         if ($request->isPost()) {
             try {
+                $post = $request->getContent();
+                $decoded = json_decode($post, true);
                 // $data = $this->paystackService->intiatializeTransaction();
-                $data = $this->stripeService->init();
+                $data = $this->stripeService->init($decoded["items"][0]);
                 // $data["public_key"] = $this->paystackConfig["public_key"];
 
                 $intentSession = new Container("intent_session");
@@ -468,6 +470,42 @@ class AppController extends  AbstractActionController
                 //     "message" => $th->getMessage()
                 // ]);
                 var_dump($th->getMessage());
+                return $response;
+            }
+        }
+
+
+        return $jsonModel;
+    }
+
+    public function initiateStripeinstallementPaymentAction()
+    {
+        $jsonModel = new JsonModel();
+
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+
+        if ($request->isPost()) {
+            try {
+                $post = $request->getContent();
+                $decoded = json_decode($post, true);
+                // $data = $this->paystackService->intiatializeTransaction();
+                // var_dump($decoded);
+                $data = $this->stripeService->initInstallment($decoded["items"][0]);
+                // $data["public_key"] = $this->paystackConfig["public_key"];
+
+                $intentSession = new Container("intent_session");
+                $intentSession->intent = $data["clientSecret"];
+                $response->getHeaders()->addHeaderLine('Content-Type', 'application/json');
+                $response->setContent(json_encode($data));
+                return $response;
+            } catch (\Throwable $th) {
+                $response->setStatusCode(400);
+                // $jsonModel->setVariables([
+                //     "trace" => $th->getTrace(),
+                //     "message" => $th->getMessage()
+                // ]);
+                // var_dump($th->getMessage());
                 return $response;
             }
         }
@@ -497,6 +535,70 @@ class AppController extends  AbstractActionController
                     "message" => $th->getMessage()
                 ]);
                 return $this->redirect()->toRoute("app", ["action" => "stripe-error"]);
+            }
+        } else {
+            return $this->redirect()->toRoute("app", ["action" => "stripe-error"]);
+        }
+        return $this->redirect()->toRoute("app", ["action" => "stripe-error"]);
+
+    }
+
+
+    public function finalizeCareerServicePaymentAction()
+    {
+        $viewModel = new JsonModel();;
+
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        $query = $this->params()->fromQuery();
+        // $intentSession = new Container("intent_session");
+        $sess  = new Container("career_service_schedule");
+        $uuid = $sess->uuid;
+        if ($uuid != NULL) {
+            try {
+                // $data = $this->paystackService->intiatializeTransaction();\
+
+                $data = $this->stripeService->finalCareerService();
+                return $this->redirect()->toRoute("app", ["action" => "stripe-success"]);
+            } catch (\Throwable $th) {
+                $response->setStatusCode(400);
+                $viewModel->setVariables([
+                    // "trace" => $th->getTraceAsString(),
+                    "message" => $th->getMessage()
+                ]);
+                return $this->redirect()->toRoute("app", ["action" => "stripe-error"]);
+            }
+        } else {
+            return $this->redirect()->toRoute("app", ["action" => "stripe-error"]);
+        }
+        // return $this->redirect()->toRoute("app", ["action" => "stripe-error"]);
+        return $viewModel;
+    }
+
+    public function finalizeStripeInstallmentPaymentAction()
+    {
+        $viewModel = new ViewModel();
+
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        $query = $this->params()->fromQuery();
+        $intentSession = new Container("intent_session");
+        if ($intentSession->intent == $query["payment_intent_client_secret"]) {
+            try {
+                // $data = $this->paystackService->intiatializeTransaction();\
+                // $json = $request->getContent();
+                // $data = json_decode($json, true);
+                $data = $this->stripeService->finalInstallment();
+                return $this->redirect()->toRoute("app", ["action" => "stripe-success"]);
+            } catch (\Throwable $th) {
+                $response->setStatusCode(400);
+                $viewModel->setVariables([
+                    "trace" => $th->getTrace(),
+                    "message" => $th->getMessage()
+                ]);
+                var_dump($th->getMessage());
+                var_dump($th->getTrace());
+                // return $this->redirect()->toRoute("app", ["action" => "stripe-error"]);
             }
         } else {
             return $this->redirect()->toRoute("app", ["action" => "stripe-error"]);

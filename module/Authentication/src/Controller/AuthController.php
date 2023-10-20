@@ -572,7 +572,7 @@ class AuthController  extends AbstractActionController
                     // Hy
                     $userEntity->setRegistrationToken($token)->setUpdatedOn(new \Datetime());
 
-                    $fullLink = $this->getBaseUrl() . $this->url()->fromRoute('admin-auth', array(
+                    $fullLink = $this->getBaseUrl() . $this->url()->fromRoute('auth', array(
                         'action' => 'newpassword',
                         'id' => $userEntity->getRegistrationToken()
 
@@ -582,9 +582,9 @@ class AuthController  extends AbstractActionController
 
                     $this->entityManager->persist($userEntity);
                     $mailData["to"] = $userEntity->getEmail();
-                    $mailData["subject"] = "AIB Reset Password";
+                    $mailData["subject"] = "Terces Academy Reset Password";
                     $mailData["toName"] = $userEntity->getFullname();
-                    $mailData["template"] = "reset-password-mail";
+                    // $mailData["template"] = "reset-password-mail";
                     $mailData["fulllink"] = $fullLink;
                     // $mailData["var"] = [
                     //     "link" => $fullLink
@@ -592,7 +592,8 @@ class AuthController  extends AbstractActionController
 
                     // $this->mailService->execute($mailData);
 
-                    $this->mailtrap->passwordResetMail($mailData);
+                    // $this->mailtrap->passwordResetMail($mailData);
+                    $this->postmarkService->resetPassword($mailData);
 
                     $this->entityManager->flush();
                     $response->setStatusCode(201);
@@ -616,9 +617,7 @@ class AuthController  extends AbstractActionController
         $token = $this->params()->fromRoute('id');
         try {
             $entityManager = $this->entityManager;
-            // if ($token !== '' && $user = $entityManager->getRepository(User::class)->findOneBy(array(
-            //     'registrationToken' => $token
-            // ))) {
+
             $request = $this->getRequest();
             if ($request->isPost()) {
                 $post = $request->getPost();
@@ -674,7 +673,7 @@ class AuthController  extends AbstractActionController
                 ));
 
                 $inputFilter->add(array(
-                    'name' => 'verifypassword',
+                    'name' => 'passwordz',
                     'required' => true,
                     'allow_empty' => false,
                     'filters' => array(
@@ -715,7 +714,7 @@ class AuthController  extends AbstractActionController
                         'registrationToken' => $data["token"]
                     ));
                     if ($userEntity) {
-                        $userEntity->setPassword(UserService::encryptPassword($data["password"]))->setUpdatedOn(new \Datetime());
+                        $userEntity->setPassword(UserService::encryptPassword($data["password"]))->setUpdatedOn(new \Datetime())->setRegistrationToken(md5(uniqid(mt_rand(), true)));
 
                         $entityManager->persist($userEntity);
                         $entityManager->flush();
@@ -735,6 +734,18 @@ class AuthController  extends AbstractActionController
                         "messages" => $inputFilter->getMessages()
                     ]);
                     return  $jsonmodel;
+                }
+            } else {
+                try {
+                    $user = $entityManager->getRepository(User::class)->findOneBy(array(
+                        'registrationToken' => $token
+                    ));
+                    if ($user == NULL) {
+                        throw new \Exception("invalid token");
+                    }
+                } catch (\Throwable $th) {
+                    // $this->flashMessenger()->addErrorMessage($th->getMessage());
+                    $this->redirect()->toRoute("login");
                 }
             }
             // }

@@ -108,6 +108,77 @@ class PostMarkService
         );
     }
 
+    public function resetPassword($data)
+    {
+        // Send an email:
+        $sendResult = $this->postmarkClient->sendEmailWithTemplate(
+            "app@tercesjobs.com",
+            $data["to"],
+            33366369,
+            [
+
+
+                "product_name" => "Terces Academy",
+                "name" => $data["toName"],
+                "action_url" => $data["fulllink"],
+
+                "company_name" => GeneralService::COMPANY_NAME,
+                "company_address" => GeneralService::COMPANY_ADDRESS,
+
+
+
+            ]
+        );
+    }
+
+    public function customerCareerTalkNotification($data)
+    {
+        // Send an email:
+        $sendResult = $this->postmarkClient->sendEmailWithTemplate(
+            "app@tercesjobs.com",
+            $data["to"],
+            33550635,
+            [
+
+
+                "product_name" => "Terces Academy",
+                "name" => $data["name"],
+                // "action_url" => $data["fulllink"],
+                "sch_date" => $data["sch_date"],
+                "sch_time"=>$data["sch_time"],
+                "company_name" => GeneralService::COMPANY_NAME,
+                "company_address" => GeneralService::COMPANY_ADDRESS,
+
+
+
+            ]
+        );
+    }
+
+    public function adminCareerTalkNotification($data)
+    {
+        // Send an email:
+        $sendResult = $this->postmarkClient->sendEmailWithTemplate(
+            "app@tercesjobs.com",
+            "Emuveyanoghenetejiri@gmail.com",
+            33551173,
+            [
+
+
+                "product_name" => "Terces Academy",
+                "name" => $data["name"],
+                "admin" => "Admin",
+                "sch_date" => $data["sch_date"],
+                "sch_time"=>$data["sch_time"],
+                "company_name" => GeneralService::COMPANY_NAME,
+                "company_address" => GeneralService::COMPANY_ADDRESS,
+
+
+
+            ]
+        );
+    }
+
     /**
      * Get undocumented variable
      *

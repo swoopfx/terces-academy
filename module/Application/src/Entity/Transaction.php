@@ -58,6 +58,13 @@ class Transaction
 
     /**
      * Undocumented variable
+     * @ORM\Column(type="text", nullable=true)
+     * @var string
+     */
+    private $servicee;
+
+    /**
+     * Undocumented variable
      * @ORM\ManyToOne(targetEntity="Application\Entity\TransactionStatus")
      * @var TransactionStatus
      */
@@ -490,6 +497,30 @@ class Transaction
     public function setPaystackData(string $paystackData)
     {
         $this->paystackData = $paystackData;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  string
+     */ 
+    public function getServicee()
+    {
+        return $this->servicee;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  string  $servicee  Undocumented variable
+     *
+     * @return  self
+     */ 
+    public function setServicee(string $servicee)
+    {
+        $this->servicee = $servicee;
 
         return $this;
     }
