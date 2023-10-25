@@ -6,6 +6,8 @@ use Application\Entity\ActiveUserProgram;
 use Application\Entity\ActiveUserProgramStatus;
 use Application\Entity\Coupon;
 use Application\Entity\Installement;
+use Application\Entity\InternshipCohort;
+use Application\Entity\InternshipRegister;
 use Application\Entity\Programs;
 use Application\Entity\ScheduleCareerTalk;
 use Application\Entity\Transaction;
@@ -351,6 +353,72 @@ class StripeService
         $mailCustomer["customer_name"] = $auth->getFullname();
         $mailCustomer["sch_time"] = $schCareerEntity->getTimee();
         $mailCustomer["sch_date"] = $schCareerEntity->getDateString();
+        $this->postmarkService->customerCareerTalkNotification($mailCustomer);
+        $this->postmarkService->adminCareerTalkNotification($mailCustomer);
+
+
+        $em->persist($transactionEntity);
+        $em->flush();
+    }
+
+
+    public function finalInternshhip()
+    {
+
+        // send transaction email here
+        // update transaction statusand 
+        // $decodedData = Json::decode($response->getBody());
+        $auth = $this->generalService->getAuth()->getIdentity();
+
+        $transactionRef = TransactionService::transactionUid();
+        $em = $this->generalService->getEntityManager();
+        $sess = new Container("internship_payment");
+        $id = $sess->cohort;
+
+        /**
+         * @var InternshipCohort
+         */
+        $cohortEntity = $em->find(InternshipCohort::class, $id);
+
+        $uuidt = Uuid::uuid4();
+
+        $internshipEntity = new InternshipRegister();
+        $internshipEntity->setCreatedOn(new \Datetime())->setCohort($cohortEntity)->setIsPayment(TRUE)->setUser($auth);
+        $transactionEntity = new Transaction();
+        $transactionEntity->setAmount(GeneralService::GENERAL_INTERNSHIP_PRICE)
+            // ->setProgram($programEntity)
+            ->setServicee("Payment for on the job training")
+            ->setCreatedOn(new \Datetime())
+            ->setTransactionId($transactionRef)->setUuid($uuidt)
+            ->setIsActive(TRUE)
+            ->setStatus($em->find(TransactionStatus::class, TransactionService::TRANSACTION_STATUS_COMPLETED))
+            ->setUser($auth);
+
+        $em->persist($transactionEntity);
+        $em->persist($internshipEntity);
+
+        $em->flush();
+
+        $auth = $this->generalService->getAuth()->getIdentity();
+
+        $date = new \Datetime();
+
+        $mail["to"] = $auth->getEmail();
+        $mail["product_name"] = "Payment for on the job training";
+        $mail["customer_name"] = $auth->getFullname();
+        $mail["tx_ref"] = $transactionEntity->getUuid();
+        $mail["date"] = $date->format('Y-m-d');
+        $mail["amount"] = $transactionEntity->getAmount();
+
+        $this->postmarkService->acquisitionSuccessEmail($mail);
+
+        // $mailCustomer[]
+        $mailCustomer["to"] = $auth->getEmail();
+        $mailCustomer["name"] = $auth->getFullname();
+        $mailCustomer["product_name"] = "Payment for on the job training";
+        $mailCustomer["customer_name"] = $auth->getFullname();
+        $mailCustomer["sch_time"] = "00 000";
+        $mailCustomer["sch_date"] = $cohortEntity->getStartDate()->format('Y-m-d H:i:s');
         $this->postmarkService->customerCareerTalkNotification($mailCustomer);
         $this->postmarkService->adminCareerTalkNotification($mailCustomer);
 

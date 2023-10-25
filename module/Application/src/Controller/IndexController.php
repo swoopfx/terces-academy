@@ -10,6 +10,7 @@ use Application\Entity\Coupon;
 use Application\Entity\CourseContent;
 use Application\Entity\Courses;
 use Application\Entity\Installement;
+use Application\Entity\InternshipCohort;
 use Application\Entity\PaymentMethod;
 use Application\Entity\Programs;
 use Application\Entity\Quiz;
@@ -537,7 +538,7 @@ class IndexController extends AbstractActionController
         $em = $this->entityManager;
         $request = $this->getRequest();
         $response = $this->getResponse();
-       
+
         $id = $this->params()->fromRoute("id", NULL);
         try {
             if ($id == NULL) {
@@ -562,6 +563,82 @@ class IndexController extends AbstractActionController
         }
 
         return $viewModel;
+    }
+
+    public function internshipAction()
+    {
+        $viewModel = new ViewModel();
+        $viewModel->setVariables([
+            "data" => $data = '',
+            "public_key" => $this->config["stripe"]["publishable_key"],
+            'url' => $this->config["uurl"]
+        ]);
+        return $viewModel;
+    }
+
+    public function internshipPaymentAction()
+    {
+        $viewModel = new ViewModel();
+        $jsonModel = new JsonModel();
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        $em = $this->entityManager;
+        $data = [];
+        if ($request->isPost()) {
+            $post = $request->getPost();
+            try {
+                if (!$this->identity()) {
+                    throw new \Exception("You need to be logged in");
+                }
+
+                if ($post["cohort"] == NULL) {
+                    throw new \Exception("please select a cohort");
+                }
+
+                /**
+                 * @var InternshipCohort
+                 */
+                $cohortEntity = $em->find(InternshipCohort::class, $post["cohort"]);
+                $nowDate = new \DateTime();
+                if ($cohortEntity->getStartDate() < $nowDate) {
+
+                    throw new \Exception("You cannot register to this cohort please select another");
+                }
+                $sess = new Container("internship_payment");
+                $sess->cohort = $cohortEntity->getId();
+                $response->setStatusCode(202);
+                return $jsonModel;
+            } catch (\Throwable $th) {
+                $jsonModel->setVariables([
+                    "message" => $th->getMessage()
+                ]);
+                $response->setStatusCode(400);
+                return $jsonModel;
+            }
+        } else {
+            $sess = new Container("internship_payment");
+            $cohortEntity = $em->find(InternshipCohort::class, $sess->cohort);
+
+        }
+        $viewModel->setVariables([
+            "data" => $cohortEntity,
+            "user" => $this->identity(),
+            "public_key" => $this->config["stripe"]["publishable_key"],
+            'url' => $this->config["uurl"]
+        ]);
+        return $viewModel;
+    }
+
+
+    public function getInternshipCohortAction()
+    {
+        $jsonModel = new JsonModel();
+        $em = $this->entityManager;
+        $data = $em->getRepository(InternshipCohort::class)->createQueryBuilder("s")->select("s")->getQuery()->getArrayResult();
+        $jsonModel->setVariables([
+            "data" => $data
+        ]);
+        return $jsonModel;
     }
 
 
