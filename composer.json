@@ -51,7 +51,9 @@
         "psr-4": {
             "Application\\": "module/Application/src/",
             "General\\": "module/General/src/",
-            "Authentication\\": "module/Authentication/src/"
+            "Authentication\\": "module/Authentication/src/",
+            "Internship\\": "module/Internship/src/",
+            "Admissions\\": "module/Admissions/src/"
         }
     },
     "autoload-dev": {

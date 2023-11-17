@@ -3,6 +3,8 @@
 namespace General\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Internship\Entity\Assignments;
+use Internship\Entity\AssignmentResult;
 
 /**
  * @ORM\Entity
@@ -83,6 +85,18 @@ class Image
      * @ORM\Column(name="updated_on", type="datetime", nullable=true)
      */
     private $updatedOn;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Internship\Entity\Assignments", inversedBy="resos")
+     * @var Assignments
+     */
+    private $assigmentResos;
+
+     /**
+     * @ORM\ManyToOne(targetEntity="Internship\Entity\AssignmentResult", inversedBy="resultResos")
+     * @var AssignmentResult
+     */
+    private $assignResultResos;
 
     /**
      */
@@ -293,6 +307,30 @@ class Image
     public function setLowres($lowres)
     {
         $this->lowres = $lowres;
+        return $this;
+    }
+
+    /**
+     * Get the value of assigmentResos
+     *
+     * @return  Assignments
+     */
+    public function getAssigmentResos()
+    {
+        return $this->assigmentResos;
+    }
+
+    /**
+     * Set the value of assigmentResos
+     *
+     * @param  Assignments  $assigmentResos
+     *
+     * @return  self
+     */
+    public function setAssigmentResos(Assignments $assigmentResos)
+    {
+        $this->assigmentResos = $assigmentResos;
+
         return $this;
     }
 }

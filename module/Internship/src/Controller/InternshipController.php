@@ -5,6 +5,10 @@ namespace Internship\Controller;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\Tools\Pagination\Paginator;
+use General\Service\GeneralService;
+use Internship\Entity\Assignments;
 
 class InternshipController extends AbstractActionController
 {
@@ -23,6 +27,56 @@ class InternshipController extends AbstractActionController
     }
 
     public function loginAction()
+    {
+        $viewModel = new ViewModel();
+        return $viewModel;
+    }
+
+    public function assignmentsAction()
+    {
+        $viewModel = new ViewModel();
+        try {
+            $order = ($this->params()->fromQuery("order", NULL) == null ? "DESC" : "ASC");
+            $pageCount = ($this->params()->fromQuery("page_count", GeneralService::MAX_PAGE_COUNT) > 100 ? 100 : $this->params()->fromQuery("page_count", GeneralService::MAX_PAGE_COUNT));
+            $orderBy = $this->params()->fromQuery("order_by", "id");
+            $query = $this->entityManager->createQueryBuilder()->select([
+                "c", "r",
+            ])->from(Assignments::class, "c")
+                ->leftJoin("c.resos", "r")
+
+
+                ->orderBy("c.{$orderBy}", $order)
+                ->getQuery()
+                ->setHydrationMode(Query::HYDRATE_ARRAY);
+
+            $paginator = new Paginator($query);
+            $totalItems = count($paginator);
+
+            $currentPage = ($this->params()->fromQuery("page")) ?: 1;
+            $totalPageCount = ceil($totalItems / $pageCount);
+            $nextPage = (($currentPage < $totalPageCount) ? $currentPage + 1 : $totalPageCount);
+            $previousPage = (($currentPage > 1) ? $currentPage - 1 : 1);
+
+            $records = $paginator->getQuery()->setFirstResult($pageCount * ($currentPage - 1))
+                ->setMaxResults($pageCount)
+                ->getResult(Query::HYDRATE_ARRAY);
+
+            $viewModel->setVariables([
+                "previous_page" => $previousPage,
+                "next_page" => $nextPage,
+                "total_page" => $totalPageCount,
+                "data" => $records
+            ]);
+        } catch (\Throwable $th) {
+
+            // var_dump($th->getTrace());
+            $url = $this->getRequest()->getHeader('Referer')->getUri();
+            return $this->redirect()->toUrl($url);
+        }
+        return $viewModel;
+    }
+
+    public function resourcesAction()
     {
         $viewModel = new ViewModel();
         return $viewModel;

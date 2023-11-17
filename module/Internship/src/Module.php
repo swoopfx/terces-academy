@@ -18,7 +18,7 @@ class Module
         $sharedEvent = $moduleManager->getEventManager()->getSharedManager();
         $sharedEvent->attach(__NAMESPACE__, 'dispatch', function ($e) {
             $controller = $e->getTarget();
-            $controller->layout('layout/control');
+            $controller->layout('internship/layout');
         });
     }
 }

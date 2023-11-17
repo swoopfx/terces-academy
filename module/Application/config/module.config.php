@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Application;
 
 use Application\Controller\AdminController;
+use Application\Controller\AdminProcessController;
 use Application\Controller\AppController;
 use Application\Controller\Factory\AdminControllerFactory;
+use Application\Controller\Factory\AdminProcessControllerFactory;
 use Application\Controller\Factory\AppControllerFactory;
 use Application\Controller\Factory\IndexControllerFactory;
 use Application\Service\Factory\TransactionServiceFactory;
@@ -80,6 +82,21 @@ return [
                     ],
                 ],
             ],
+
+            'admin-process' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/adminprocess[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[a-zA-Z0-9_-]*'
+                    ],
+                    'defaults' => [
+                        'controller' => AdminProcessController::class,
+                        'action'     => 'index',
+                    ],
+                ],
+            ]
         ],
     ],
     'controllers' => [
@@ -87,7 +104,8 @@ return [
             // Controller\IndexController::class => IndexControllerFactory::class,
             Controller\IndexController::class => IndexControllerFactory::class,
             AppController::class => AppControllerFactory::class,
-            AdminController::class => AdminControllerFactory::class
+            AdminController::class => AdminControllerFactory::class,
+            AdminProcessController::class => AdminProcessControllerFactory::class
         ],
     ],
     'doctrine' => [

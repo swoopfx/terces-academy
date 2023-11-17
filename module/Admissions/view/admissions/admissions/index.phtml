@@ -1,0 +1,113 @@
+<?php $this->headtitle("Admissions Login"); ?>
+
+<!-- Register Section - Start
+================================================== -->
+<section id="adminlogin" class="register_section section_space_lg">
+<div class="container">
+  <div class="row justify-content-center">
+      <div class="col col-lg-5">
+          <h1 class="register_heading text-center">Account Login</h1>
+          <p class="register_heading_description text-center">
+              Please enter your User/Email & Password
+          </p>
+
+          <div class="register_form signup_login_form">
+              <div class="form_item">
+                  <input v-model="email" type="email" name="email" placeholder="Username or Email">
+              </div>
+              <div class="form_item">
+                  <input v-model="password" type="password" name="password" placeholder="**********">
+              </div>
+              <div class="remenber_forget row mb-3 align-items-center justify-content-between">
+                  <div class="col col-6">
+                      <div class="checkbox_item mb-0">
+                          <input id="checkbox_remenber" type="checkbox">
+                          <label for="checkbox_remenber">Remember me</label>
+                      </div>
+                  </div>
+                  <div class="col col-6">
+                      <div class="forget_password text-end">
+                          <a href="<?= $this->url("auth", ["action"=>"reset-password"]) ?>">Forget Password</a>
+                      </div>
+                  </div>
+              </div>
+              <div v-if="isSubmitting">
+                  <i class="fas fa-spinner fs-3x"></i>
+              </div>
+              <div v-else>
+                  <button @click="login" type="submit" class="btn btn_dark mb-5">
+                      <span>
+                          <small>Login Now</small>
+                          <small>Login Now</small>
+                      </span>
+                  </button>
+              </div>
+
+              <p class="mb-0 text-center">don't have an account? <a href="<?= $this->url("register") ?>">Register Here</a></p>
+          </div>
+
+      </div>
+  </div>
+</div>
+</section>
+<!-- Register Section - End
+================================================== -->
+
+
+
+
+<script>
+const adminloginApp = Vue.createApp({
+  data() {
+      return {
+          email: "",
+          password: "",
+          isSubmitting: false,
+      }
+  },
+  methods: {
+      login() {
+          if (this.email == "" || this.password == "") {
+              Swal.fire({
+                  icon: 'error',
+                  title: 'Oops...',
+                  text: 'A required field is empty',
+                  footer: '<a href="">Why do I have this issue?</a>'
+              });
+          } else {
+              this.isSubmitting = true;
+              let formData = new FormData();
+              formData.append("password", this.password);
+              formData.append("email", this.email);
+              axios.post("/auth/loginjson", formData).then(res => {
+                  if (res.status == 201) {
+                      //process redirection 
+                      // make a toast notification 
+                      this.$toast.open({
+                          message: "Successfully logged in",
+                          type: "success",
+                          duration: 20000,
+                          dismissible: true
+                      });
+                      // console.log(res.data.redirect);
+                      window.location.href = res.data.redirect;
+                  }
+
+              }).catch(err => {
+
+                  this.$toast.open({
+                      message: err.response.data.messages,
+                      type: "error",
+                      duration: 20000,
+                      dismissible: true
+                  })
+
+                  this.isSubmitting = false;
+              });
+          }
+      }
+  },
+});
+adminloginApp.use(VueToast.ToastPlugin);
+adminloginApp.mount("#adminlogin")
+</script>

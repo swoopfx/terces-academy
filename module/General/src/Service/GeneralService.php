@@ -35,6 +35,8 @@ class GeneralService
 
     const COMPANY_ADDRESS = "";
 
+    const MAX_PAGE_COUNT = 50;
+
 
 
     /**

@@ -57,6 +57,18 @@ class AdminController extends AbstractActionController
         $this->layout()->setTemplate("admin-layout");
     }
 
+    public function internshipBoardAction()
+    {
+        $viewModel = new ViewModel();
+        return $viewModel;
+    }
+
+    public function internshipCreateAssignmentAction()
+    {
+        $viewModel = new ViewModel();
+        return $viewModel;
+    }
+
     public function interacPaymentAction()
     {
         $viewModel = new ViewModel();
