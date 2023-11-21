@@ -58,6 +58,34 @@ class InternshipRegister
     private $isPayment;
 
     /**
+     * Undocumented variable
+     * @ORM\Column(type="boolean", nullable=false, options={"default": 0})
+     * @var bool
+     */
+    private $isPartialpayment;
+
+    /**
+     * Undocumented variable
+     * @ORM\Column(type="date", nullable=true)
+     * @var \Datetime
+     */
+    private $nextPaymentDate;
+
+    /**
+     * Undocumented variable
+     * @ORM\Column(nullable=true)
+     * @var string
+     */
+    private $nextPaymentValue;
+
+    /**
+     * Undocumented variable
+     * @ORM\Column(type="boolean", nullable=false, options={"default": 0})
+     * @var bool
+     */
+    private $isFullpayment;
+
+    /**
      * Get the value of id
      *
      * @return  integer
@@ -183,6 +211,104 @@ class InternshipRegister
     public function setIsPayment(bool $isPayment)
     {
         $this->isPayment = $isPayment;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  bool
+     */
+    public function getIsPartialpayment()
+    {
+        return $this->isPartialpayment;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  bool  $isPartialpayment  Undocumented variable
+     *
+     * @return  self
+     */
+    public function setIsPartialpayment(bool $isPartialpayment)
+    {
+        $this->isPartialpayment = $isPartialpayment;
+
+        return $this;
+    }
+
+
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  \Datetime
+     */
+    public function getNextPaymentDate()
+    {
+        return $this->nextPaymentDate;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  \Datetime  $nextPaymentDate  Undocumented variable
+     *
+     * @return  self
+     */
+    public function setNextPaymentDate(\Datetime $nextPaymentDate)
+    {
+        $this->nextPaymentDate = $nextPaymentDate;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  string
+     */
+    public function getNextPaymentValue()
+    {
+        return $this->nextPaymentValue;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  string  $nextPaymentValue  Undocumented variable
+     *
+     * @return  self
+     */
+    public function setNextPaymentValue(string $nextPaymentValue)
+    {
+        $this->nextPaymentValue = $nextPaymentValue;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  bool
+     */
+    public function getIsFullpayment()
+    {
+        return $this->isFullpayment;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  bool  $isFullpayment  Undocumented variable
+     *
+     * @return  self
+     */
+    public function setIsFullpayment(bool $isFullpayment)
+    {
+        $this->isFullpayment = $isFullpayment;
 
         return $this;
     }

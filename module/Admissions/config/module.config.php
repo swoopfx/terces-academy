@@ -56,7 +56,7 @@ return [
                     ],
                     'defaults' => [
                         'controller' => AdmissionsController::class,
-                        'action'     => 'dashboard',
+                        'action'     => 'index',
                     ],
                 ],
             ],

@@ -1,4 +1,15 @@
-<?php echo $this->headtitle("Internship Payment"); ?>
+<?php
+
+use General\Service\GeneralService;
+use Laminas\Session\Container;
+
+echo $this->headtitle("Internship Payment");
+$sess = new Container("internship_payment");
+$price = GeneralService::GENERAL_INTERNSHIP_PRICE;
+if ($sess->isPartPayment) {
+    $price = $price / 2;
+}
+?>
 
 <script src="https://js.stripe.com/v3/"></script>
 
@@ -165,7 +176,7 @@
                         <div class="pricing_wrap">
 
 
-                            <span class="price_value"><sup><?= $this->currencyFormat(1500, "USD") ?></span>
+                            <span class="price_value"><sup><?= $this->currencyFormat($price, "USD") ?></span>
                             <small class="d-block"></small> On the job Training</small>
                         </div>
                     </div>
@@ -228,7 +239,7 @@
     // The items the customer wants to buy
     const items = [{
         id: <?= $data->getId() ?>,
-        amount: '1500',
+        amount: <?= $price ?>,
         coupon: ''
 
     }];

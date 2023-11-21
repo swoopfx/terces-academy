@@ -1,0 +1,81 @@
+<?= $this->headtitle("Internship Paymnet Middleware"); ?>
+
+<section class="popular_event_section section_space_lg bg_dark decoration_wrap">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col col-lg-6">
+                <div class="section_heading mb-lg-0">
+                    <h2 class="heading_text text-white">
+                        Select Payment Type
+                    </h2>
+                    <p class="heading_description mb-0 text-white">
+                        <!--  Rhoncus dolor purus non enim praesent elementum facilisis. Nec tincidunt praesent semper feugiat nibh sed pulvinar. Faucibus interdum posuere lorem ipsum dolor sit amet consectetur adipiscing. Iaculis eu non diam phasellus vestibulum lorem sed risus. -->
+                    </p>
+
+                </div>
+            </div>
+            <div class="col col-lg-6">
+                <div class="popular_event_list">
+                    <h3 class="wrap_title">Internship Payment</h3>
+                    <div class="pricing_card text-center tilt">
+                        <div class="pricing_wrap">
+
+
+                            <span class="price_value"><sup><?= $this->currencyFormat(1500, "USD") ?></span>
+                            <small class="d-block"></small> On the job Training</small>
+                        </div>
+                    </div>
+                    <ul class="unordered_list_block">
+
+                        <div class="card card-calendar">
+                            <div class="card-body p-3">
+                                <?php if ($this->identity()) : ?>
+                                    <a class="btn border_dark w-100" href="<?= $this->url("application", ["action" => "internship-payment"], [
+                                                                                'query' => ['pmeth' => 'full'],
+                                                                            ]) ?>">
+                                        <span>
+                                            <small>Pay Once (USD)</small>
+                                            <small>Pay Once (USD)</small>
+                                        </span>
+                                    </a>
+
+                                    <a class="btn border_dark w-100" href="<?= $this->url("application", ["action" => "internship-payment"], [
+                                                                                'query' => ['pmeth' => 'part'],
+                                                                            ]) ?>">
+                                        <span>
+                                            <small>Pay Twice (USD)</small>
+                                            <small>Pay Twice (USD)</small>
+                                        </span>
+                                    </a>
+
+                                    <a class="btn border_dark w-100" href="">
+                                        <span>
+                                            <small>Pay Once (Naira)</small>
+                                            <small>Pay Once (Naira)</small>
+                                        </span>
+                                    </a>
+                                <?php else : ?>
+                                    <a class="btn border_dark" href="<?= $this->url("app", ["action" => "refer"]) ?>">
+                                        <span>
+                                            <small>LOGIN</small>
+
+                                        </span>
+                                    </a>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="deco_item shape_img_1" data-parallax='{"y" : 130, "smoothness": 6}'>
+        <img src="assets/images/shape/shape_img_3.png" alt="Terces – Online Learning Platform">
+    </div>
+    <div class="deco_item shape_img_2" data-parallax='{"x" : -130, "smoothness": 6}'>
+        <img src="assets/images/shape/shape_img_3.png" alt="Terces – Online Learning Platform">
+    </div>
+    <div class="deco_item shape_img_3" data-parallax='{"y" : -130, "smoothness": 6}'>
+        <img src="assets/images/shape/shape_img_3.png" alt="Terces – Online Learning Platform">
+    </div>
+</section>

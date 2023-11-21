@@ -37,6 +37,8 @@ class GeneralService
 
     const MAX_PAGE_COUNT = 50;
 
+    const INTERNSHIP_INSTALLMENT = "+4 week";
+
 
 
     /**

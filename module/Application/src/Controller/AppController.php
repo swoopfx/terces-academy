@@ -598,7 +598,7 @@ class AppController extends  AbstractActionController
                     // "trace" => $th->getTraceAsString(),
                     "message" => $th->getMessage()
                 ]);
-                return $this->redirect()->toRoute("app", ["action" => "stripe-error"]);
+                // return $this->redirect()->toRoute("app", ["action" => "stripe-error"]);
             }
         } else {
             return $this->redirect()->toRoute("app", ["action" => "stripe-error"]);

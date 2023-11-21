@@ -11,6 +11,7 @@ class AdmissionsController extends AbstractActionController
     public function indexAction()
     {
         $viewModel = new ViewModel();
+        return $viewModel;
     }
 
 

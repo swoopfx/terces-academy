@@ -104,9 +104,9 @@
                 } else {
                     let formData = new FormData();
                     formData.append("cohort", this.selectedCohort)
-                    axios.post("/internship-payment", formData).then((result) => {
+                    axios.post("/internship-payment-middleware", formData).then((result) => {
                         if (result.status == 202) {
-                            window.location.href = "/internship-payment";
+                            window.location.href = "/internship-payment-middleware";
                             this.isSubmitting = false;
                         }
                     }).catch((err) => {

@@ -576,7 +576,7 @@ class IndexController extends AbstractActionController
         return $viewModel;
     }
 
-    public function internshipPaymentAction()
+    public function internshipPaymentMiddlewareAction()
     {
         $viewModel = new ViewModel();
         $jsonModel = new JsonModel();
@@ -602,7 +602,7 @@ class IndexController extends AbstractActionController
                 $nowDate = new \DateTime();
                 if ($cohortEntity->getStartDate() < $nowDate) {
 
-                    throw new \Exception("You cannot register to this cohort please select another");
+                    throw new \Exception("You cannot register to this cohort please select another date");
                 }
                 $sess = new Container("internship_payment");
                 $sess->cohort = $cohortEntity->getId();
@@ -615,11 +615,68 @@ class IndexController extends AbstractActionController
                 $response->setStatusCode(400);
                 return $jsonModel;
             }
-        } else {
-            $sess = new Container("internship_payment");
-            $cohortEntity = $em->find(InternshipCohort::class, $sess->cohort);
-
         }
+        return $viewModel;
+    }
+
+    public function internshipInstallmentAction()
+    {
+        $viewModel = new ViewModel();
+
+        return $viewModel;
+    }
+
+    public function internshipPaymentAction()
+    {
+        $viewModel = new ViewModel();
+        $jsonModel = new JsonModel();
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        $em = $this->entityManager;
+        $data = [];
+        // if ($request->isPost()) {
+        // $post = $request->getPost();
+        try {
+            $sess = new Container("internship_payment");
+            $params = $this->params()->fromQuery("pmeth", NULL);
+            if ($params == "part") {
+                $sess->isPartPayment = TRUE;
+            } else {
+                $sess->isPartPayment = FALSE;
+            }
+
+
+            if (!$this->identity()) {
+                throw new \Exception("You need to be logged in");
+            }
+
+            if ($sess->cohort  == NULL) {
+                throw new \Exception("please select a cohort");
+            }
+
+            /**
+             * @var InternshipCohort
+             */
+            $cohortEntity = $em->find(InternshipCohort::class, $sess->cohort);
+            $nowDate = new \DateTime();
+            if ($cohortEntity->getStartDate() < $nowDate) {
+
+                throw new \Exception("You cannot register to this cohort please select another");
+            }
+
+            // $response->setStatusCode(202);
+            // return $jsonModel;
+        } catch (\Throwable $th) {
+            $jsonModel->setVariables([
+                "message" => $th->getMessage()
+            ]);
+            $response->setStatusCode(400);
+            return $jsonModel;
+        }
+        // } else {
+        //     $sess = new Container("internship_payment");
+        //     $cohortEntity = $em->find(InternshipCohort::class, $sess->cohort);
+        // }
         $viewModel->setVariables([
             "data" => $cohortEntity,
             "user" => $this->identity(),

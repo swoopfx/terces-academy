@@ -45,7 +45,7 @@ return [
                 'type'    => Segment::class,
                 'options' => [
 
-                    'route'    => '/internship[/:action[/:id]]',
+                    'route'    => '/internships[/:action[/:id]]',
                     'constraints' => [
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                         'id' => '[a-zA-Z0-9_-]*'

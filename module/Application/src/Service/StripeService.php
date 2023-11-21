@@ -374,6 +374,8 @@ class StripeService
         $em = $this->generalService->getEntityManager();
         $sess = new Container("internship_payment");
         $id = $sess->cohort;
+        $isPartPayment = $sess->isPartPayment;
+
 
         /**
          * @var InternshipCohort
@@ -383,9 +385,26 @@ class StripeService
         $uuidt = Uuid::uuid4();
 
         $internshipEntity = new InternshipRegister();
-        $internshipEntity->setCreatedOn(new \Datetime())->setCohort($cohortEntity)->setIsPayment(TRUE)->setUser($auth);
+        $internshipEntity->setCreatedOn(new \Datetime())
+            ->setCohort($cohortEntity)
+            ->setIsPayment(TRUE)->setUser($auth);
+
+        $amountPayable = GeneralService::GENERAL_INTERNSHIP_PRICE;
+
+        if ($isPartPayment) {
+            $nextPaymentValue = GeneralService::GENERAL_INTERNSHIP_PRICE / 2;
+            $internshipEntity->setIsPartialpayment(TRUE)->setIsFullpayment(FALSE);
+            $startDateEntity = $cohortEntity->getStartDate();
+
+            $clonedStartDate  = clone $startDateEntity;
+            $clonedStartDate->modify(GeneralService::INTERNSHIP_INSTALLMENT);
+            $internshipEntity->setNextPaymentDate($clonedStartDate)->setNextPaymentValue(strval($nextPaymentValue))
+                ->getIsFullpayment(FALSE);
+        } else {
+            $internshipEntity->setIsFullpayment(TRUE)->setIsPartialpayment(FALSE);
+        }
         $transactionEntity = new Transaction();
-        $transactionEntity->setAmount(GeneralService::GENERAL_INTERNSHIP_PRICE)
+        $transactionEntity->setAmount($amountPayable)
             // ->setProgram($programEntity)
             ->setServicee("Payment for on the job training")
             ->setCreatedOn(new \Datetime())
