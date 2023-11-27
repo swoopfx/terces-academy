@@ -221,6 +221,79 @@ class PaystackService
         // }
     }
 
+    public function intiatializeInternshipTransactionNaira()
+    {
+        // $settings = $this->generalService->getSettings();
+
+        /**
+         * @var User
+         */
+        $auth = $this->generalService->getAuth()->getIdentity();
+        $sess = new Container("internship_payment");
+        $transactionRef = TransactionService::transactionUid();
+        $em = $this->generalService->getEntityManager();
+
+
+        $transactionEntity = new Transaction();
+
+        $uuid = Uuid::uuid4();
+
+
+        // $data = [
+        //     "amount" => $amount * $this->usdExchaageRate,
+        //     "ref" => $transactionRef,
+        //     "email" => $auth->getEmail(),
+        //     "fullname" => $auth->getFullname(),
+
+        // ];
+        $amount = GeneralService::GENERAL_INTERNSHIP_PRICE;
+
+        $endPoint = "{$this->baseEndpoint}/transaction/initialize";
+
+        $client = new Client();
+        $headers["Content-Type"] = "application/json";
+        $paystackAmount = $amount * 100 * $this->usdExchaageRate;
+        $body = [
+            "amount" => $paystackAmount,
+            "email" => $auth->getEmail(),
+            "currency" => "NGN",
+            "callback_url" => "",
+            "channels" => ["card"]
+
+        ];
+        $headers["Authorization"] = "Bearer " . $this->secretKey;
+        $client->setHeaders($headers);
+        $client->setMethod("POST");
+        $client->setRawBody(json_encode($body));
+        //         $client->setParameterGet($getBody);
+        $client->setUri($endPoint);
+
+        $response = $client->send();
+
+        if ($response->isSuccess()) {
+            // send transaction email here
+        }
+
+
+        $rdata = $this->paypalService->createOrder($data);
+        $decodedData = json_decode($rdata);
+        $transactionEntity->setCreatedOn(new \Datetime())->setIsActive(TRUE)
+            ->setProgram($programEntity)
+            ->setTransactionId($transactionRef)->setUuid($uuid)
+            ->setStatus($em->find(TransactionStatus::class, TransactionService::TRANSACTION_STATUS_INITITED))
+            ->setUser($auth)
+            // ->setPaystackData()
+            ->setAmount($amount);
+        $em->persist($transactionEntity);
+        $em->flush();
+
+
+        return $data;
+        // } else {
+        //     throw new \Exception("Could not get transaction status");
+        // }
+    }
+
     public function verifyTrasaction($data)
     {
         $endPoint = "{$this->baseEndpoint}/transaction/verify/" . $data["reference"];
@@ -293,6 +366,77 @@ class PaystackService
                 $transactionEntity->setUpdatedOn(new \Datetime())->setStatus($em->find(TransactionStatus::class, TransactionService::TRANSACTION_STATUS_FAILED));
                 $em->persist($transactionEntity);
                 $em->flush();
+                throw new \Exception("Payment was not completed");
+            }
+        } else {
+            throw new \Exception($response);
+        }
+    }
+
+    public function verifyinternshipTrasaction($data)
+    {
+        $endPoint = "{$this->baseEndpoint}/transaction/verify/" . $data["reference"];
+        $auth = $this->generalService->getAuth()->getIdentity();
+        $em = $this->entityManager;
+        $client = new Client();
+        $headers["Content-Type"] = "application/json";
+        //         $getBody = [
+        //             "transactionReference"=>$data["transactionReference"],
+        //         ];
+        $headers["Authorization"] = "Bearer " . $this->secretKey;
+        $client->setHeaders($headers);
+        $client->setMethod("GET");
+        //         $client->setParameterGet($getBody);
+        $client->setUri($endPoint);
+
+        $response = $client->send();
+        // var_dump()
+        if ($response->isSuccess()) {
+            // send transaction email here
+            // update transaction statusand 
+            $decodedData = Json::decode($response->getBody());
+            /**
+             * @var Transaction
+             */
+            // $transactionEntity =  new Transaction();
+
+            if (filter_var($decodedData->status, FILTER_VALIDATE_BOOL)) {
+
+                // $transactionEntity->setUpdatedOn(new \Datetime())
+                //     ->setUuid(Uuid::uuid4())
+                //     ->setCreatedOn(new \DateTime())
+                //     ->setTransactionId($data["reference"])
+                //     ->setUser($auth)
+                //     ->setIsActive(FALSE)
+                //     ->setAmount($data["amount"])
+                //     ->setStatus($em->find(TransactionStatus::class, TransactionService::TRANSACTION_STATUS_COMPLETED))
+                //     ->setPaystackData($data["data"]);
+
+                return true;
+
+
+
+                // $date = new \Datetime();
+
+                // $mail["to"] = $auth->getEmail();
+                // $mail["product_name"] = "On the job Training";
+                // $mail["customer_name"] = $auth->getFullname();
+                // $mail["tx_ref"] = $transactionEntity->getUuid();
+                // $mail["date"] = $date->format('Y-m-d');
+                // $mail["amount"] = $transactionEntity->getAmount();
+
+                // $this->postmarkService->acquisitionSuccessEmail($mail);
+
+                // // $em->persist($activeUserProgramEntity);
+                // $em->persist($transactionEntity);
+                // $em->flush();
+
+
+                // send EMailto customer
+            } else {
+                // $transactionEntity->setUpdatedOn(new \Datetime())->setStatus($em->find(TransactionStatus::class, TransactionService::TRANSACTION_STATUS_FAILED));
+                // $em->persist($transactionEntity);
+                // $em->flush();
                 throw new \Exception("Payment was not completed");
             }
         } else {

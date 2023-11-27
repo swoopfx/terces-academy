@@ -274,6 +274,30 @@ class AppController extends  AbstractActionController
         return $jsonModel;
     }
 
+    public function initInternshipPaystackNairaAction()
+    {
+        $jsonModel = new JsonModel();
+
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+
+
+        try {
+            $data = $this->paystackService->intiatializeInternshipTransactionNaira();
+            $data["public_key"] = $this->paystackConfig["public_key"];
+            $jsonModel->setVariables($data);
+            $response->setStatusCode(201);
+        } catch (\Throwable $th) {
+            $response->setStatusCode(400);
+            $jsonModel->setVariables([
+                "trace" => $th->getTrace(),
+                "message" => $th->getMessage()
+            ]);
+        }
+
+        return $jsonModel;
+    }
+
 
     public function verifyPaystackAction()
     {
@@ -540,7 +564,6 @@ class AppController extends  AbstractActionController
             return $this->redirect()->toRoute("app", ["action" => "stripe-error"]);
         }
         return $this->redirect()->toRoute("app", ["action" => "stripe-error"]);
-
     }
 
 
@@ -603,6 +626,49 @@ class AppController extends  AbstractActionController
         } else {
             return $this->redirect()->toRoute("app", ["action" => "stripe-error"]);
         }
+        // return $this->redirect()->toRoute("app", ["action" => "stripe-error"]);
+        return $viewModel;
+    }
+
+    public function finalizeInternshipPaystackPaymentAction()
+    {
+        $viewModel = new JsonModel();;
+
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        // $query = $this->params()->fromQuery();
+        // $intentSession = new Container("intent_session");
+        $sess = new Container("internship_payment");
+        $id = $sess->cohort;
+        if ($request->isPost()) {
+            $post = $request->getPost();
+            if ($post != NULL && $id != NULL) {
+                $fulldata = json_decode($post["data"], true);
+
+                try {
+                    $this->paystackService->verifyinternshipTrasaction($fulldata);
+
+                    $data = $this->stripeService->finalInternshhip();
+                    $ped = $this->params()->fromQuery("ped", NULL);
+                    if ($ped == "ix") {
+                        $jsonModel = new JsonModel();
+                        $response->setStatusCode(201);
+                        return $jsonModel;
+                    }
+                    return $this->redirect()->toRoute("app", ["action" => "stripe-success"]);
+                } catch (\Throwable $th) {
+                    $response->setStatusCode(400);
+                    $viewModel->setVariables([
+                        // "trace" => $th->getTraceAsString(),
+                        "message" => $th->getMessage()
+                    ]);
+                    // return $this->redirect()->toRoute("app", ["action" => "stripe-error"]);
+                }
+            } else {
+                return $this->redirect()->toRoute("app", ["action" => "stripe-error"]);
+            }
+        }
+
         // return $this->redirect()->toRoute("app", ["action" => "stripe-error"]);
         return $viewModel;
     }

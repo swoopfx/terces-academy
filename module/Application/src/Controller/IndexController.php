@@ -582,6 +582,7 @@ class IndexController extends AbstractActionController
         $jsonModel = new JsonModel();
         $request = $this->getRequest();
         $response = $this->getResponse();
+        $auth = $this->identity();
         $em = $this->entityManager;
         $data = [];
         if ($request->isPost()) {
@@ -616,6 +617,11 @@ class IndexController extends AbstractActionController
                 return $jsonModel;
             }
         }
+        $viewModel->setVariables([
+            "usdExchaageRate"=>$this->config["naira_per_usd"],
+            "paystackPublicKey"=>$this->config["paystack"]["dev"]["public_key"],
+            "email"=>$auth->getEmail(),
+        ]);
         return $viewModel;
     }
 

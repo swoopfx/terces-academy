@@ -1,4 +1,15 @@
-<?= $this->headtitle("Internship Paymnet Middleware"); ?>
+<?php
+
+use Application\Service\TransactionService;
+use General\Service\GeneralService;
+
+echo $this->headtitle("Internship Paymnet Middleware");
+$trasactionUid = TransactionService::transactionUid();
+$amount = GeneralService::GENERAL_INTERNSHIP_PRICE;
+$amount = $amount * 100 * $usdExchaageRate;
+
+
+?>
 
 <section class="popular_event_section section_space_lg bg_dark decoration_wrap">
     <div class="container">
@@ -47,13 +58,15 @@
                                             <small>Pay Twice (USD)</small>
                                         </span>
                                     </a>
+                                    <div id="sa">
+                                        <a @click="payWithPaystack()" class="btn border_dark w-100">
+                                            <span>
+                                                <small>Pay Once (Naira)</small>
+                                                <small>Pay Once (Naira)</small>
+                                            </span>
+                                        </a>
+                                    </div>
 
-                                    <a class="btn border_dark w-100" href="">
-                                        <span>
-                                            <small>Pay Once (Naira)</small>
-                                            <small>Pay Once (Naira)</small>
-                                        </span>
-                                    </a>
                                 <?php else : ?>
                                     <a class="btn border_dark" href="<?= $this->url("app", ["action" => "refer"]) ?>">
                                         <span>
@@ -79,3 +92,69 @@
         <img src="assets/images/shape/shape_img_3.png" alt="Terces – Online Learning Platform">
     </div>
 </section>
+
+<script src="https://js.paystack.co/v2/inline.js"></script>
+
+<script>
+    const saaa = Vue.createApp({
+        data() {
+            return {
+                // paymentMethod: [],
+                // activePaymentMethod: "",
+                // activeMethodId: 0,
+                // courseUuid: "",
+                // isPaying: false,
+                // paystack_public_key: "",
+                // paystack_amount: "",
+                // paystack_ref: "",
+                // paystack_email: "",
+            }
+        },
+
+        methods: {
+            payWithPaystack() {
+                this.isPaying = true;
+                const paystack = new PaystackPop();
+                paystack.newTransaction({
+
+
+                    key: '<?= $paystackPublicKey ?>',
+                    email: '<?= $email ?>',
+                    amount: '<?= $amount ?>',
+                    //   currency: "USD",
+                    ref: '<?= $trasactionUid ?>',
+
+                    onSuccess: (transaction) => {
+                        // Payment complete! Reference: transaction.reference 
+                        let formData = new FormData();
+                        formData.append("reference", transaction.reference);
+                        formData.append("currency", "NGN");
+                        formData.append("amount", transaction.amount)
+                        formData.append("data", JSON.stringify(transaction));
+                        // console.log(transaction);
+                        axios.post("/app/finalize-internship-paystack-payment?ped=ix", formData).then((result) => {
+
+                            if (result.status == 201) {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Success",
+                                    text: "You have successfully subscribed to a course"
+                                }).then(res => {
+                                    window.location.href = "/";
+                                })
+                            }
+                        }).catch((err) => {
+
+                        });
+                    },
+                    onCancel: () => {
+                        // user closed popup
+                        window.location.reload();
+                    }
+                });
+
+            },
+        },
+    });
+    saaa.mount("#sa");
+</script>

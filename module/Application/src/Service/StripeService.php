@@ -362,7 +362,7 @@ class StripeService
     }
 
 
-    public function finalInternshhip()
+    public function finalInternshhip($data = NULL)
     {
 
         // send transaction email here
@@ -408,10 +408,15 @@ class StripeService
             // ->setProgram($programEntity)
             ->setServicee("Payment for on the job training")
             ->setCreatedOn(new \Datetime())
-            ->setTransactionId($transactionRef)->setUuid($uuidt)
+            ->setTransactionId($transactionRef)
+            ->setUuid($uuidt)
             ->setIsActive(TRUE)
             ->setStatus($em->find(TransactionStatus::class, TransactionService::TRANSACTION_STATUS_COMPLETED))
             ->setUser($auth);
+
+        if ($data != NULL) {
+            $transactionEntity->setPaystackData($data);
+        }
 
         $em->persist($transactionEntity);
         $em->persist($internshipEntity);
