@@ -1,5 +1,7 @@
 <?php
 
+namespace Admissions;
+
 use Admissions\Controller\AdmissionsController;
 use Admissions\Controller\Factory\AdmissionsControllerFactory;
 use Admissions\Controller\Factory\PortalControllerFactory;
@@ -40,6 +42,7 @@ return [
         ],
         'template_map' => [
             'admissions/layout'           => __DIR__ . '/../view/layout/admissionsLayout.phtml',
+            'sendmoney/layout'           => __DIR__ . '/../view/layout/sendmoneyLayout.phtml',
             'pre/admissions/layout'           => __DIR__ . '/../view/layout/preLayout.phtml',
         ]
     ],

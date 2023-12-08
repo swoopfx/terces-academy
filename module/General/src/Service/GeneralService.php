@@ -40,6 +40,11 @@ class GeneralService
     const INTERNSHIP_INSTALLMENT = "+4 week";
 
 
+    const ADMISSIONS_SEND_MONEY_INITIATED = 100;
+
+    const ADMISSION_SEND_MONEY_COMPLETED = 200;
+
+
 
     /**
      * Undocumented variable

@@ -486,6 +486,7 @@ class AuthController  extends AbstractActionController
                         $redirect = $this->url()->fromRoute('home', array(), array(
                             'force_canonical' => true
                         ));
+                       
                         $cont = new Container("refer");
                         $referal = $cont->refer;
                         if ($referal != "") {
