@@ -3,13 +3,16 @@
 namespace Internship;
 
 use Internship\Controller\Factory\InternshipControllerFactory;
+use Internship\Controller\Factory\ProjectsControllerFactory;
 use Internship\Controller\InternshipController;
+use Internship\Controller\ProjectController;
 use Laminas\Router\Http\Segment;
 
 return [
     "controllers" => [
         "factories" => [
-            InternshipController::class => InternshipControllerFactory::class
+            InternshipController::class => InternshipControllerFactory::class,
+            ProjectController::class=>ProjectsControllerFactory::class,
 
         ],
     ],
