@@ -25,10 +25,24 @@ class ProjectController extends AbstractActionController
         return $viewModel;
     }
 
-    public function getProjectsAction(){
+    public function getProjectsAction()
+    {
         $jsonModel = new JsonModel();
         $em = $this->entityManager;
-        $data = $em->getRepository(Projects::class)->createQueryBuilder("p")->select("p")
+        try {
+            $data = $em->getRepository(Projects::class)
+            ->createQueryBuilder("p")
+            ->select("p")
+            
+            ->getQuery()
+            ->getArrayResult();
+        $jsonModel->setVariables([
+            "data" => $data
+        ]);
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+       
         return $jsonModel;
     }
 
@@ -38,7 +52,7 @@ class ProjectController extends AbstractActionController
      * @param  EntityManager  $entityManager  Undocumented variable
      *
      * @return  self
-     */ 
+     */
     public function setEntityManager(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;

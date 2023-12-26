@@ -37,7 +37,7 @@ class User
 
 
     /**
-     * @ORM\Column(length=30, nullable=false, unique=true)
+     * @ORM\Column(length=200, nullable=false, unique=true)
      */
     private $email;
 

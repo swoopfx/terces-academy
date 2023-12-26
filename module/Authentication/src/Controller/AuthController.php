@@ -277,19 +277,20 @@ class AuthController  extends AbstractActionController
                     ];
 
                     // call active campaign newsletter
-                    $activeResponse = $this->activeCampaignService->createContact($activeCampaignData);
-                    $activeCampaignList = [
-                        "list" => 5,
-                        "contact" => $activeResponse["id"]
-                    ];
-                    // $fulllink = "";
+                    // $activeResponse = $this->activeCampaignService->createContact($activeCampaignData);
+                    // $activeCampaignList = [
+                    //     "list" => 5,
+                    //     "contact" => $activeResponse["id"]
+                    // ];
+                    // // $fulllink = "";
+                    // $this->activeCampaignService->updateContactList($activeCampaignList);
                     $fulllink = $this->url()->fromRoute('auth', array(
                         'action' => 'confirm-email',
                         'id' => $userEntity->getRegistrationToken()
                     ), array(
                         'force_canonical' => true
                     ));
-                    $this->activeCampaignService->updateContactList($activeCampaignList);
+                   
                     $emailData["to"] =  $data["email"];
                     $emailData["link"] = $fulllink;
                     $emailData["name"] = $data["fullname"];
@@ -303,7 +304,8 @@ class AuthController  extends AbstractActionController
                 } catch (\Throwable $th) {
                     $jsonModel->setVariables([
                         "success" => false,
-                        "message" => $th->getMessage()
+                        "message" => $th->getMessage(),
+                        "trace"=>$th->getTraceAsString()
                     ]);
                     $response->setStatusCode(400);
                 }
