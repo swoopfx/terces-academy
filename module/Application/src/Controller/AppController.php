@@ -19,6 +19,7 @@ use Application\Service\PaystackService;
 use Ramsey\Uuid\Uuid;
 use General\Service\PostMarkService;
 use Application\Service\StripeService;
+use Doctrine\ORM\Query;
 
 class AppController extends  AbstractActionController
 {
@@ -856,6 +857,30 @@ class AppController extends  AbstractActionController
                 // ]);
             }
         }
+
+        return $jsonModel;
+    }
+
+    public function getProgramsForTirdpartyAction()
+    {
+        $jsonModel = new JsonModel();
+        $em = $this->entityManager;
+        $response = $this->getResponse();
+        $repo = $em->getRepository(Programs::class);
+        $data = $repo->createQueryBuilder("p")
+            ->select([
+                "p"
+            ])->orderBy("p.id", "DESC")
+            ->getQuery()
+            ->getResult(Query::HYDRATE_ARRAY);
+
+        $jsonModel->setVariables([
+            "data" => $data
+        ]);
+        $response = $this->getResponse();
+        $response->getHeaders()->addHeaderLine('Access-Control-Allow-Origin', '*');
+        $response->getHeaders()->addHeaderLine('Access-Control-Allow-Credentials', 'true');
+        $response->getHeaders()->addHeaderLine('Access-Control-Allow-Methods', 'POST PUT DELETE GET');
 
         return $jsonModel;
     }

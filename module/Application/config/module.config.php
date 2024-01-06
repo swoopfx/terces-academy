@@ -16,9 +16,11 @@ use Application\Service\PaypalService;
 use Application\Service\Factory\PaypalServiceFactory;
 use Application\Service\Factory\PaystackServiceFactory;
 use Application\Service\Factory\StripeServiceFactory;
+use Application\Service\Factory\ZoomServiceFactory;
 use Application\Service\PaystackService;
 use Application\Service\StripeService;
 use Application\Service\TransactionService;
+use Application\Service\ZoomService;
 use Application\View\Factory\IsSuscribedFactory;
 use Application\View\IsSubscribed;
 use Laminas\Router\Http\Literal;
@@ -130,6 +132,7 @@ return [
             PaypalService::class => PaypalServiceFactory::class,
             PaystackService::class => PaystackServiceFactory::class,
             StripeService::class => StripeServiceFactory::class,
+            ZoomService::class => ZoomServiceFactory::class,
         ]
     ],
     'view_manager' => [
