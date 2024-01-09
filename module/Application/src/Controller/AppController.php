@@ -880,7 +880,7 @@ class AppController extends  AbstractActionController
         $response = $this->getResponse();
         $response->getHeaders()->addHeaderLine('Access-Control-Allow-Origin', '*');
         $response->getHeaders()->addHeaderLine('Access-Control-Allow-Credentials', 'true');
-        $response->getHeaders()->addHeaderLine('Access-Control-Allow-Methods', 'POST PUT DELETE GET');
+        $response->getHeaders()->addHeaderLine('Access-Control-Allow-Methods', 'GET');
 
         return $jsonModel;
     }
