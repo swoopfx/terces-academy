@@ -34,6 +34,10 @@ class ZoomService
     {
         $client = new Client();
         $client->setUri($this->zoomConfig["base_url"] . "/users/me/meetings");
+        $client->setHeaders([
+            "Authorization" => "Bearer {$this->zoomTokenRes["access_token"]}",
+            "Content-Type" => "application/x-www-form-urlencoded",
+        ]);
         $body = [
             "agenda" => "Career Talk",
             "default_password" => false,
@@ -41,7 +45,7 @@ class ZoomService
             "password" => "123456",
             "pre_schedule" => false,
             "schedule_for" => $data["user_email"],
-           
+
             "settings" => [
                 "additional_data_center_regions" => [
                     "TY"
@@ -153,6 +157,13 @@ class ZoomService
 
         ];
         $client->setRawBody(json_encode($body));
+        $response = $client->send();
+        if ($response->isSuccess()) {
+            $body = json_decode($response->getBody());
+            
+        }else{
+            throw new \Exception("could not create the meeting");
+        }
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace Application\Service\Factory;
 
 use Application\Service\StripeService;
+use Application\Service\ZoomService;
 use General\Service\GeneralService;
 use General\Service\PostMarkService;
 use Laminas\ServiceManager\Factory\FactoryInterface;
@@ -20,7 +21,9 @@ class StripeServiceFactory implements FactoryInterface
         $postmarkService = $container->get(PostMarkService::class);
         $stripeConfig = $config["stripe"];
         $stripeClient = new StripeClient($stripeConfig["secret_key"]);
-        $xserv->setStripeClient($stripeClient)->setGeneralService($generalService)
+        $xserv->setStripeClient($stripeClient)
+            ->setGeneralService($generalService)
+            ->setZoomService($container->get(ZoomService::class))
             ->setPostmarkService($postmarkService);
         return $xserv;
     }

@@ -18,6 +18,7 @@ use Doctrine\ORM\EntityManager;
 use Laminas\Session\Container;
 use General\Service\GeneralService;
 use Ramsey\Uuid\Uuid;
+use Application\Service\ZoomService;
 
 class StripeService
 {
@@ -45,6 +46,11 @@ class StripeService
 
 
     private $postmarkService;
+
+    /**
+     * @var ZoomService
+     */
+    private $zoomService;
 
     public function calculateTax($items, $currency)
     {
@@ -356,6 +362,7 @@ class StripeService
         $this->postmarkService->customerCareerTalkNotification($mailCustomer);
         $this->postmarkService->adminCareerTalkNotification($mailCustomer);
 
+        // generate zoom meeting service
 
         $em->persist($transactionEntity);
         $em->flush();
@@ -634,6 +641,20 @@ class StripeService
     public function setPostmarkService($postmarkService)
     {
         $this->postmarkService = $postmarkService;
+
+        return $this;
+    }
+
+    /**
+     * Set the value of zoomService
+     *
+     * @param  ZoomService  $zoomService
+     *
+     * @return  self
+     */
+    public function setZoomService(ZoomService $zoomService)
+    {
+        $this->zoomService = $zoomService;
 
         return $this;
     }

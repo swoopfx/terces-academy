@@ -18,7 +18,7 @@ class ZoomServiceFactory  implements FactoryInterface
         $activeZoomConfig = $zoomConfig[$config["active_env"]];
         $client = new Client();
         $base64 = base64_encode($activeZoomConfig["client_id"] . ":" . $activeZoomConfig["client_secret"]);
-        $client->setUri($zoomConfig["base_url"] . "/oauth/token");
+        $client->setUri("https://zoom.us/oauth/token");
         $client->setHeaders([
             "Authorization" => "Basic " . $base64,
             "Content-Type" => "application/x-www-form-urlencoded",
