@@ -25,13 +25,14 @@ class ZoomServiceFactory  implements FactoryInterface
         ]);
         $body = [
             "grant_type" => "account_credentials",
-            "account_id" => $zoomConfig["account_id"]
+            "account_id" => $activeZoomConfig["account_id"]
         ];
+        $client->setRawBody(json_encode($body));
         $response = $client->send();
         if ($response->isSuccess()) {
             $xserv->setZoomTokenRes(json_decode($response->getBody(), true));
         } else {
-            throw new \Exception("Could not retrieve Zoom Token");
+            throw new \Exception($response->getReasonPhrase());
         }
         $xserv->setConfig($config)->setZoomConfig($zoomConfig);
 

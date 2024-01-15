@@ -9,6 +9,7 @@ use Doctrine\ORM\Query;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use General\Service\GeneralService;
 use Internship\Entity\Assignments;
+use Laminas\View\Model\JsonModel;
 
 class InternshipController extends AbstractActionController
 {
@@ -69,11 +70,17 @@ class InternshipController extends AbstractActionController
             ]);
         } catch (\Throwable $th) {
 
-            // var_dump($th->getTrace());
-            $url = $this->getRequest()->getHeader('Referer')->getUri();
-            return $this->redirect()->toUrl($url);
+            var_dump($th->getMessage());
+            // $url = $this->getRequest()->getHeader('Referer')->getUri();
+            // return $this->redirect()->toUrl($url);
         }
         return $viewModel;
+    }
+
+    public function getCohortAction()
+    {
+        $jsonModel = new JsonModel();
+        return $jsonModel;
     }
 
     public function resourcesAction()

@@ -363,6 +363,10 @@ class StripeService
         $this->postmarkService->adminCareerTalkNotification($mailCustomer);
 
         // generate zoom meeting service
+        $zoomData["user_email"] = "";
+        $zoomData["user_name"] = "";
+        $zoomData["date_time"] = "";
+        // hydrate zoom entity 
 
         $em->persist($transactionEntity);
         $em->flush();

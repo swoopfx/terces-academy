@@ -1049,3 +1049,4 @@ class AppController extends  AbstractActionController
         return $this;
     }
 }
+

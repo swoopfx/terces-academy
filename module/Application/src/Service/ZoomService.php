@@ -32,28 +32,29 @@ class ZoomService
 
     public function createMeeting($data)
     {
+        $token = $this->zoomTokenRes;
         $client = new Client();
         $client->setUri($this->zoomConfig["base_url"] . "/users/me/meetings");
         $client->setHeaders([
-            "Authorization" => "Bearer {$this->zoomTokenRes["access_token"]}",
+            "Authorization" => "Bearer {$token["access_token"]}",
             "Content-Type" => "application/x-www-form-urlencoded",
         ]);
         $body = [
             "agenda" => "Career Talk",
             "default_password" => false,
             "duration" => 30,
-            "password" => "123456",
+            "password" => "Simple123@",
             "pre_schedule" => false,
             "schedule_for" => $data["user_email"],
 
             "settings" => [
-                "additional_data_center_regions" => [
-                    "TY"
-                ],
+                // "additional_data_center_regions" => [
+                //     "TY"
+                // ],
                 "allow_multiple_devices" => true,
                 // "alternative_hosts" => "jchill@example.com;thill@example.com",
                 "alternative_hosts_email_notification" => true,
-                "approval_type" => 1,
+                "approval_type" => 0,
                 // "approved_or_denied_countries_or_regions" => [
                 //     "approved_list" => [
                 //         "CX"
@@ -87,7 +88,7 @@ class ZoomService
                 //     ]
                 // ],
                 "calendar_type" => 1,
-                "close_registration" => true,
+                "close_registration" => false,
                 "contact_email" => $data["user_email"],
                 "contact_name" => $data["user_name"],
                 "email_notification" => true,
@@ -151,7 +152,7 @@ class ZoomService
                 // ]
             ],
             "start_time" => "",
-            "timezone" => "",
+            "timezone" => "America/Montreal",
             "topic" => ""
 
 
@@ -160,8 +161,8 @@ class ZoomService
         $response = $client->send();
         if ($response->isSuccess()) {
             $body = json_decode($response->getBody());
-            
-        }else{
+            return $body;
+        } else {
             throw new \Exception("could not create the meeting");
         }
     }
