@@ -151,7 +151,7 @@ class ZoomService
                 //     ]
                 // ]
             ],
-            "start_time" => "",
+            "start_time" => $data["date_time"],
             "timezone" => "America/Montreal",
             "topic" => ""
 

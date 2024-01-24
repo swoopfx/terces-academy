@@ -1,6 +1,6 @@
 <?php $this->headtitle("Internship Dashboard"); ?>
 
-<div class="row">
+<div id="ddd" class="row">
     <div class="col-lg-8 col-12">
         <div class="card">
             <div class="table-responsive">
@@ -405,10 +405,10 @@
             <div class="card card-background card-background-mask-info h-100 tilt" data-tilt="" style="will-change: transform; transform: perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1);">
                 <div class="full-background" style="background-image: url('../../../assets/img/curved-images/white-curved.jpeg')"></div>
                 <div class="card-body pt-4 text-center">
-                    <h2 class="text-white mb-0 mt-2 up">Earnings</h2>
-                    <h1 class="text-white mb-0 up">$15,800</h1>
-                    <span class="badge badge-lg d-block bg-gradient-dark mb-2 up">+15% since last week</span>
-                    <a href="javascript:;" class="btn btn-outline-white mb-2 px-5 up">View more</a>
+                    <h2 class="text-white mb-0 mt-2 up">ACTIVE</h2>
+                    <h3 class="text-white mb-0 up">{{cohort}}</h3>
+                    <!--   <span class="badge badge-lg d-block bg-gradient-dark mb-2 up">+15% since last week</span>
+                    <a href="javascript:;" class="btn btn-outline-white mb-2 px-5 up">View more</a> -->
                 </div>
             </div>
 
@@ -454,3 +454,30 @@
         </div>
     </div>
 </div>
+<script>
+    const boardApp = Vue.createApp({
+        data() {
+            return {
+                cohort: "",
+            }
+        },
+
+        mounted() {
+            this.getCohort();
+        },
+
+        methods: {
+            getCohort() {
+                axios.get("/internships/internship/get-cohort").then((result) => {
+                    if (result.status == 200) {
+                        // console.log(result);
+                        this.cohort = result.data.data;
+                    }
+                }).catch((err) => {
+
+                });
+            }
+        },
+    });
+    boardApp.mount("#ddd")
+</script>

@@ -5,6 +5,9 @@ namespace Application\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Authentication\Entity\User;
 use Application\Entity\InternshipCohort;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Internship\Entity\InternshipResource;
 
 /**
  * Undocumented class
@@ -66,6 +69,17 @@ class InternshipRegister
 
     /**
      * Undocumented variable
+     * @ORM\ManyToMany(targetEntity="Internship\Entity\InternshipResource")
+     * @ORM\JoinTable(name="register_cohort_resources",
+     *      joinColumns={@ORM\JoinColumn(name="register_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="resources_id", referencedColumnName="id", unique=true)}
+     *      )
+     * @var Collection<int, InternshipResource>
+     */
+    private $cohortResos;
+
+    /**
+     * Undocumented variable
      * @ORM\Column(type="date", nullable=true)
      * @var \Datetime
      */
@@ -84,6 +98,12 @@ class InternshipRegister
      * @var bool
      */
     private $isFullpayment;
+
+
+    public function __construct()
+    {
+        $this->cohortResos = new ArrayCollection();
+    }
 
     /**
      * Get the value of id
@@ -310,6 +330,25 @@ class InternshipRegister
     {
         $this->isFullpayment = $isFullpayment;
 
+        return $this;
+    }
+
+    /**
+     * Get )
+     *
+     * @return  Collection
+     */
+    public function getCohortResos()
+    {
+        return $this->cohortResos;
+    }
+
+
+    public function addCohortResos($resos)
+    {
+        if (!$this->cohortResos->contains($resos)) {
+            $this->cohortResos->add($resos);
+        }
         return $this;
     }
 }

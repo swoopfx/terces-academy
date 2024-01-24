@@ -53,7 +53,8 @@
             "General\\": "module/General/src/",
             "Authentication\\": "module/Authentication/src/",
             "Internship\\": "module/Internship/src/",
-            "Admissions\\": "module/Admissions/src/"
+            "Admissions\\": "module/Admissions/src/",
+            "Admin\\":"module/Admin/src/"
         }
     },
     "autoload-dev": {

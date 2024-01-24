@@ -12,9 +12,12 @@ return [
     "controllers" => [
         "factories" => [
             InternshipController::class => InternshipControllerFactory::class,
-            ProjectController::class=>ProjectsControllerFactory::class,
+            ProjectController::class => ProjectsControllerFactory::class,
 
         ],
+        "aliases" => [
+            "internship" => InternshipController::class
+        ]
     ],
 
     'doctrine' => [
@@ -48,13 +51,14 @@ return [
                 'type'    => Segment::class,
                 'options' => [
 
-                    'route'    => '/internships[/:action[/:id]]',
+                    'route'    => '/internships[/:controller[/:action[/:id]]]',
                     'constraints' => [
+                        'controller' => '[a-zA-Z0-9_-]*',
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                         'id' => '[a-zA-Z0-9_-]*'
                     ],
                     'defaults' => [
-                        'controller' => InternshipController::class,
+                        'controller' => "internship",
                         'action'     => 'dashboard',
                     ],
                 ],

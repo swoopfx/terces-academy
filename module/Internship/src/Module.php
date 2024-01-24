@@ -2,7 +2,10 @@
 
 namespace Internship;
 
+use General\Service\GeneralService;
 use Laminas\ModuleManager\ModuleManager;
+use Laminas\Mvc\MvcEvent;
+use Laminas\Session\Container;
 
 class Module
 {
@@ -20,5 +23,41 @@ class Module
             $controller = $e->getTarget();
             $controller->layout('internship/layout');
         });
+    }
+
+    public function onBootstrap(MvcEvent $e)
+    {
+        $application = $e->getApplication();
+        $eventManager = $application->getEventManager();
+        $eventManager->attach("route", [$this, 'onRoute'], -100);
+    }
+
+
+    public function onRoute(MvcEvent $e)
+    {
+        $application = $e->getApplication();
+        $routeMatch = $e->getRouteMatch();
+        $sm = $application->getServiceManager(); // service Manager
+        $generalService = $sm->get(GeneralService::class);
+        $response = $e->getResponse();
+        $request = $e->getRequest();
+        $authService = $generalService->getAuth();
+        $cont = new Container("refer");
+
+        // var_dump( $routeMatch->getMatchedRouteName());
+        if ($routeMatch->getMatchedRouteName() == "internship") {
+            if (!$authService->hasIdentity()) {
+                $cont->refer = "/internships";
+                $response->setStatusCode(301);
+                // $referContainer->location = $request->getUriString();
+                $controller = $e->getTarget();
+                $uri = $request->getUri();
+                $fullLink = sprintf('%s://%s', $uri->getScheme(), $uri->getHost());
+
+                $response->getHeaders()->addHeaderLine('Location', $fullLink . "/login");
+
+                // $e->stopPropagation();
+            }
+        }
     }
 }

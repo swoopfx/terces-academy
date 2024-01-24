@@ -67,10 +67,10 @@ class Image extends \General\Entity\Image implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', '' . "\0" . 'General\\Entity\\Image' . "\0" . 'id', '' . "\0" . 'General\\Entity\\Image' . "\0" . 'imageUid', '' . "\0" . 'General\\Entity\\Image' . "\0" . 'imageUrl', '' . "\0" . 'General\\Entity\\Image' . "\0" . 'lowres', '' . "\0" . 'General\\Entity\\Image' . "\0" . 'thumbnail', '' . "\0" . 'General\\Entity\\Image' . "\0" . 'imageName', '' . "\0" . 'General\\Entity\\Image' . "\0" . 'isHidden', '' . "\0" . 'General\\Entity\\Image' . "\0" . 'mimeType', '' . "\0" . 'General\\Entity\\Image' . "\0" . 'docExt', '' . "\0" . 'General\\Entity\\Image' . "\0" . 'createdOn', '' . "\0" . 'General\\Entity\\Image' . "\0" . 'updatedOn'];
+            return ['__isInitialized__', '' . "\0" . 'General\\Entity\\Image' . "\0" . 'id', '' . "\0" . 'General\\Entity\\Image' . "\0" . 'imageUid', '' . "\0" . 'General\\Entity\\Image' . "\0" . 'imageUrl', '' . "\0" . 'General\\Entity\\Image' . "\0" . 'lowres', '' . "\0" . 'General\\Entity\\Image' . "\0" . 'thumbnail', '' . "\0" . 'General\\Entity\\Image' . "\0" . 'imageName', '' . "\0" . 'General\\Entity\\Image' . "\0" . 'isHidden', '' . "\0" . 'General\\Entity\\Image' . "\0" . 'mimeType', '' . "\0" . 'General\\Entity\\Image' . "\0" . 'docExt', '' . "\0" . 'General\\Entity\\Image' . "\0" . 'createdOn', '' . "\0" . 'General\\Entity\\Image' . "\0" . 'updatedOn', '' . "\0" . 'General\\Entity\\Image' . "\0" . 'assigmentResos', '' . "\0" . 'General\\Entity\\Image' . "\0" . 'assignResultResos'];
         }
 
-        return ['__isInitialized__', '' . "\0" . 'General\\Entity\\Image' . "\0" . 'id', '' . "\0" . 'General\\Entity\\Image' . "\0" . 'imageUid', '' . "\0" . 'General\\Entity\\Image' . "\0" . 'imageUrl', '' . "\0" . 'General\\Entity\\Image' . "\0" . 'lowres', '' . "\0" . 'General\\Entity\\Image' . "\0" . 'thumbnail', '' . "\0" . 'General\\Entity\\Image' . "\0" . 'imageName', '' . "\0" . 'General\\Entity\\Image' . "\0" . 'isHidden', '' . "\0" . 'General\\Entity\\Image' . "\0" . 'mimeType', '' . "\0" . 'General\\Entity\\Image' . "\0" . 'docExt', '' . "\0" . 'General\\Entity\\Image' . "\0" . 'createdOn', '' . "\0" . 'General\\Entity\\Image' . "\0" . 'updatedOn'];
+        return ['__isInitialized__', '' . "\0" . 'General\\Entity\\Image' . "\0" . 'id', '' . "\0" . 'General\\Entity\\Image' . "\0" . 'imageUid', '' . "\0" . 'General\\Entity\\Image' . "\0" . 'imageUrl', '' . "\0" . 'General\\Entity\\Image' . "\0" . 'lowres', '' . "\0" . 'General\\Entity\\Image' . "\0" . 'thumbnail', '' . "\0" . 'General\\Entity\\Image' . "\0" . 'imageName', '' . "\0" . 'General\\Entity\\Image' . "\0" . 'isHidden', '' . "\0" . 'General\\Entity\\Image' . "\0" . 'mimeType', '' . "\0" . 'General\\Entity\\Image' . "\0" . 'docExt', '' . "\0" . 'General\\Entity\\Image' . "\0" . 'createdOn', '' . "\0" . 'General\\Entity\\Image' . "\0" . 'updatedOn', '' . "\0" . 'General\\Entity\\Image' . "\0" . 'assigmentResos', '' . "\0" . 'General\\Entity\\Image' . "\0" . 'assignResultResos'];
     }
 
     /**
@@ -421,6 +421,28 @@ class Image extends \General\Entity\Image implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'setLowres', [$lowres]);
 
         return parent::setLowres($lowres);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getAssigmentResos()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getAssigmentResos', []);
+
+        return parent::getAssigmentResos();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setAssigmentResos(\Internship\Entity\Assignments $assigmentResos)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setAssigmentResos', [$assigmentResos]);
+
+        return parent::setAssigmentResos($assigmentResos);
     }
 
 }

@@ -2,6 +2,8 @@
 
 namespace Internship\Controller;
 
+use Application\Entity\InternshipCohort;
+use Application\Entity\InternshipRegister;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use Doctrine\ORM\EntityManager;
@@ -9,6 +11,7 @@ use Doctrine\ORM\Query;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use General\Service\GeneralService;
 use Internship\Entity\Assignments;
+use Internship\Entity\InternshipResource;
 use Laminas\View\Model\JsonModel;
 
 class InternshipController extends AbstractActionController
@@ -80,12 +83,61 @@ class InternshipController extends AbstractActionController
     public function getCohortAction()
     {
         $jsonModel = new JsonModel();
+        $user = $this->identity();
+        $em = $this->entityManager;
+        $data = $em->createQueryBuilder()->select(["s", "u", "c"])
+            ->from(InternshipRegister::class, "s")
+            ->leftJoin("s.user", "u")
+            ->leftJoin("s.cohort", "c")
+            ->where("u.id = :user")
+            ->setParameters([
+                "user" => $user->getId()
+            ])
+            ->getQuery()
+            ->getArrayResult();
+
+        // var_dump($data);
+
+        $jsonModel->setVariables([
+            "data" => $data[0]["cohort"]["cohort"]
+        ]);
         return $jsonModel;
     }
+
+    public function getAssignmentSnippetAction()
+    {
+        $jsonModel = new JsonModel();
+        $em = $this->entityManager;
+        // $data = $em->createQueryBuilder()->select(["r", "c"])
+        //     ->from(InternshipResource::class, "r")->leftJoin("r.cohort", "c")
+        //     ->where()
+        //     ->getQuery()->getArrayResult();
+        return $jsonModel;
+    }
+
+    public function getResourcesAction()
+    {
+        $jsonModel = new JsonModel();
+        $em = $this->entityManager;
+        $user = $this->identity();
+        $registeredIntern = $em->getRepository(InternshipRegister::class)->findOneBy([
+            "user" => $user->getId()
+        ]);
+        return $jsonModel;
+    }
+
+
 
     public function resourcesAction()
     {
         $viewModel = new ViewModel();
+
+        $em = $this->entityManager;
+        $user = $this->identity();
+        $registeredIntern = $em->getRepository(InternshipRegister::class)->findOneBy([
+            "user" => $user->getId()
+        ]);
+        $viewModel->setVariable("resos", $registeredIntern->getCohortResos());
         return $viewModel;
     }
 
