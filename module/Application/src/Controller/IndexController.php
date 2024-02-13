@@ -6,12 +6,15 @@ namespace Application\Controller;
 
 use Application\Entity\ActiveUserProgram;
 use Application\Entity\ActiveUserProgramStatus;
+use Application\Entity\Coupon;
 use Application\Entity\CourseContent;
 use Application\Entity\Courses;
 use Application\Entity\Installement;
+use Application\Entity\InternshipCohort;
 use Application\Entity\PaymentMethod;
 use Application\Entity\Programs;
 use Application\Entity\Quiz;
+use Application\Entity\ScheduleCareerTalk;
 use Authentication\Entity\User;
 use Doctrine\ORM\EntityManager;
 use Laminas\Db\Sql\Where;
@@ -23,6 +26,7 @@ use Laminas\View\Model\ViewModel;
 use Ramsey\Uuid\Uuid;
 use Doctrine\Common\Collections\Collection;
 use General\Service\GeneralService;
+use Laminas\InputFilter\InputFilter;
 
 class IndexController extends AbstractActionController
 {
@@ -31,6 +35,13 @@ class IndexController extends AbstractActionController
      * @var EntityManager
      */
     private $entityManager;
+
+    /**
+     * Undocumented variable
+     *
+     * @var array
+     */
+    private $config;
 
     public function indexAction()
     {
@@ -156,6 +167,48 @@ class IndexController extends AbstractActionController
     }
 
     public function buyCourseAction()
+    {
+        $viewModel =  new ViewModel();
+        $em = $this->entityManager;
+        $request = $this->getRequest();
+        $uuid = $this->params()->fromRoute("id", NULL);
+        $couponCode = $this->params()->fromQuery("poc", NULL);
+        $coupon = "";
+        if ($couponCode != NULL) {
+            $coupon = $em->getRepository(Coupon::class)
+                ->createQueryBuilder("c")
+                ->select("c")
+                ->where("c.coupon = :co")
+                ->andWhere("c.isUsed = :uus")
+                ->setParameters([
+                    "co" => $couponCode,
+                    "uus" => FALSE,
+                ])->getQuery()->getArrayResult();
+            $coupon =  $coupon == NULL ? NULL : $coupon[0];
+        }
+        if ($uuid == NULL) {
+            return $this->redirect()->toRoute("home");
+        }
+        $buyCourseSession = new Container("buy_course_uuid");
+        $buyCourseSession->uuid = $uuid;
+        $em = $this->entityManager;
+        $data =  $em->getRepository(Programs::class)->findOneBy([
+            "uuid" => $uuid
+        ]);
+        $paymentMethod = $em->getRepository(PaymentMethod::class)->findAll();
+
+        $viewModel->setVariables([
+            "data" => $data,
+            "user" => $this->identity(),
+            "coupon" => $coupon,
+            "method" => $paymentMethod,
+            "public_key" => $this->config["stripe"]["publishable_key"],
+            'url' => $this->config["uurl"]
+        ]);
+        return $viewModel;
+    }
+
+    public function buyCourseNairaAction()
     {
         $viewModel =  new ViewModel();
         $request = $this->getRequest();
@@ -326,7 +379,10 @@ class IndexController extends AbstractActionController
             ]);
 
             $viewModel->setVariables([
-                "data" => $data
+                "data" => $data,
+                "user" => $this->identity(),
+                "public_key" => $this->config["stripe"]["publishable_key"],
+                'url' => $this->config["uurl"]
                 // "method" => $paymentMethod
             ]);
         } catch (\Throwable $th) {
@@ -372,7 +428,285 @@ class IndexController extends AbstractActionController
 
 
 
+
     public function careerServiceAction()
+    {
+        $viewModel = new ViewModel();
+        return $viewModel;
+    }
+
+    public function careerServiceValidatorAction()
+    {
+        $jsonModel = new JsonModel();
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        $em = $this->entityManager;
+        if ($request->isPost()) {
+            $post = $request->getPost();
+            $inputFilter = new InputFilter();
+            $inputFilter->add([
+                'name' => 'dateStr',
+                'required' => true,
+                'break_chain_on_failure' => true,
+                'allow_empty' => false,
+                'filters' => [
+                    [
+                        'name' => 'StripTags'
+                    ],
+                    [
+                        'name' => 'StringTrim'
+                    ]
+                ],
+                'validators' => [
+                    [
+                        'name' => 'NotEmpty',
+                        'options' => [
+                            'messages' => [
+                                'isEmpty' => 'reference data cannot be empty'
+                            ]
+                        ]
+                    ],
+
+                ]
+            ]);
+            $inputFilter->setData($post);
+            if ($inputFilter->isValid()) {
+                try {
+                    $values = $inputFilter->getValues();
+                    $data = $em->getRepository(ScheduleCareerTalk::class)->findOneBy([
+                        "searchString" => $values["dateStr"],
+                        // "isPayment" => TRUE
+                    ]);
+                    if ($data != NULL) {
+                        throw new \Exception("Available slot has been filled, please select another date and time");
+                    }
+                    $response->setStatusCode(200);
+                } catch (\Throwable $th) {
+                    $response->setStatusCode(202);
+                    $jsonModel->setVariables(["message" => $th->getMessage()]);
+                }
+            }
+        }
+        return $jsonModel;
+    }
+
+    public function careerServicePrePaymentAction()
+    {
+        // $viewModel = new ViewModel();
+        $jsonModel = new JsonModel();
+        $em = $this->entityManager;
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        if ($request->isPost()) {
+            try {
+                $post = $request->getPost();
+                $data = json_decode($post["submitData"], true);
+                $scheduleEntity  = new ScheduleCareerTalk();
+                $uuid = (Uuid::uuid4())->toString();
+                $scheduleEntity->setUuid($uuid)
+                    ->setCreatedOn(new \Datetime())
+                    ->setTimee($data["timee"])
+                    ->setSearchString($data["searchString"])
+                    ->setDateString($data["fullDateString"])
+                    ->setIsPayment(FALSE)
+                    ->setUser($this->identity())
+                    ->setDatee($data["date"]);
+
+                $em->persist($scheduleEntity);
+                $em->flush();
+
+                $sess  = new Container("career_service_schedule");
+                $sess->uuid = $uuid;
+
+                $jsonModel->setVariables([
+                    "data" => $uuid
+                ]);
+                $response->setStatusCode(201);
+            } catch (\Throwable $th) {
+                $response->setStatusCode(400);
+                $jsonModel->setVariables([
+                    "data" => $th->getMessage()
+                ]);
+            }
+        }
+        return $jsonModel;
+    }
+
+    public function careerServicePaymentAction()
+    {
+        $viewModel = new ViewModel();
+        $em = $this->entityManager;
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+
+        $id = $this->params()->fromRoute("id", NULL);
+        try {
+            if ($id == NULL) {
+                throw new \Exception("Identifier absent");
+            }
+            $data = $em->getRepository(ScheduleCareerTalk::class)->findOneBy([
+                "uuid" => $id
+            ]);
+            $sess  = new Container("career_service_schedule");
+            $sess->uuid = $id;
+            // var_dump($data);
+            $viewModel->setVariables([
+                "data" => $data,
+                "public_key" => $this->config["stripe"]["publishable_key"],
+                'url' => $this->config["uurl"]
+            ]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            $viewModel->setVariables([
+                "mess" => $th->getMessage()
+            ]);
+        }
+
+        return $viewModel;
+    }
+
+    public function internshipAction()
+    {
+        $viewModel = new ViewModel();
+        $viewModel->setVariables([
+            "data" => $data = '',
+            "public_key" => $this->config["stripe"]["publishable_key"],
+            'url' => $this->config["uurl"]
+        ]);
+        return $viewModel;
+    }
+
+    public function internshipPaymentMiddlewareAction()
+    {
+        $viewModel = new ViewModel();
+        $jsonModel = new JsonModel();
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        $auth = $this->identity();
+        $em = $this->entityManager;
+        $data = [];
+        if ($request->isPost()) {
+            $post = $request->getPost();
+            try {
+                if (!$this->identity()) {
+                    throw new \Exception("You need to be logged in");
+                }
+
+                if ($post["cohort"] == NULL) {
+                    throw new \Exception("please select a cohort");
+                }
+
+                /**
+                 * @var InternshipCohort
+                 */
+                $cohortEntity = $em->find(InternshipCohort::class, $post["cohort"]);
+                $nowDate = new \DateTime();
+                if ($cohortEntity->getStartDate() < $nowDate) {
+
+                    throw new \Exception("You cannot register to this cohort please select another date");
+                }
+                $sess = new Container("internship_payment");
+                $sess->cohort = $cohortEntity->getId();
+                $response->setStatusCode(202);
+                return $jsonModel;
+            } catch (\Throwable $th) {
+                $jsonModel->setVariables([
+                    "message" => $th->getMessage()
+                ]);
+                $response->setStatusCode(400);
+                return $jsonModel;
+            }
+        }
+        $viewModel->setVariables([
+            "usdExchaageRate"=>$this->config["naira_per_usd"],
+            "paystackPublicKey"=>$this->config["paystack"]["dev"]["public_key"],
+            "email"=>$auth->getEmail(),
+        ]);
+        return $viewModel;
+    }
+
+    public function internshipInstallmentAction()
+    {
+        $viewModel = new ViewModel();
+
+        return $viewModel;
+    }
+
+    public function internshipPaymentAction()
+    {
+        $viewModel = new ViewModel();
+        $jsonModel = new JsonModel();
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        $em = $this->entityManager;
+        $data = [];
+        // if ($request->isPost()) {
+        // $post = $request->getPost();
+        try {
+            $sess = new Container("internship_payment");
+            $params = $this->params()->fromQuery("pmeth", NULL);
+            if ($params == "part") {
+                $sess->isPartPayment = TRUE;
+            } else {
+                $sess->isPartPayment = FALSE;
+            }
+
+
+            if (!$this->identity()) {
+                throw new \Exception("You need to be logged in");
+            }
+
+            if ($sess->cohort  == NULL) {
+                throw new \Exception("please select a cohort");
+            }
+
+            /**
+             * @var InternshipCohort
+             */
+            $cohortEntity = $em->find(InternshipCohort::class, $sess->cohort);
+            $nowDate = new \DateTime();
+            if ($cohortEntity->getStartDate() < $nowDate) {
+
+                throw new \Exception("You cannot register to this cohort please select another");
+            }
+
+            // $response->setStatusCode(202);
+            // return $jsonModel;
+        } catch (\Throwable $th) {
+            $jsonModel->setVariables([
+                "message" => $th->getMessage()
+            ]);
+            $response->setStatusCode(400);
+            return $jsonModel;
+        }
+        // } else {
+        //     $sess = new Container("internship_payment");
+        //     $cohortEntity = $em->find(InternshipCohort::class, $sess->cohort);
+        // }
+        $viewModel->setVariables([
+            "data" => $cohortEntity,
+            "user" => $this->identity(),
+            "public_key" => $this->config["stripe"]["publishable_key"],
+            'url' => $this->config["uurl"]
+        ]);
+        return $viewModel;
+    }
+
+
+    public function getInternshipCohortAction()
+    {
+        $jsonModel = new JsonModel();
+        $em = $this->entityManager;
+        $data = $em->getRepository(InternshipCohort::class)->createQueryBuilder("s")->select("s")->getQuery()->getArrayResult();
+        $jsonModel->setVariables([
+            "data" => $data
+        ]);
+        return $jsonModel;
+    }
+
+
+
+    public function scheduleAction()
     {
         $viewModel = new ViewModel();
         return $viewModel;
@@ -400,6 +734,30 @@ class IndexController extends AbstractActionController
     public function setEntityManager(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  array
+     */
+    public function getConfig()
+    {
+        return $this->config;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  array  $config  Undocumented variable
+     *
+     * @return  self
+     */
+    public function setConfig(array $config)
+    {
+        $this->config = $config;
 
         return $this;
     }

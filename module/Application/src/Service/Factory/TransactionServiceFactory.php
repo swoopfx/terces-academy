@@ -17,10 +17,10 @@ class TransactionServiceFactory implements FactoryInterface
     {
         $xserv = new TransactionService();
         $generalService = $container->get(GeneralService::class);
-        $paypalService = $container->get(PaypalService::class);
+        // $paypalService = $container->get(PaypalService::class);
         $postmarkService = $container->get(PostMarkService::class);
         $xserv->setGeneralService($generalService)
-            ->setPaypalService($paypalService)
+            // ->setPaypalService($paypalService)
             ->setPostmarkService($postmarkService);
         return $xserv;
     }

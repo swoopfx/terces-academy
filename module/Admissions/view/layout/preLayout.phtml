@@ -1,0 +1,217 @@
+<?php
+
+/**
+ * @var Laminas\View\Renderer\PhpRenderer $this
+ */
+
+?>
+<?= $this->doctype() ?>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <?= $this->headTitle("Internship")->setSeparator(' - ')->setAutoEscape(false) ?>
+
+    <!-- Font Awesome Icons -->
+    <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+    <?= $this->headMeta()
+        ->appendName('viewport', 'width=device-width, initial-scale=1.0')
+        ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
+    ?>
+
+    <!-- Le styles -->
+    <?= $this->headLink([
+        'rel' => 'shortcut icon',
+        'type' => 'image/vnd.microsoft.icon',
+        'href' => $this->basePath() . '/img/favicon.ico'
+    ])
+        ->prependStylesheet($this->basePath("board/assets/css/soft-ui-dashboard.css?v=1.1.1"))
+        ->prependStylesheet($this->basePath("board/assets/css/nucleo-svg.css"))
+        ->prependStylesheet($this->basePath("board/assets/css/nucleo-svg.css"))
+        ->prependStylesheet($this->basePath("board/assets/css/nucleo-icons.css"))
+        ->prependStylesheet("https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700")
+
+    ?>
+
+    <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
+
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue-toast-notification@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/vue-toast-notification@3/dist/theme-sugar.css" rel="stylesheet">
+
+
+    <!-- Scripts -->
+    <?= $this->headScript() ?>
+</head>
+
+<?php $activeNavigation = "navigation"; ?>
+
+<body class="g-sidenav-show  bg-gray-100">
+    <?php //echo $this->navigation($activeNavigation)->menu()->setPartial("navigation-partial")->setOnlyActiveBranch() 
+    ?>
+
+    <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+        <!-- Navbar -->
+
+        <!-- End Navbar -->
+        <div class="page-header bg-gradient-primary  position-relative m-3 border-radius-xl">
+            <img src="/assets/images/oie_3QNUOMetbJh7.png" alt="Terces Jobs" class="position-absolute opacity-6 start-0 top-0 w-100">
+            <div class="container pb-lg-9 pb-10 pt-7 postion-relative z-index-2">
+
+
+            </div>
+        </div>
+        <div class="mt-n8">
+            <div class="container">
+                <div class="tab-content tab-space">
+                    <div class="tab-pane active" id="monthly">
+                        <div class="row">
+                            <div class="col-lg-4 mb-lg-0 mb-4">
+                                <div class="card">
+                                    <div class="card-header text-center pt-4 pb-3">
+                                        <span class="badge rounded-pill bg-light text-dark">Admission Intent</span>
+
+                                    </div>
+                                    <div class="card-body text-lg-start text-center pt-0">
+                                        <div class="d-flex justify-content-lg-start justify-content-center p-2">
+                                            <div class="icon icon-shape icon-xs rounded-circle bg-gradient-success shadow text-center">
+                                                <i class="fas fa-check opacity-10"></i>
+                                            </div>
+                                            <div>
+                                                <span class="ps-3">2 team members</span>
+                                            </div>
+                                        </div>
+
+
+
+
+                                        <a href="<?= $this->url("portal") ?>" class="btn btn-icon bg-gradient-dark d-lg-block mt-3 mb-0">
+                                            Access Platform
+
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 mb-lg-0 mb-4">
+                                <div class="card">
+                                    <div class="card-header text-center pt-4 pb-3">
+                                        <span class="badge rounded-pill bg-light text-dark">Send Money</span>
+
+                                    </div>
+                                    <div class="card-body text-lg-start text-center pt-0">
+                                        <div class="d-flex justify-content-lg-start justify-content-center p-2">
+                                            <div class="icon icon-shape icon-xs rounded-circle bg-gradient-success shadow text-center">
+                                                <i class="fas fa-check opacity-10"></i>
+                                            </div>
+                                            <div>
+                                                <span class="ps-3"> Canada</span>
+                                            </div>
+                                        </div>
+
+                                        <a href="<?= $this->url("sendmoney") ?>" class="btn btn-icon bg-gradient-primary d-lg-block mt-3 mb-0">
+                                            Send Money
+                                            <i class="fas fa-arrow-right ms-1"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--    <div class="col-lg-4 mb-lg-0 mb-4">
+                                <div class="card">
+                                    <div class="card-header text-center pt-4 pb-3">
+                                        <span class="badge rounded-pill bg-light text-dark">Enterprise</span>
+                                        <h1 class="font-weight-bold mt-2">
+                                            <small>$</small>99
+                                        </h1>
+                                    </div>
+                                    <div class="card-body text-lg-start text-center pt-0">
+                                        <div class="d-flex justify-content-lg-start justify-content-center p-2">
+                                            <div class="icon icon-shape icon-xs rounded-circle bg-gradient-success shadow text-center">
+                                                <i class="fas fa-check opacity-10"></i>
+                                            </div>
+                                            <div>
+                                                <span class="ps-3">Unlimited team members</span>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-content-lg-start justify-content-center p-2">
+                                            <div class="icon icon-shape icon-xs rounded-circle bg-gradient-success shadow text-center">
+                                                <i class="fas fa-check opacity-10"></i>
+                                            </div>
+                                            <div>
+                                                <span class="ps-3">100GB Cloud storage </span>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-content-lg-start justify-content-center p-2">
+                                            <div class="icon icon-shape icon-xs rounded-circle bg-gradient-success shadow text-center">
+                                                <i class="fas fa-check opacity-10"></i>
+                                            </div>
+                                            <div>
+                                                <span class="ps-3">Integration help </span>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-content-lg-start justify-content-center p-2">
+                                            <div class="icon icon-shape icon-xs rounded-circle bg-gradient-success shadow text-center">
+                                                <i class="fas fa-check opacity-10"></i>
+                                            </div>
+                                            <div>
+                                                <span class="ps-3">Sketch Files </span>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-content-lg-start justify-content-center p-2">
+                                            <div class="icon icon-shape icon-xs rounded-circle bg-gradient-success shadow text-center">
+                                                <i class="fas fa-check opacity-10"></i>
+                                            </div>
+                                            <div>
+                                                <span class="ps-3">API Access </span>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-content-lg-start justify-content-center p-2">
+                                            <div class="icon icon-shape icon-xs rounded-circle bg-gradient-success shadow text-center">
+                                                <i class="fas fa-check opacity-10"></i>
+                                            </div>
+                                            <div>
+                                                <span class="ps-3">Complete documentation </span>
+                                            </div>
+                                        </div>
+                                        <a href="javascript:;" class="btn btn-icon bg-gradient-dark d-lg-block mt-3 mb-0">
+                                            Join
+                                            <i class="fas fa-arrow-right ms-1"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div> -->
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+
+    <?= $this->inlineScript()
+        ->prependFile($this->basePath('/board/assets/js/plugins/choices.min.js'))
+        ->prependFile($this->basePath('/board/assets/js/plugins/multistep-form.js'))
+        ->prependFile($this->basePath('/board/assets/js/plugins/jkanban/jkanban.js'))
+        ->prependFile($this->basePath('/board/assets/js/plugins/dragula/dragula.min.js'))
+        ->prependFile($this->basePath('/board/assets/js/plugins/smooth-scrollbar.min.js'))
+        ->prependFile($this->basePath('/board/assets/js/plugins/perfect-scrollbar.min.js'))
+        ->prependFile($this->basePath('/board/assets/js/core/bootstrap.min.js'))
+        ->prependFile($this->basePath('/board/assets/js/core/popper.min.js'))
+    // ->prependFile($this->basePath('js/bootstrap.min.js'))
+    // ->prependFile($this->basePath('js/jquery-3.5.1.min.js'))
+    ?>
+
+    <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
+    <script src="/soft/assets/js/soft-ui-dashboard.min.js?v=1.1.1"></script>
+</body>
+
+
+</html>

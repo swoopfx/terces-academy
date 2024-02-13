@@ -11,11 +11,15 @@ class GeneralService
 
     const GENERAL_TRAINING_FREE = "Business Analysis Free Hands on training";
 
-    const GENERAL_TRAINING_WORK_EXPERIENCE = "Business Analysis Work Experience Program";
+    const GENERAL_TRAINING_WORK_EXPERIENCE = "Business Analysis- Self Study";
 
     const GENERAL_TRAINING_CERTIFICATE_PROGRAM = "Business Analysis Certification Program";
 
     const GENERAL_TRAINING_INTERVIEW_PREP = "One on One Interview Prep";
+
+    const GENERAL_INTERNSHIP_ON_JOB_TRAINING = "Business Analysis - on the job training";
+
+    const GENERAL_INTERNSHIP_PRICE = 1500;
 
 
     const ACTIVE_USER_PROGRAM_STATUS_ACQUIRED = 100;
@@ -30,6 +34,15 @@ class GeneralService
     const COMPANY_NAME = "Terces Academy";
 
     const COMPANY_ADDRESS = "";
+
+    const MAX_PAGE_COUNT = 50;
+
+    const INTERNSHIP_INSTALLMENT = "+4 week";
+
+
+    const ADMISSIONS_SEND_MONEY_INITIATED = 100;
+
+    const ADMISSION_SEND_MONEY_COMPLETED = 200;
 
 
 

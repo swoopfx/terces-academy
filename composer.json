@@ -43,13 +43,18 @@
         "symfony/console": "^5.4",
         "enqueue/amqp-lib": "^0.10.18",
         "pusher/pusher-php-server": "^7.2",
-        "codeception/module-phpbrowser": "*"
+        "codeception/module-phpbrowser": "*",
+        "yabacon/paystack-php": "^2.2",
+        "stripe/stripe-php": "^12.4"
     },
     "autoload": {
         "psr-4": {
             "Application\\": "module/Application/src/",
             "General\\": "module/General/src/",
-            "Authentication\\": "module/Authentication/src/"
+            "Authentication\\": "module/Authentication/src/",
+            "Internship\\": "module/Internship/src/",
+            "Admissions\\": "module/Admissions/src/",
+            "Admin\\":"module/Admin/src/"
         }
     },
     "autoload-dev": {
@@ -69,7 +74,7 @@
             "php -r 'if (file_exists(\"bin/remove-package-artifacts.php\")) include \"bin/remove-package-artifacts.php\";'",
             "php -r 'if (file_exists(\"CHANGELOG.md\")) unlink(\"CHANGELOG.md\");'"
         ],
-        "serve": "php -S 0.0.0.0:8080 -t public",
+        "serve": "php -S 0.0.0.0:8082 -t public",
         "test": "vendor/bin/phpunit",
         "static-analysis": "vendor/bin/psalm --shepherd --stats"
     },

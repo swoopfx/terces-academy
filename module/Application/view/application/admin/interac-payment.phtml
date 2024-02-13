@@ -1,0 +1,117 @@
+<?php echo $this->headtitle("Interac Payment"); ?>
+
+
+<div id="interac" class="section-wrapper mg-t-20">
+    <label class="section-title"> </label>
+    <p class="mg-b-20 mg-sm-b-40">Payment Via interact</p>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-colored table-primary">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th class="wd-35p">Interac Email</th>
+                    <th class="wd-35p">User</th>
+                    <th class="wd-35p">Program</th>
+                    <th class="wd-35p">Description</th>
+                    <th>Amount Paid</th>
+                    <th class="wd-20p"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($data as $key => $da) : ?>
+                    <tr>
+                        <th scope="row"> </th>
+                        <td><?= $da["interacEmail"] ?></td>
+                        <td>
+                            <strong> User Fullname: </strong> <?= $da["user"]["fullname"] ?><br>
+                            <strong> User Email:</strong> <?= $da["user"]["email"] ?><br>
+                        </td>
+                        <td>
+                            <strong> Program :</strong><?= $da["program"]["title"] ?><br>
+
+                        </td>
+                        <td><?= $da["amount"] ?> </td>
+                        <td>
+                            <?php if (!$da["isConfirmed"] && !$da["isFailed"] && !$da["isProcessed"]) : ?>
+                                <button :disabled="isSubmitting" @click="confirmPayment('<?= $da["program"]["id"] ?>', '<?= $da["id"] ?>')" class="btn btn-success"> Confirm</button>
+                                <button :disabled="isSubmitting" @click="rejectinterac('<?= $da["program"]["id"] ?>', '<?= $da["id"] ?>')" class="btn btn-danger">Decline</button>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                <?php endforeach ?>
+
+            </tbody>
+        </table>
+    </div><!-- table-responsive -->
+
+</div><!-- section-wrapper -->
+
+<script>
+    const interac = Vue.createApp({
+        data() {
+            return {
+                status: false,
+                isSubmitting: false,
+            }
+        },
+        methods: {
+            confirmPayment(programId, interacId) {
+                this.isSubmitting = true;
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        let formData = new FormData();
+                        // formData.append("program", programId);
+                        formData.append("interac", interacId);
+
+                        axios.post("/admin/confirm-interac-payment", formData).then((result) => {
+                            if (result.status == 201) {
+                                window.location.reload();
+                            }
+                        }).catch((err) => {
+
+                        });
+                    }
+                })
+                this.isSubmitting = false;
+            },
+
+            rejectinterac(programId, interacId) {
+                this.isSubmitting = true;
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        let formData = new FormData();
+                        // formData.append("program", programId);
+                        formData.append("interac", interacId);
+
+                        axios.post("/admin/reject-interac-payment", formData).then((result) => {
+                            if (result.status == 201) {
+                                window.location.reload();
+                            }
+                        }).catch((err) => {
+
+                        });
+                    }
+                })
+                this.isSubmitting = false;
+            }
+        },
+    });
+    interac.mount("#interac");
+</script>

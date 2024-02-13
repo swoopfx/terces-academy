@@ -28,5 +28,8 @@ return [
     'DoctrineORMModule',
     'Application',
     'General',
-    'Authentication'
+    'Authentication',
+    "Internship",
+    "Admissions",
+    'Admin'
 ];

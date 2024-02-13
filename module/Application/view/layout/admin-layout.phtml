@@ -96,18 +96,38 @@ use General\Service\GeneralService;
 
                 </li>
 
-                <li class="nav-item">
-                    <a class="nav-link" href="<?= $this->url("admin", ["action" => "program-list"]) ?>">
+                <li class="nav-item with-sub mega-dropdown">
+                    <a class="nav-link" href="#">
                         <i class="icon ion-ios-analytics-outline"></i>
-                        <span>Programs</span>
+                        <span>Payments</span>
                     </a>
+                    <div class="sub-item">
+                        <ul>
+                            <li><a href="<?= $this->url("admin", ["action" => "interac-payment"]) ?>">Interac Payment</a></li>
+                            <!-- <li><a href="<?php echo $this->url("admin", ["action" => "active-program-lists"]) ?>">Registered
+                                    Courses</a></li>
+                            <li><a href="<?php $this->url("admin", ["action" => "active-program-lists"]) ?>">Active
+                                    Courses</a></li> -->
+
+                        </ul>
+                    </div><!-- dropdown-menu -->
                 </li>
 
                 <li class="nav-item with-sub mega-dropdown">
-                    <a class="nav-link" href="<?= $this->url("admin", ["action" => "program-list"]) ?>">
+                    <a class="nav-link" href="#">
                         <i class="icon ion-ios-filing-outline"></i>
                         <span>Programs</span>
                     </a>
+
+                    <div class="sub-item">
+                        <ul>
+                            <li><a href="<?= $this->url("admin", ["action" => "program-list"]) ?>">Programs</a></li>
+                            <li><a href="<?php echo $this->url("admin", ["action" => "internship-board"]) ?>">Internship</a></li>
+                            <!--  <li><a href="<?php $this->url("admin", ["action" => "active-program-lists"]) ?>">Active
+                                    Courses</a></li> -->
+
+                        </ul>
+                    </div><!-- dropdown-menu -->
 
                 </li>
 

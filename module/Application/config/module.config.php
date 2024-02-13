@@ -5,14 +5,22 @@ declare(strict_types=1);
 namespace Application;
 
 use Application\Controller\AdminController;
+use Application\Controller\AdminProcessController;
 use Application\Controller\AppController;
 use Application\Controller\Factory\AdminControllerFactory;
+use Application\Controller\Factory\AdminProcessControllerFactory;
 use Application\Controller\Factory\AppControllerFactory;
 use Application\Controller\Factory\IndexControllerFactory;
 use Application\Service\Factory\TransactionServiceFactory;
 use Application\Service\PaypalService;
 use Application\Service\Factory\PaypalServiceFactory;
+use Application\Service\Factory\PaystackServiceFactory;
+use Application\Service\Factory\StripeServiceFactory;
+use Application\Service\Factory\ZoomServiceFactory;
+use Application\Service\PaystackService;
+use Application\Service\StripeService;
 use Application\Service\TransactionService;
+use Application\Service\ZoomService;
 use Application\View\Factory\IsSuscribedFactory;
 use Application\View\IsSubscribed;
 use Laminas\Router\Http\Literal;
@@ -76,6 +84,21 @@ return [
                     ],
                 ],
             ],
+
+            'admin-process' => [
+                'type'    => Segment::class,
+                'options' => [
+                    'route'    => '/adminprocess[/:action[/:id]]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[a-zA-Z0-9_-]*'
+                    ],
+                    'defaults' => [
+                        'controller' => AdminProcessController::class,
+                        'action'     => 'index',
+                    ],
+                ],
+            ]
         ],
     ],
     'controllers' => [
@@ -83,7 +106,8 @@ return [
             // Controller\IndexController::class => IndexControllerFactory::class,
             Controller\IndexController::class => IndexControllerFactory::class,
             AppController::class => AppControllerFactory::class,
-            AdminController::class => AdminControllerFactory::class
+            AdminController::class => AdminControllerFactory::class,
+            AdminProcessController::class => AdminProcessControllerFactory::class
         ],
     ],
     'doctrine' => [
@@ -105,7 +129,10 @@ return [
     "service_manager" => [
         "factories" => [
             TransactionService::class => TransactionServiceFactory::class,
-            PaypalService::class => PaypalServiceFactory::class
+            PaypalService::class => PaypalServiceFactory::class,
+            PaystackService::class => PaystackServiceFactory::class,
+            StripeService::class => StripeServiceFactory::class,
+            ZoomService::class => ZoomServiceFactory::class,
         ]
     ],
     'view_manager' => [
