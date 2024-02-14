@@ -42,7 +42,7 @@ class User
     private $email;
 
     /**
-     * @ORM\Column(name="password", length=100, nullable=false)
+     * @ORM\Column(name="password", length=200, nullable=true)
      */
     private $password;
 
@@ -83,7 +83,7 @@ class User
 
     /**
      *
-     * @var string @ORM\Column(name="registration_token", type="string", length=32, nullable=true)
+     * @var string @ORM\Column(name="registration_token", type="string", length=100, nullable=true, unique=true)
      */
     protected $registrationToken;
 
@@ -143,7 +143,7 @@ class User
     //  */
     // private $wallet;
 
-   
+
     private $isActive;
 
 
@@ -533,11 +533,11 @@ class User
         return $this;
     }
 
-   
+
 
     /**
      * Get the value of isActive
-     */ 
+     */
     public function getIsActive()
     {
         return $this->isActive;
@@ -547,7 +547,7 @@ class User
      * Set the value of isActive
      *
      * @return  self
-     */ 
+     */
     public function setIsActive($isActive)
     {
         $this->isActive = $isActive;

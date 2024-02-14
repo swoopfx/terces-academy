@@ -96,7 +96,7 @@ use General\Service\GeneralService;
 
                 </li>
 
-                <li class="nav-item with-sub mega-dropdown">
+                <li class="nav-item with-sub">
                     <a class="nav-link" href="#">
                         <i class="icon ion-ios-analytics-outline"></i>
                         <span>Payments</span>
@@ -113,8 +113,8 @@ use General\Service\GeneralService;
                     </div><!-- dropdown-menu -->
                 </li>
 
-                <li class="nav-item with-sub mega-dropdown">
-                    <a class="nav-link" href="#">
+                <li class="nav-item with-sub">
+                    <a class="nav-link" href="#" data-toggle="dropdown">
                         <i class="icon ion-ios-filing-outline"></i>
                         <span>Programs</span>
                     </a>
@@ -138,6 +138,7 @@ use General\Service\GeneralService;
                     </a>
                     <div class="sub-item">
                         <ul>
+                        <li><a href="<?= $this->url("admin", ["action" => "create-user"]) ?>">Create User</a></li>
                             <li><a href="<?= $this->url("admin", ["action" => "user-list"]) ?>">Registered User</a></li>
                             <li><a href="<?php echo $this->url("admin", ["action" => "active-program-lists"]) ?>">Registered
                                     Courses</a></li>

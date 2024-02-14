@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Controller;
+namespace Admin\Controller;
 
 use Application\Entity\ActiveUserProgram;
 use Application\Entity\ActiveUserProgramStatus;
@@ -13,7 +13,9 @@ use Application\Entity\Quiz;
 use Application\Entity\QuizAnswer;
 use Application\Entity\QuizQuestion;
 use Application\Entity\Resources;
+use Authentication\Entity\Roles;
 use Authentication\Entity\User;
+use Authentication\Entity\UserState;
 use Authentication\Service\UserService;
 use Laminas\Mvc\Controller\AbstractActionController;
 use General\Service\GeneralService;
@@ -21,8 +23,12 @@ use General\Service\UploadService;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use DoctrineModule\Validator\NoObjectExists;
+use General\Service\ActiveCampaignService;
+use General\Service\PostMarkService;
 use Laminas\InputFilter\InputFilter;
 use Laminas\Mvc\MvcEvent;
+use Laminas\Validator\StringLength;
 use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
 use Ramsey\Uuid\Uuid;
@@ -51,10 +57,173 @@ class AdminController extends AbstractActionController
      */
     private $uploadService;
 
+    private PostMarkService $postmarkService;
+
     public function onDispatch(MvcEvent $e)
     {
         $response = parent::onDispatch($e);
         $this->layout()->setTemplate("admin-layout");
+    }
+
+    public function createUserAction()
+    {
+        $viewModel = new ViewModel();
+        $jsonModel = new JsonModel();
+        $request = $this->getRequest();
+        $entityManager = $this->entityManager;
+        $response = $this->getResponse();
+        if ($request->isPost()) {
+            $post = $request->getPost();
+            $inputFilter = new InputFilter();
+            $inputFilter->add([
+                'name' => 'email',
+                'break_chain_on_failure' => true,
+                'required' => true,
+                "allow_empty" => false,
+                'filters' => [
+                    [
+                        'name' => 'StripTags'
+                    ],
+                    [
+                        'name' => 'StringTrim'
+                    ]
+                ],
+                'validators' => [
+                    [
+                        'name' => 'NotEmpty',
+                        'options' => [
+                            'messages' => [
+                                'isEmpty' => 'Email is required'
+                            ]
+                        ]
+                    ],
+                    [
+                        "name" => NoObjectExists::class,
+                        "options" => [
+                            "use_context" => true,
+                            "object_repository" => $entityManager->getRepository(User::class),
+                            "objject_manager" => $entityManager,
+                            "fields" => [
+                                "email"
+                            ],
+                            "messages" => [
+                                NoObjectExists::ERROR_OBJECT_FOUND => "please use another email"
+                            ]
+                        ]
+                    ],
+                    [
+                        'name' => StringLength::class,
+                        'options' => [
+                            'messages' => [],
+                            'min' => 6,
+                            'max' => 256,
+                            'messages' => [
+                                StringLength::TOO_SHORT => 'Try Something more longer',
+                                StringLength::TOO_LONG => 'Could you really remember this long identity'
+                            ]
+                        ],
+                    ]
+                ]
+            ]);
+
+            $inputFilter->add([
+                'name' => 'fullname',
+                'break_chain_on_failure' => true,
+                'required' => true,
+                "allow_empty" => false,
+                'filters' => [
+                    [
+                        'name' => 'StripTags'
+                    ],
+                    [
+                        'name' => 'StringTrim'
+                    ]
+                ],
+                'validators' => [
+                    [
+                        'name' => 'NotEmpty',
+                        'options' => [
+                            'messages' => [
+                                'isEmpty' => 'Full Name is required'
+                            ]
+                        ]
+                    ],
+
+                    [
+                        'name' => StringLength::class,
+                        'options' => [
+                            'messages' => [],
+                            'min' => 3,
+                            'max' => 256,
+                            'messages' => [
+                                StringLength::TOO_SHORT => 'Try Something more longer',
+                                StringLength::TOO_LONG => 'Could you really remember this long identity'
+                            ]
+                        ],
+                    ]
+                ]
+            ]);
+            $inputFilter->setData($post);
+            if ($inputFilter->isValid()) {
+                try {
+                    $data = $inputFilter->getValues();
+                    $userEntity = new User();
+                    $token = md5(uniqid(mt_rand(), true));
+                    $uuid = Uuid::uuid4();
+                    $userEntity->setCreatedOn(new \Datetime())
+                        ->setRole($entityManager->find(Roles::class, UserService::USER_ROLE_CUSTOMER))
+                        ->setEmail($data["email"])
+                        ->setPassword(UserService::encryptPassword($data["password"]))
+                        ->setEmailConfirmed(False)
+                        ->setFullname($data["fullname"])
+                        ->setRegistrationDate(new \Datetime())->setRegistrationToken($token)
+                        ->setUuid($uuid)
+                        ->setUid(uniqid())
+                        ->setState($entityManager->find(UserState::class, UserService::USER_STATE_ENABLED));
+
+                    // send a process email
+
+                    $fulllink = $this->url()->fromRoute('auth', array(
+                        'action' => 'complete-registration',
+                        'id' => $userEntity->getRegistrationToken()
+                    ), array(
+                        'query' =>
+                        array('diu' => $uuid),
+                        'force_canonical' => true
+                    ));
+
+                    $emailData["to"] =  $data["email"];
+                    $emailData["link"] = $fulllink;
+                    $emailData["name"] = $data["fullname"];
+
+                    $this->postmarkService->adminUserCreation($emailData);
+
+                    // postmark mail
+                    $entityManager->persist($userEntity);
+                    $entityManager->flush();
+                    $response->setStatusCode(201);
+                    return $jsonModel;
+                } catch (\Throwable $th) {
+                    $jsonModel->setVariables([
+                        "success" => false,
+                        "message" => $th->getMessage(),
+                        // "trace"=>$th->getTraceAsString()
+                    ]);
+                    $response->setStatusCode(400);
+                    return $jsonModel;
+                }
+            } else {
+                $jsonModel->setVariables([
+                    "success" => false,
+                    "message" => $th->getMessage(),
+                    // "trace"=>$th->getTraceAsString()
+                ]);
+                $response->setStatusCode(400);
+                return $jsonModel;
+            }
+        }
+
+        return $viewModel;
     }
 
     public function internshipBoardAction()
@@ -264,9 +433,14 @@ class AdminController extends AbstractActionController
         $userEntity = $this->identity();
         $response = $this->getResponse();
         try {
+            // $order = ($this->params()->fromQuery("order", NULL) == null ? "DESC" : "ASC");
+            // $pageCount = ($this->params()->fromQuery("page_count", 40) > 100 ? 100 : $this->params()->fromQuery("page_count", 40));
+            // $orderBy = $this->params()->fromQuery("order_by", "id");
+
             $order = ($this->params()->fromQuery("order", NULL) == null ? "DESC" : "ASC");
-            $pageCount = ($this->params()->fromQuery("page_count", 40) > 100 ? 100 : $this->params()->fromQuery("page_count", 40));
+            $pageCount = ($this->params()->fromQuery("page_count", GeneralService::MAX_PAGE_COUNT) > 100 ? 100 : $this->params()->fromQuery("page_count", GeneralService::MAX_PAGE_COUNT));
             $orderBy = $this->params()->fromQuery("order_by", "id");
+
             $query = $this->entityManager->createQueryBuilder()->select([
                 "c", "r", "s"
             ])->from(User::class, "c")
@@ -286,7 +460,7 @@ class AdminController extends AbstractActionController
             $previousPage = (($currentPage > 1) ? $currentPage - 1 : 1);
 
             $records = $paginator->getQuery()->setFirstResult($pageCount * ($currentPage - 1))
-                // ->setMaxResults($pageCount)
+                ->setMaxResults($pageCount)
                 ->getResult(Query::HYDRATE_ARRAY);
 
             $viewModel->setVariables([
@@ -1624,6 +1798,18 @@ class AdminController extends AbstractActionController
     public function setUploadService(UploadService $uploadService)
     {
         $this->uploadService = $uploadService;
+
+        return $this;
+    }
+
+    /**
+     * Set the value of postmarkService
+     *
+     * @return  self
+     */
+    public function setPostmarkService($postmarkService)
+    {
+        $this->postmarkService = $postmarkService;
 
         return $this;
     }

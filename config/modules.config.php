@@ -31,5 +31,5 @@ return [
     'Authentication',
     "Internship",
     "Admissions",
-    'Admin'
+    'Admin',
 ];
