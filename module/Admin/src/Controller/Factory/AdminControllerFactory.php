@@ -1,8 +1,8 @@
 <?php
 
-namespace Application\Controller\Factory;
+namespace Admin\Controller\Factory;
 
-use Application\Controller\AdminController;
+use Admin\Controller\AdminController;
 use General\Service\GeneralService;
 use General\Service\UploadService;
 use Laminas\ServiceManager\Factory\FactoryInterface;

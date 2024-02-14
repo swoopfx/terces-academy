@@ -290,7 +290,7 @@ class AuthController  extends AbstractActionController
                     ), array(
                         'force_canonical' => true
                     ));
-                   
+
                     $emailData["to"] =  $data["email"];
                     $emailData["link"] = $fulllink;
                     $emailData["name"] = $data["fullname"];
@@ -305,7 +305,7 @@ class AuthController  extends AbstractActionController
                     $jsonModel->setVariables([
                         "success" => false,
                         "message" => $th->getMessage(),
-                        "trace"=>$th->getTraceAsString()
+                        "trace" => $th->getTraceAsString()
                     ]);
                     $response->setStatusCode(400);
                 }
@@ -322,6 +322,27 @@ class AuthController  extends AbstractActionController
             }
         }
         return new ViewModel();
+    }
+
+    public function completeRegistrationAction()
+    {
+        $viewModel = new ViewModel();
+        $dui = $this->params()->fromQuery("dui", NULL);
+        if ($dui == NULL) {
+            $this->flashMessenger()->addErrorMessage("Absent Identifier");
+            // $url = $this->getRequest()->getHeader('Referer')->getUri();
+            return $this->redirect()->toRoute("login");
+        } else {
+            $duiSession = new Container("dui");
+            $duiSession->data = $dui;
+        }
+        return $viewModel;
+    }
+
+    public function completeRegistrationJsonAction()
+    {
+        $jsonModel = new JsonModel();
+        return $jsonModel;
     }
 
     public function loginjsonAction()
@@ -488,7 +509,7 @@ class AuthController  extends AbstractActionController
                         $redirect = $this->url()->fromRoute('home', array(), array(
                             'force_canonical' => true
                         ));
-                       
+
                         $cont = new Container("refer");
                         $referal = $cont->refer;
                         if ($referal != "") {

@@ -70,35 +70,7 @@ return [
                 ],
             ],
 
-            'admin' => [
-                'type'    => Segment::class,
-                'options' => [
-                    'route'    => '/admin[/:action[/:id]]',
-                    'constraints' => [
-                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                        'id' => '[a-zA-Z0-9_-]*'
-                    ],
-                    'defaults' => [
-                        'controller' => AdminController::class,
-                        'action'     => 'index',
-                    ],
-                ],
-            ],
-
-            'admin-process' => [
-                'type'    => Segment::class,
-                'options' => [
-                    'route'    => '/adminprocess[/:action[/:id]]',
-                    'constraints' => [
-                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                        'id' => '[a-zA-Z0-9_-]*'
-                    ],
-                    'defaults' => [
-                        'controller' => AdminProcessController::class,
-                        'action'     => 'index',
-                    ],
-                ],
-            ]
+          
         ],
     ],
     'controllers' => [
@@ -106,8 +78,8 @@ return [
             // Controller\IndexController::class => IndexControllerFactory::class,
             Controller\IndexController::class => IndexControllerFactory::class,
             AppController::class => AppControllerFactory::class,
-            AdminController::class => AdminControllerFactory::class,
-            AdminProcessController::class => AdminProcessControllerFactory::class
+            // AdminController::class => AdminControllerFactory::class,
+            // AdminProcessController::class => AdminProcessControllerFactory::class
         ],
     ],
     'doctrine' => [

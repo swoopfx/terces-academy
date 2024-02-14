@@ -36,6 +36,29 @@ class PostMarkService
         );
     }
 
+    public function adminUserCreation($data)
+    {
+        // Send an email:
+        $sendResult = $this->postmarkClient->sendEmailWithTemplate(
+            "app@tercesjobs.com",
+            $data["to"],
+            34800507,
+            [
+
+                "action_url" => $data["link"],
+                "company_name" => GeneralService::COMPANY_NAME,
+                "company_address" => GeneralService::COMPANY_ADDRESS,
+                // "name_value" => 
+                "product_url" => "https://academy.tercesjobs.com/",
+                "product_name" => GeneralService::COMPANY_NAME,
+                "name" => $data["name"],
+                "invite_sender_name" => "Tejiri",
+                "invite_sender_organization_name" => GeneralService::COMPANY_NAME,
+               
+            ]
+        );
+    }
+
 
     public function acquisitionSuccessEmail($data)
     {
@@ -145,7 +168,7 @@ class PostMarkService
                 "name" => $data["name"],
                 // "action_url" => $data["fulllink"],
                 "sch_date" => $data["sch_date"],
-                "sch_time"=>$data["sch_time"],
+                "sch_time" => $data["sch_time"],
                 "company_name" => GeneralService::COMPANY_NAME,
                 "company_address" => GeneralService::COMPANY_ADDRESS,
 
@@ -169,7 +192,7 @@ class PostMarkService
                 "name" => $data["name"],
                 "admin" => "Admin",
                 "sch_date" => $data["sch_date"],
-                "sch_time"=>$data["sch_time"],
+                "sch_time" => $data["sch_time"],
                 "company_name" => GeneralService::COMPANY_NAME,
                 "company_address" => GeneralService::COMPANY_ADDRESS,
 

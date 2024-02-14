@@ -1,0 +1,126 @@
+<?php echo $this->headtitle("Internship Create Assignent"); ?>
+<!-- include VueJS first -->
+<script src="https://unpkg.com/vue@next"></script>
+
+<!-- use the latest VueQuill release -->
+<script src="https://unpkg.com/@vueup/vue-quill@latest"></script>
+<link rel="stylesheet" href="https://unpkg.com/@vueup/vue-quill@latest/dist/vue-quill.snow.prod.css">
+
+<!-- or point to a specific VueQuill release -->
+<script src="https://unpkg.com/@vueup/vue-quill@1.2.0"></script>
+<link rel="stylesheet" href="https://unpkg.com/@vueup/vue-quill@1.2.0/dist/vue-quill.snow.prod.css">
+<style>
+    .ql-container {
+        min-height: 20rem;
+        height: 100%;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .ql-editor {
+        height: 100%;
+        flex: 1;
+        overflow-y: auto;
+        width: 100%;
+    }
+</style>
+
+
+<div id="sss" class="section-wrapper">
+    <label class="section-title">Top Label Layout</label>
+    <p class="mg-b-20 mg-sm-b-40">A form with a label on top of each form control.</p>
+
+    <div class="form-layout">
+        <div class="row mg-b-25">
+            <div class="col-lg-6">
+                <div class="form-group">
+                    <label class="form-control-label">Title: <span class="tx-danger">*</span></label>
+                    <input v-model="title" class="form-control" type="text" name="firstname">
+                </div>
+            </div><!-- col-4 -->
+            <div class="col-lg-6">
+                <div class="form-group">
+                    <label class="form-control-label">Submittion Deadline: <span class="tx-danger">*</span></label>
+                    <input class="form-control" type="text" name="lastname">
+                </div>
+            </div><!-- col-4 -->
+
+            <div class="col-lg-8">
+                <div class="form-group mg-b-10-force">
+                    <label class="form-control-label">Mail Address: <span class="tx-danger">*</span></label>
+                    <quill-editor ref="myee" v-model:content="contentss" contentType="html" theme="snow"></quill-editor>
+                </div>
+            </div><!-- col-8 -->
+            <div class="col-lg-4">
+                <div class="form-group mg-b-10-force">
+                    <label class="form-control-label">Assigned Cohort: <span class="tx-danger">*</span></label>
+                    <select v-if="cohort.length" v-model="selectedCohort" class="form-control select2" data-placeholder="Choose country">
+                        <option v-for="hort in cohort" :value="hort.id"> {{hort.cohort}}</option>
+
+                    </select>
+                </div>
+            </div><!-- col-4 -->
+        </div><!-- row -->
+
+        <div class="form-layout-footer">
+            <button @click="submitAssignments()" class="btn btn-primary bd-0">Submit Form</button>
+            <button class="btn btn-secondary bd-0">Cancel</button>
+        </div><!-- form-layout-footer -->
+    </div><!-- form-layout -->
+</div><!-- section-wrapper -->
+
+<script>
+    const appde = Vue.createApp({
+        data() {
+            return {
+                key: "",
+                title: "",
+                contentss: "",
+                submitDate: "",
+                selectedCohort: "",
+                cohort: [],
+            }
+        },
+        mounted() {
+            this.getCohorts();
+        },
+
+        methods: {
+            getCohorts() {
+                axios.get("/get-internship-cohort").then((result) => {
+                    if (result.status == 200) {
+                        this.cohort = result.data.data;
+                    }
+                }).catch((err) => {
+
+                });
+            },
+
+            submitAssignments() {
+                let quill = this.$refs.myee.getQuill();
+                if (this.title == "" || this.submitDate == "" || this.selectedCohort == "" || quill.root.innerHTML == "") {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Empty Filed",
+                        text: "A require field is empty"
+                    });
+                } else {
+                    let formData = new FormData();
+                    axios.post("", formData).then((result) => {
+                        if (result.status == 201) {
+
+                        }
+                    }).catch((err) => {
+
+                    });
+                }
+
+                console.log(quill.root.innerHTML);
+            }
+        },
+
+    });
+    appde.component('QuillEditor', VueQuill.QuillEditor);
+    appde.mount("#sss");
+</script>
