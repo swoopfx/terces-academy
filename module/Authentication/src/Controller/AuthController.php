@@ -327,13 +327,13 @@ class AuthController  extends AbstractActionController
     public function completeRegistrationAction()
     {
         $viewModel = new ViewModel();
-        $dui = $this->params()->fromQuery("dui", NULL);
+        $dui = $this->params()->fromQuery("diu", NULL);
         if ($dui == NULL) {
             $this->flashMessenger()->addErrorMessage("Absent Identifier");
             // $url = $this->getRequest()->getHeader('Referer')->getUri();
             return $this->redirect()->toRoute("login");
         } else {
-            $duiSession = new Container("dui");
+            $duiSession = new Container("diu");
             $duiSession->data = $dui;
         }
         return $viewModel;

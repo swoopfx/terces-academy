@@ -1,0 +1,112 @@
+<?php $this->headtitle("Complete Registration"); ?>
+
+<section id="registerApp" class="register_section section_space_lg">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col col-lg-5">
+                <h1 class="register_heading text-center">Complete Registration</h1>
+
+
+                <div class="register_form signup_login_form">
+
+                    <div class="form_item">
+                        <input type="password" v-model="password" name="createpassword" placeholder="Create Password">
+                    </div>
+                    <div class="form_item">
+                        <input type="password" v-model="confirm_password" name="confirmpassword" placeholder="Confirm Password">
+                    </div>
+                    <div v-if="isSubmitting">
+                        <i class="fas fa-spinner fs-3x"></i>
+                    </div>
+                    <button v-else @click="register" type="submit" class="btn btn_dark mb-5">
+                        <span>
+                            <small>Complete</small>
+                            <small>Complete</small>
+                        </span>
+                    </button>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Register Section - End
+        ================================================== -->
+
+
+<script>
+    const registerApp = Vue.createApp({
+        data() {
+            return {
+                fullname: "",
+                email: "",
+                password: "",
+                confirm_password: "",
+                isSubmitting: false,
+
+                recentUsers: []
+            }
+        },
+        mounted() {
+            // this.getRecentUser();
+        },
+        methods: {
+
+           
+            register() {
+                this.isSubmitting = true;
+                if (this.fullname == "" || this.email == "" || this.password == "" || this.confirm_password == "") {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'A required field is empty',
+                        footer: '<a href="">Why do I have this issue?</a>'
+                    });
+                    this.isSubmitting = false;
+                } else if (this.password !== this.confirm_password) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'password Error',
+                        text: 'The passwords do not match',
+
+                    });
+                    this.isSubmitting = false;
+                } else {
+                    let formData = new FormData();
+                    formData.append("email", this.email);
+                    formData.append("fullname", this.fullname);
+                    formData.append("password", this.password);
+                    formData.append("confirm_password", this.confirm_password);
+
+                    axios.post("/register", formData).then(res => {
+                        if (res.status == 201) {
+                            this.isSubmitting = false;
+                            //   window.location.href = res.data.data.link;
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Registration Successfull',
+                                text: `An email cinfirmation link has been sent to you email: ${res.data.data.email}`,
+
+                            }).then(state => {
+                                window.location.href = "/login"
+                            });
+                        }
+                    }).catch(err => {
+                        this.isSubmitting = false;
+                        this.$toast.open({
+                            message: err.response.data.message,
+                            type: "error",
+                            duration: 20000,
+                            dismissible: true
+                        });
+
+                    });
+                }
+
+            }
+        },
+    });
+    registerApp.use(VueToast.ToastPlugin);
+    registerApp.mount("#registerApp");
+</script>
