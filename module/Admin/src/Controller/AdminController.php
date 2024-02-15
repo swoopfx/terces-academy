@@ -8,6 +8,8 @@ use Application\Entity\CourseContent;
 use Application\Entity\CourseResource;
 use Application\Entity\Courses;
 use Application\Entity\InteracPayment;
+use Application\Entity\InternshipCohort;
+use Application\Entity\InternshipRegister;
 use Application\Entity\Programs;
 use Application\Entity\Quiz;
 use Application\Entity\QuizAnswer;
@@ -74,6 +76,7 @@ class AdminController extends AbstractActionController
         $response = $this->getResponse();
         if ($request->isPost()) {
             $post = $request->getPost();
+
             $inputFilter = new InputFilter();
             $inputFilter->add([
                 'name' => 'email',
@@ -173,7 +176,7 @@ class AdminController extends AbstractActionController
                     $userEntity->setCreatedOn(new \Datetime())
                         ->setRole($entityManager->find(Roles::class, UserService::USER_ROLE_CUSTOMER))
                         ->setEmail($data["email"])
-                        ->setPassword(UserService::encryptPassword($data["password"]))
+                        // ->setPassword(UserService::encryptPassword($data["password"]))
                         ->setEmailConfirmed(False)
                         ->setFullname($data["fullname"])
                         ->setRegistrationDate(new \Datetime())->setRegistrationToken($token)
@@ -181,16 +184,31 @@ class AdminController extends AbstractActionController
                         ->setUid(uniqid())
                         ->setState($entityManager->find(UserState::class, UserService::USER_STATE_ENABLED));
 
+                    if ($post["isCohort"] == "true") {
+                        $internEntity = new InternshipRegister();
+                        $internEntity->setCohort($entityManager->find(InternshipCohort::class, $post["cohort"]))
+                            ->setCreatedOn(new \Datetime())->setUser($userEntity)
+                            ->setIsPayment(true)
+                            ->setIsPartialpayment(false)
+                            ->setIsFullpayment(true);
+
+                        $entityManager->persist($internEntity);
+                    }
+
                     // send a process email
 
-                    $fulllink = $this->url()->fromRoute('auth', array(
-                        'action' => 'complete-registration',
-                        'id' => $userEntity->getRegistrationToken()
-                    ), array(
-                        'query' =>
-                        array('diu' => $uuid),
-                        'force_canonical' => true
-                    ));
+                    $fulllink = $this->url()->fromRoute(
+                        'auth',
+                        array(
+                            'action' => 'complete-registration',
+                            'id' => $userEntity->getRegistrationToken()
+                        ),
+                        [
+
+                            'force_canonical' => true
+                        ]
+
+                    ) . "?diu={$uuid}";
 
                     $emailData["to"] =  $data["email"];
                     $emailData["link"] = $fulllink;
@@ -224,6 +242,20 @@ class AdminController extends AbstractActionController
         }
 
         return $viewModel;
+    }
+
+    public function getRecentUserAction()
+    {
+        $jsonModel = new JsonModel();
+        $em = $this->entityManager;
+        $data = $em->getRepository(User::class)->createQueryBuilder("u")
+            ->select(["u.id", "u.uuid", "u.fullname", "u.email", "u.registrationDate"])
+            ->setMaxResults(5)
+            ->orderBy("u.id", "DESC")
+            ->getQuery()
+            ->getArrayResult();
+        $jsonModel->setVariable("data", $data);
+        return $jsonModel;
     }
 
     public function internshipBoardAction()

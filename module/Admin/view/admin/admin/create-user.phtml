@@ -42,44 +42,44 @@
         </div><!-- section-wrapper -->
     </div><!-- col-6 -->
     <div class="col-lg-6 mg-t-20 mg-lg-t-0">
-        <div class="section-wrapper">
-            <label class="section-title">Right Label Alignment</label>
-            <p class="mg-b-20 mg-sm-b-40">A basic form where labels are aligned in right.</p>
-            <div class="form-layout form-layout-5">
-                <div class="row">
-                    <label class="col-sm-4 form-control-label"><span class="tx-danger">*</span> Firstname:</label>
-                    <div class="col-sm-8 mg-t-10 mg-sm-t-0">
-                        <input type="text" class="form-control" placeholder="Enter firstname">
-                    </div>
-                </div><!-- row -->
-                <div class="row mg-t-20">
-                    <label class="col-sm-4 form-control-label"><span class="tx-danger">*</span> Lastname:</label>
-                    <div class="col-sm-8 mg-t-10 mg-sm-t-0">
-                        <input type="text" class="form-control" placeholder="Enter lastname">
-                    </div>
-                </div>
-                <div class="row mg-t-20">
-                    <label class="col-sm-4 form-control-label"><span class="tx-danger">*</span> Email:</label>
-                    <div class="col-sm-8 mg-t-10 mg-sm-t-0">
-                        <input type="text" class="form-control" placeholder="Enter email address">
-                    </div>
-                </div>
-                <div class="row mg-t-20">
-                    <label class="col-sm-4 form-control-label"><span class="tx-danger">*</span> Address:</label>
-                    <div class="col-sm-8 mg-t-10 mg-sm-t-0">
-                        <textarea rows="2" class="form-control" placeholder="Enter your address"></textarea>
-                    </div>
-                </div><!-- row -->
-                <div class="row mg-t-30">
-                    <div class="col-sm-8 mg-l-auto">
-                        <div class="form-layout-footer">
-                            <button class="btn btn-primary bd-0">Submit Form</button>
-                            <button class="btn btn-secondary bd-0">Cancel</button>
-                        </div><!-- form-layout-footer -->
-                    </div><!-- col-8 -->
-                </div>
-            </div><!-- form-layout -->
-        </div><!-- section-wrapper -->
+        <div class="card card-table">
+            <div class="card-header">
+                <h6 class="slim-card-title">User Transaction History</h6>
+            </div><!-- card-header -->
+            <div class="table-responsive">
+                <table class="table mg-b-0 tx-13">
+                    <thead>
+                        <tr class="tx-10">
+                            <th class="wd-10p pd-y-5">&nbsp;</th>
+                            <th class="pd-y-5">User</th>
+                            <th class="pd-y-5">Type</th>
+                            <th class="pd-y-5">Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr v-if="recentUsers.length" v-for="user in recentUsers">
+                            <td class="pd-l-20">
+                                <img src="http://via.placeholder.com/500x500" class="wd-36 rounded-circle" alt="Image">
+                            </td>
+                            <td>
+                                <a href="" class="tx-inverse tx-14 tx-medium d-block">{{user.fullname}}</a>
+                                <span class="tx-11 d-block">USERID: <strong> {{user.uuid}}</strong></span>
+                            </td>
+                            <td class="tx-12">
+                                <span class="square-8 bg-success mg-r-5 rounded-circle"></span> Email verified
+                            </td>
+                            <td>{{user.registrationDate}}</td>
+                        </tr>
+
+
+                    </tbody>
+                </table>
+            </div><!-- table-responsive -->
+            <div class="card-footer tx-12 pd-y-15 bg-transparent">
+                <a href=""><i class="fa fa-angle-down mg-r-5"></i>View All Users</a>
+            </div><!-- card-footer -->
+        </div><!-- card -->
     </div><!-- col-6 -->
 </div><!-- row -->
 
@@ -92,11 +92,14 @@
                 cohort: "",
                 acohort: false,
                 selectedCohort: '',
+
+                recentUsers: [],
             }
         },
 
         mounted() {
-            this.getCohort()
+            this.getCohort();
+            this.getRecentUser();
         },
 
         methods: {
@@ -113,6 +116,16 @@
                 });
 
             },
+            getRecentUser() {
+                axios.get("/admin/get-recent-user").then((result) => {
+                    if (result.status == 200) {
+                        this.recentUsers = result.data.data;
+                    }
+                }).catch((err) => {
+
+                });
+            },
+
 
             createUser() {
                 if (this.fullname == "" || this.email == "") {
@@ -127,23 +140,23 @@
                     formData.append("email", this.email);
                     formData.append("isCohort", this.acohort);
                     formData.append("cohort", this.selectedCohort);
-                    // console.log(this.acohort);
-                    // axios.post("/admin/create-user", formData).then((result) => {
-                    //     if (result.status == 201) {
-                    //         Swal.fire({
-                    //             icon: 'success',
-                    //             title: 'User Created',
-                    //             text: "User has been successfully created",
 
-                    //         }).then((result) => {
-                    //             window.location.reload();
-                    //         }).catch((err) => {
+                    axios.post("/admin/create-user", formData).then((result) => {
+                        if (result.status == 201) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'User Created',
+                                text: "User has been successfully created",
 
-                    //         });
-                    //     }
-                    // }).catch((err) => {
+                            }).then((result) => {
+                                window.location.reload();
+                            }).catch((err) => {
 
-                    // });
+                            });
+                        }
+                    }).catch((err) => {
+
+                    });
                 }
             }
 
