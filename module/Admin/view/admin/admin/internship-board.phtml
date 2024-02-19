@@ -1,4 +1,8 @@
-<?php echo $this->headtitle("Internship Board"); ?>
+<?php
+
+use Admin\Controller\InternshipController;
+
+ echo $this->headtitle("Internship Board"); ?>
 <div id="ddd">
     <div class="dash-headline-two">
         <div>
@@ -59,12 +63,15 @@
         </div>
     </div><!-- d-flex -->
 
+
+
+
     <div class="row no-gutters dashboard-chart-one">
         <div class="col-md-4 col-lg">
             <div class="card card-total">
                 <div>
-                    <h1>420</h1>
-                    <p>Total Employee</p>
+                    <h1>{{totalInternRegistered}}</h1>
+                    <p>Total Intern</p>
                 </div>
                 <div>
                     <div class="tx-24 mg-b-10 tx-center op-5">
@@ -79,23 +86,23 @@
                         <i class="icon ion-man tx-gray-400"></i>
                         <i class="icon ion-man tx-gray-400"></i>
                     </div>
-                    <label>Female (66%)</label>
+                    <!--    <label>Female (66%)</label>
                     <div class="progress mg-b-10">
                         <div class="progress-bar bg-primary progress-bar-xs wd-65p" role="progressbar" aria-valuenow="66" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div><!-- progress -->
+                    </div>
 
                     <label>Male (34%)</label>
                     <div class="progress">
                         <div class="progress-bar bg-danger progress-bar-xs wd-35p" role="progressbar" aria-valuenow="34" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div><!-- progress -->
+                    </div> -->
                 </div>
             </div><!-- card -->
         </div><!-- col -->
         <div class="col-md-4 col-lg">
             <div class="card card-total">
                 <div>
-                    <h1>55</h1>
-                    <p>Total Products</p>
+                    <h1>{{totalActiveIntern}}</h1>
+                    <p>Total Active</p>
                 </div>
                 <div>
                     <div class="tx-16 mg-b-15 tx-center op-5">
@@ -110,15 +117,15 @@
                         <i class="icon ion-cube tx-gray-400"></i>
                         <i class="icon ion-cube tx-gray-400"></i>
                     </div>
-                    <label>Digital products (85%)</label>
+                    <!-- <label>Digital products (85%)</label>
                     <div class="progress mg-b-10">
                         <div class="progress-bar bg-success progress-bar-xs wd-85p" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div><!-- progress -->
+                    </div>
 
                     <label>Non-digital products (15%)</label>
                     <div class="progress">
                         <div class="progress-bar bg-warning progress-bar-xs wd-15p" role="progressbar" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div><!-- progress -->
+                    </div> -->
                 </div>
             </div><!-- card -->
         </div><!-- col -->
@@ -166,70 +173,38 @@
 
     <hr>
 
-    <div class="report-summary-header">
-        <div>
-            <h4 class="tx-inverse mg-b-3">Most Popular Products</h4>
-            <p class="mg-b-0"><i class="icon ion-calendar mg-r-3"></i> January 01, 2018 - January 31, 2018</p>
-        </div>
-        <div>
-            <a href="" class="btn btn-secondary">Top Rated Products</a>
-            <a href="" class="btn btn-secondary">View All Products</a>
-        </div>
-    </div><!-- d-flex -->
+    <div class="row row-sm mg-t-20">
+        <div class="card card-body pd-25 tx-center col-lg-4 mg-t-20 mg-lg-t-0">
+            <div class="card-icon-wrapper success">
+                <i class="icon ion-ios-upload"></i>
+            </div><!-- icon-wrapper -->
+            <h4 class="tx-gray-800 mg-b-25">Upload Training</h4>
+            
+            <a href="<?= $this->url("admin-general", ["controller"=>"admin-intern", "action"=>"upload-video" ]) ?>" class="btn btn-success btn-block">Browse Articles</a>
+        </div><!-- card -->
 
-    <div class="row row-sm">
-        <div class="col-md-6 col-lg-4">
-            <div class="card card-popular-product">
-                <label class="prod-id">Product ID: #PD-1754</label>
-                <h5 class="prod-name"><a href="">US 360 Home Security IP Camera Night</a></h5>
-                <p class="prod-by">By: <a href="">ThmPxls Security</a></p>
-                <div class="row">
-                    <div class="col-5">
-                        <h1>1885</h1>
-                        <p>Total Sales</p>
-                    </div><!-- col -->
-                    <div class="col-7">
-                        <h1>$12,056</h1>
-                        <p>Earnings</p>
-                    </div><!-- col -->
-                </div><!-- row -->
-            </div><!-- card -->
-        </div><!-- col-4 -->
-        <div class="col-md-6 col-lg-4 mg-t-20 mg-md-t-0">
-            <div class="card card-popular-product">
-                <label class="prod-id">Product ID: #PD-1753</label>
-                <h5 class="prod-name"><a href="">US KS-5 Junior Lite DVD Karaoke 9500</a></h5>
-                <p class="prod-by">By: <a href="">ThmPxls Security</a></p>
-                <div class="row">
-                    <div class="col-5">
-                        <h1>1862</h1>
-                        <p>Total Sales</p>
-                    </div><!-- col -->
-                    <div class="col-7">
-                        <h1>$13,113</h1>
-                        <p>Earnings</p>
-                    </div><!-- col -->
-                </div><!-- row -->
-            </div><!-- card -->
-        </div><!-- col-4 -->
-        <div class="col-md-6 col-lg-4 mg-t-20 mg-lg-t-0">
-            <div class="card card-popular-product">
-                <label class="prod-id">Product ID: #PD-1754</label>
-                <h5 class="prod-name"><a href="">US 360 Home Security IP Camera Night</a></h5>
-                <p class="prod-by">By: <a href="">ThmPxls Digital</a></p>
-                <div class="row">
-                    <div class="col-5">
-                        <h1>1799</h1>
-                        <p>Total Sales</p>
-                    </div><!-- col -->
-                    <div class="col-7">
-                        <h1>$11,091</h1>
-                        <p>Earnings</p>
-                    </div><!-- col -->
-                </div><!-- row -->
-            </div><!-- card -->
-        </div><!-- col-4 -->
+
+        <div class="card card-body pd-25 tx-center col-lg-4 mg-t-20 mg-lg-t-0">
+            <div class="card-icon-wrapper success">
+                <i class="icon ion-ios-paper-outline"></i>
+            </div><!-- icon-wrapper -->
+            <h4 class="tx-gray-800 mg-b-25">Knowledge Base</h4>
+            <p class="mg-b-25">Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum.</p>
+            <a href="" class="btn btn-success btn-block">Browse Articles</a>
+        </div><!-- card -->
+
+        <div class="card card-body pd-25 tx-center col-lg-4 mg-t-20 mg-lg-t-0">
+            <div class="card-icon-wrapper success">
+                <i class="icon ion-ios-paper-outline"></i>
+            </div><!-- icon-wrapper -->
+            <h4 class="tx-gray-800 mg-b-25">Knowledge Base</h4>
+            <p class="mg-b-25">Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum.</p>
+            <a href="" class="btn btn-success btn-block">Browse Articles</a>
+        </div><!-- card -->
     </div><!-- row -->
+    <hr>
+
+
 </div>
 <script>
     const appsss = Vue.createApp({
@@ -237,12 +212,37 @@
             return {
                 assignments: [],
                 resos: [],
+                totalInternRegistered: 0,
+                totalActiveIntern: 0,
             }
+        },
+        mounted() {
+            this.totalRegistered();
+            this.totalActive();
         },
         methods: {
             getAssignment() {
 
-            }
+            },
+            totalRegistered() {
+                axios.get("/admins/admin-intern/total-registered").then((result) => {
+                    if (result.status == 200) {
+                        this.totalInternRegistered = result.data.total;
+                    }
+                }).catch((err) => {
+
+                });
+            },
+
+            totalActive() {
+                axios.get("/admins/admin-intern/total-active").then((result) => {
+                    if (result.status == 200) {
+                        this.totalActiveIntern = result.data.total;
+                    }
+                }).catch((err) => {
+
+                });
+            },
         },
     });
     appsss.mount("#ddd")

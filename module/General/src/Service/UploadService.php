@@ -2,6 +2,7 @@
 
 namespace General\Service;
 
+use Aws\S3\Exception\S3Exception;
 use Doctrine\ORM\EntityManager;
 use AWs\S3\S3Client;
 use General\Entity\Image;
@@ -23,8 +24,10 @@ class UploadService
      */
     private $s3Instance;
 
+    private $s3Config;
 
-    const MAX_FILE_SIZE = 4582853;
+
+    const MAX_FILE_SIZE = 10282853;
 
     const AWS_BUCKET_NAME = "aibnigeria";
 
@@ -94,12 +97,100 @@ class UploadService
                     ->setDocExt($mimeType);
 
                 $entityManager->persist($uploadEntity);
-                $entityManager->flush();
+                // $entityManager->flush();
 
                 return $uploadEntity;
             } catch (\Exception $e) {
                 throw new \Exception($e->getMessage());
             }
+        }
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param array $data should include video, keyname
+     * @return void
+     */
+    public function uploadLarge($data)
+    {
+        $file = $data["video"];
+
+        $uploadEntity = new Image();
+        $blobName = $this->cleanBlobName($file["name"]);
+        $entityManager = $this->entityManager;
+        if ($file["size"] > self::MAX_FILE_SIZE) {
+            // Trigger an event
+            throw new \Exception($this->error_messages[2]);
+        } elseif ($file['tmp_name'] == NULL) {
+            throw new \Exception($this->error_messages[4]);
+        } else {
+            $result = $this->s3Instance->createMultipartUpload([
+                'Bucket'       => self::AWS_BUCKET_NAME,
+                'Key'          => $data["keyname"],
+                'StorageClass' => 'REDUCED_REDUNDANCY',
+                // 'Metadata'     => [
+                //     'param1' => 'value 1',
+                //     'param2' => 'value 2',
+                //     'param3' => 'value 3'
+                // ]
+            ]);
+
+            $uploadId = $result['UploadId'];
+
+            // Upload the file in parts.
+            try {
+                $filename = $file['tmp_name'];
+                $file = fopen($filename, 'r');
+                $partNumber = 1;
+                while (!feof($file)) {
+                    $result = $this->s3Instance->uploadPart([
+                        'Bucket'     => self::AWS_BUCKET_NAME,
+                        'Key'        => $data["keyname"],
+                        'UploadId'   => $uploadId,
+                        'PartNumber' => $partNumber,
+                        'Body'       => fread($file, 5 * 1024 * 1024),
+                    ]);
+                    $parts['Parts'][$partNumber] = [
+                        'PartNumber' => $partNumber,
+                        'ETag' => $result['ETag'],
+                    ];
+                    $partNumber++;
+
+                    // echo "Uploading part $partNumber of $filename." . PHP_EOL;
+                }
+                fclose($file);
+            } catch (S3Exception $e) {
+                $result = $this->s3Instance->abortMultipartUpload([
+                    'Bucket'   => self::AWS_BUCKET_NAME,
+                    'Key'        => $data["keyname"],
+                    'UploadId' => $uploadId
+                ]);
+
+                echo "Upload of $filename failed." . PHP_EOL;
+            }
+
+            // Complete the multipart upload.
+            $result = $this->s3Instance->completeMultipartUpload([
+                'Bucket'   => self::AWS_BUCKET_NAME,
+                'Key'        => $data["keyname"],
+                'UploadId' => $uploadId,
+                'MultipartUpload'    => $parts,
+            ]);
+            $url = $result['Location'];
+            $loadUri = $this->s3Instance->getEndpoint();
+            $docUrl = $loadUri . "/" . self::AWS_BUCKET_NAME . '/' . $blobName;
+
+            $mimeType = $file["type"];
+            $uploadEntity->setCreatedOn(new \Datetime())->setImageUid(self::docCode())
+                ->setImageName($blobName)
+                ->setImageUrl($url)
+                ->setIsHidden(FALSE)
+                ->setMimeType($mimeType)
+                ->setDocExt($mimeType);
+
+            $entityManager->persist($uploadEntity);
+            return $uploadEntity;
         }
     }
 

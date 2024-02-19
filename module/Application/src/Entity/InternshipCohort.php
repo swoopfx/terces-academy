@@ -35,6 +35,18 @@ class InternshipCohort
      */
     private $startDate;
 
+    /**
+     * Undocumented variable
+     * @ORM\Column(type="boolean", options={"default":0})
+     * @var bool
+     */
+    private bool $presentlyActive;
+
+
+    public function __construct()
+    {
+        $this->presentlyActive = false;
+    }
 
     /**
      * Get the value of id
@@ -50,7 +62,7 @@ class InternshipCohort
      * Get undocumented variable
      *
      * @return  string
-     */ 
+     */
     public function getCohort()
     {
         return $this->cohort;
@@ -62,7 +74,7 @@ class InternshipCohort
      * @param  string  $cohort  Undocumented variable
      *
      * @return  self
-     */ 
+     */
     public function setCohort(string $cohort)
     {
         $this->cohort = $cohort;
@@ -74,7 +86,7 @@ class InternshipCohort
      * Get undocumented variable
      *
      * @return  \Datetime
-     */ 
+     */
     public function getStartDate()
     {
         return $this->startDate;
@@ -86,10 +98,34 @@ class InternshipCohort
      * @param  \Datetime  $startDate  Undocumented variable
      *
      * @return  self
-     */ 
+     */
     public function setStartDate(\Datetime $startDate)
     {
         $this->startDate = $startDate;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  bool
+     */
+    public function getPresentlyActive()
+    {
+        return $this->presentlyActive;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  bool  $presentlyActive  Undocumented variable
+     *
+     * @return  self
+     */
+    public function setPresentlyActive(bool $presentlyActive)
+    {
+        $this->presentlyActive = $presentlyActive;
 
         return $this;
     }

@@ -67,10 +67,10 @@ class InternshipCohort extends \Application\Entity\InternshipCohort implements \
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'id', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'cohort', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'startDate'];
+            return ['__isInitialized__', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'id', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'cohort', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'startDate', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'presentlyActive'];
         }
 
-        return ['__isInitialized__', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'id', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'cohort', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'startDate'];
+        return ['__isInitialized__', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'id', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'cohort', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'startDate', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'presentlyActive'];
     }
 
     /**
@@ -234,6 +234,28 @@ class InternshipCohort extends \Application\Entity\InternshipCohort implements \
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'setStartDate', [$startDate]);
 
         return parent::setStartDate($startDate);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getPresentlyActive()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getPresentlyActive', []);
+
+        return parent::getPresentlyActive();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setPresentlyActive(bool $presentlyActive)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setPresentlyActive', [$presentlyActive]);
+
+        return parent::setPresentlyActive($presentlyActive);
     }
 
 }

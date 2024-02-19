@@ -26,6 +26,8 @@ return [
     'Laminas\Diactoros',
     'DoctrineModule',
     'DoctrineORMModule',
+    'Laminas\Cache\Storage\Adapter\Filesystem',
+    'Laminas\Cache\Storage\Adapter\Memory',
     'Application',
     'General',
     'Authentication',
