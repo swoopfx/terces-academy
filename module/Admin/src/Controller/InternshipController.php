@@ -5,6 +5,7 @@ namespace Admin\Controller;
 use Admin\Entity\ZoomVideo;
 use Application\Entity\InternshipRegister;
 use Doctrine\ORM\EntityManager;
+use General\Service\UploadService;
 use Laminas\Filter\StringTrim;
 use Laminas\Filter\StripTags;
 use Laminas\InputFilter\InputFilter;
@@ -17,7 +18,19 @@ use Laminas\View\Model\ViewModel;
 
 class InternshipController extends AbstractActionController
 {
+    /**
+     * Undocumented variable
+     *
+     * @var EntityManager
+     */
     private EntityManager $entityManager;
+
+    /**
+     * Undocumented variable
+     *
+     * @var UploadService
+     */
+    private UploadService $uploadService;
 
 
     public function onDispatch(MvcEvent $e)
@@ -165,27 +178,30 @@ class InternshipController extends AbstractActionController
                     ),
                 ]
             ]);
-        }
-        $jsonModel = new JsonModel();
-        $inputFilter->setData($post);
-        if ($inputFilter->isValid()) {
-            $data = $inputFilter->getValues();
-            try {
-                
-            } catch (\Throwable $th) {
+
+            $jsonModel = new JsonModel();
+            $inputFilter->setData($merge);
+            if ($inputFilter->isValid()) {
+                $data = $inputFilter->getValues();
+                try {
+                    $data["keyname"] = "academy";
+                    $res = $this->uploadService->uploadLarge($data);
+                } catch (\Throwable $th) {
+                    $response->setStatusCode(400);
+                    $jsonModel->setVariables([
+                        "message" => $inputFilter->getMessages()
+                    ]);
+                    return $jsonModel;
+                }
+            } else {
                 $response->setStatusCode(400);
                 $jsonModel->setVariables([
                     "message" => $inputFilter->getMessages()
                 ]);
                 return $jsonModel;
             }
-        } else {
-            $response->setStatusCode(400);
-            $jsonModel->setVariables([
-                "message" => $inputFilter->getMessages()
-            ]);
-            return $jsonModel;
         }
+
         return $viewModel;
     }
 
@@ -222,6 +238,20 @@ class InternshipController extends AbstractActionController
     public function setEntityManager($entityManager)
     {
         $this->entityManager = $entityManager;
+
+        return $this;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  UploadService  $uploadService  Undocumented variable
+     *
+     * @return  self
+     */
+    public function setUploadService(UploadService $uploadService)
+    {
+        $this->uploadService = $uploadService;
 
         return $this;
     }

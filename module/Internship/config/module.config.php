@@ -4,8 +4,10 @@ namespace Internship;
 
 use Internship\Controller\Factory\InternshipControllerFactory;
 use Internship\Controller\Factory\ProjectsControllerFactory;
+use Internship\Controller\Factory\ResourceControllerFactory;
 use Internship\Controller\InternshipController;
 use Internship\Controller\ProjectController;
+use Internship\Controller\ResourceController;
 use Laminas\Router\Http\Segment;
 
 return [
@@ -13,10 +15,11 @@ return [
         "factories" => [
             InternshipController::class => InternshipControllerFactory::class,
             ProjectController::class => ProjectsControllerFactory::class,
-
+            ResourceController::class => ResourceControllerFactory::class,
         ],
         "aliases" => [
-            "internship" => InternshipController::class
+            "internship" => InternshipController::class,
+            "resources" => ResourceController::class
         ]
     ],
 

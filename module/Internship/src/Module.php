@@ -2,6 +2,7 @@
 
 namespace Internship;
 
+use Application\Entity\InternshipRegister;
 use General\Service\GeneralService;
 use Laminas\ModuleManager\ModuleManager;
 use Laminas\Mvc\MvcEvent;
@@ -38,6 +39,9 @@ class Module
         $application = $e->getApplication();
         $routeMatch = $e->getRouteMatch();
         $sm = $application->getServiceManager(); // service Manager
+        /**
+         * @var GeneralService
+         */
         $generalService = $sm->get(GeneralService::class);
         $response = $e->getResponse();
         $request = $e->getRequest();
@@ -55,8 +59,28 @@ class Module
                 $fullLink = sprintf('%s://%s', $uri->getScheme(), $uri->getHost());
 
                 $response->getHeaders()->addHeaderLine('Location', $fullLink . "/login");
-
+            } else {
                 // $e->stopPropagation();
+                $em = $generalService->getEntityManager();
+                $userEntity = $authService->getIdentity();
+                $registerdCohortEntity = $em->getRepository(InternshipRegister::class)->findOneBy([
+                    "user" => $userEntity->getId()
+                ]);
+                // var_dump($registerdCohortEntity);
+                if ($registerdCohortEntity == NULL) {
+                    $controller = $e->getTarget();
+                    $uri = $request->getUri();
+                    $fullLink = sprintf('%s://%s', $uri->getScheme(), $uri->getHost());
+                    // var_dump("JJJJ");
+                    // $response->getHeaders()->addHeaderLine('Location', $fullLink . "/logout");
+                    $response->getHeaders()->addHeaderLine("Location", $fullLink . "/logout");
+
+
+                    $response->setStatusCode(302);
+                    $response->sendHeaders();
+
+                    exit;
+                }
             }
         }
     }

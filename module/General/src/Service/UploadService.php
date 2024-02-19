@@ -182,7 +182,8 @@ class UploadService
             $docUrl = $loadUri . "/" . self::AWS_BUCKET_NAME . '/' . $blobName;
 
             $mimeType = $file["type"];
-            $uploadEntity->setCreatedOn(new \Datetime())->setImageUid(self::docCode())
+            $uploadEntity->setCreatedOn(new \Datetime())
+                ->setImageUid(self::docCode())
                 ->setImageName($blobName)
                 ->setImageUrl($url)
                 ->setIsHidden(FALSE)
