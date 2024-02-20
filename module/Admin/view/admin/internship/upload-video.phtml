@@ -42,7 +42,7 @@ $this->headtitle("Upload Video");
                                 <label for="cohort">Choose a Cohort:</label>
                                 <select name="cohort" class="form-control" v-model="selectedCohort" v-if="cohort.length">
 
-                                    <option v-for="co in cohort" :value="cohort.id">{{co.cohort}}</option>
+                                    <option v-for="co in cohort" :value="co.id">{{co.cohort}}</option>
                                 </select>
                             </div><!-- col -->
                         </div><!-- row -->
@@ -54,16 +54,28 @@ $this->headtitle("Upload Video");
                         <div class="row row-sm">
                             <div class="col-sm">
                                 <div class="custom-file">
-                                    <input type="file" accept=".mp4,.mov,.avi" class="custom-file-input" id="customFile2">
-                                    <label ref="vFile" class="custom-file-label custom-file-label-primary" for="customFile">Choose file</label>
+                                    <input ref="vFile" type="file" accept=".mp4,.mov,.avi" class="custom-file-input" id="customFile2">
+                                    <label class="custom-file-label custom-file-label-primary" for="customFile">Choose file</label>
                                 </div><!-- custom-file -->
                             </div><!-- col -->
 
                         </div><!-- row -->
                     </div><!-- form-group -->
+                    <div v-if="isSubmitting">
+                        <div class="d-flex bg-gray-200 ht-50 pos-relative align-items-center">
+                            <div class="sk-folding-cube">
+                                <div class="sk-cube1 sk-cube"></div>
+                                <div class="sk-cube2 sk-cube"></div>
+                                <div class="sk-cube4 sk-cube"></div>
+                                <div class="sk-cube3 sk-cube"></div>
+                            </div>
+                        </div><!-- d-flex -->
+                    </div>
+                    <div v-else>
+                        <button @click="createVideo()" class="btn btn-primary pd-x-20">Submit</button>
+                        <button class="btn btn-secondary pd-x-20">Cancel</button>
+                    </div>
 
-                    <button @click="createVideo()" class="btn btn-primary pd-x-20">Submit</button>
-                    <button class="btn btn-secondary pd-x-20">Cancel</button>
                 </div><!-- card-body -->
             </div><!-- card -->
         </div><!-- col-6 -->
@@ -84,7 +96,7 @@ $this->headtitle("Upload Video");
             <table class="table mg-b-0 tx-13">
                 <thead>
                     <tr class="tx-10">
-                        <th class="wd-10p pd-y-5 tx-center">Item</th>
+                       
                         <th class="pd-y-5">Item Details</th>
                         <th class="pd-y-5 tx-right">Sold</th>
                         <th class="pd-y-5 tx-center">Location</th>
@@ -95,12 +107,10 @@ $this->headtitle("Upload Video");
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td class="tx-center">
-                            <img src="http://via.placeholder.com/800x533" class="wd-55" alt="Image">
-                        </td>
+                    <tr v-for="vi in recentVideos">
+                       
                         <td>
-                            <a href="" class="tx-inverse tx-medium d-block">The Dothraki Shoes</a>
+                            <a href="" class="tx-inverse tx-medium d-block">{{vi.titles}}</a>
                             <span class="tx-12 d-block"><span class="square-8 bg-danger mg-r-5 rounded-circle"></span> 20 remaining</span>
                         </td>
                         <td class="valign-middle tx-right">3,345</td>
@@ -112,74 +122,7 @@ $this->headtitle("Upload Video");
                             <a href="" class="tx-gray-600 tx-24"><i class="icon ion-android-more-horizontal"></i></a>
                         </td>
                     </tr>
-                    <tr>
-                        <td class="tx-center">
-                            <img src="http://via.placeholder.com/800x533" class="wd-55" alt="Image">
-                        </td>
-                        <td>
-                            <a href="" class="tx-inverse tx-medium d-block">Westeros Sneaker</a>
-                            <span class="tx-12 d-block"><span class="square-8 bg-success mg-r-5 rounded-circle"></span> In stock</span>
-                        </td>
-                        <td class="valign-middle tx-right">720</td>
-                        <td class="valign-middle tx-center"><span class="flag-icon flag-icon-ca tx-16"></span></td>
-                        <td class="valign-middle"><span class="tx-danger"><i class="icon ion-android-arrow-down mg-r-5"></i>21.20%</span> from last week</td>
-                        <td class="valign-middle tx-right">10/20/2017</td>
-                        <td class="valign-middle tx-right">3 hours ago</td>
-                        <td class="valign-middle tx-center">
-                            <a href="" class="tx-gray-600 tx-24"><i class="icon ion-android-more-horizontal"></i></a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="tx-center">
-                            <img src="http://via.placeholder.com/800x533" class="wd-55" alt="Image">
-                        </td>
-                        <td>
-                            <a href="" class="tx-inverse tx-medium d-block">Selonian Hand Bag</a>
-                            <span class="tx-12 d-block"><span class="square-8 bg-success mg-r-5 rounded-circle"></span> In stock</span>
-                        </td>
-                        <td class="valign-middle tx-right">1,445</td>
-                        <td class="valign-middle tx-center"><span class="flag-icon flag-icon-us tx-16"></span></td>
-                        <td class="valign-middle"><span class="tx-success"><i class="icon ion-android-arrow-up mg-r-5"></i>23.34%</span> from last week</td>
-                        <td class="valign-middle tx-right">10/19/2017</td>
-                        <td class="valign-middle tx-right">5 hours ago</td>
-                        <td class="valign-middle tx-center">
-                            <a href="" class="tx-gray-600 tx-24"><i class="icon ion-android-more-horizontal"></i></a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="tx-center">
-                            <img src="http://via.placeholder.com/800x533" class="wd-55" alt="Image">
-                        </td>
-                        <td>
-                            <a href="" class="tx-inverse tx-medium d-block">Kel Dor Sunglass</a>
-                            <span class="tx-12 d-block"><span class="square-8 bg-warning mg-r-5 rounded-circle"></span> 45 remaining</span>
-                        </td>
-                        <td class="valign-middle tx-right">2,500</td>
-                        <td class="valign-middle tx-center"><span class="flag-icon flag-icon-dk tx-16"></span></td>
-                        <td class="valign-middle"><span class="tx-success"><i class="icon ion-android-arrow-up mg-r-5"></i>28.78%</span> from last week</td>
-                        <td class="valign-middle tx-right">10/17/2017</td>
-                        <td class="valign-middle tx-right">1 day ago</td>
-                        <td class="valign-middle tx-center">
-                            <a href="" class="tx-gray-600 tx-24"><i class="icon ion-android-more-horizontal"></i></a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="tx-center">
-                            <img src="http://via.placeholder.com/800x533" class="wd-55" alt="Image">
-                        </td>
-                        <td>
-                            <a href="" class="tx-inverse tx-medium d-block">Kubaz Sunglass</a>
-                            <span class="tx-12 d-block"><span class="square-8 bg-success mg-r-5 rounded-circle"></span> In stock</span>
-                        </td>
-                        <td class="valign-middle tx-right">223</td>
-                        <td class="valign-middle tx-center"><span class="flag-icon flag-icon-au tx-16"></span></td>
-                        <td class="valign-middle"><span class="tx-danger"><i class="icon ion-android-arrow-down mg-r-5"></i>18.18%</span> from last week</td>
-                        <td class="valign-middle tx-right">10/16/2017</td>
-                        <td class="valign-middle tx-right">a week ago</td>
-                        <td class="valign-middle tx-center">
-                            <a href="" class="tx-gray-600 tx-24"><i class="icon ion-android-more-horizontal"></i></a>
-                        </td>
-                    </tr>
+                  
                 </tbody>
             </table>
         </div><!-- table-responsive -->
@@ -200,7 +143,8 @@ $this->headtitle("Upload Video");
                 noFiles: true,
                 totalInternRegistered: 0,
                 totalActiveIntern: 0,
-                recentVideos: []
+                recentVideos: [],
+                isSubmitting: false,
             }
         },
 
@@ -250,6 +194,7 @@ $this->headtitle("Upload Video");
             },
 
             createVideo() {
+                this.isSubmitting = true;
                 if (this.noFiles = !this.$refs.vFile.files.length) {
                     this.$toast.open({
                         message: "A required file is empty please check and upload required document",
@@ -258,9 +203,19 @@ $this->headtitle("Upload Video");
                         duration: 2000,
                         dismissible: true
                     })
+                    this.isSubmitting = false;
                 } else if (this.titles == "" || this.vdesc == "" || this.selectedCohort == "") {
+                    this.$toast.open({
+                        message: "A required field is empty",
+                        type: "error",
+                        position: "top-right",
+                        duration: 2000,
+                        dismissible: true
+                    })
+                    this.isSubmitting = false
+                } else {
                     let formData = new FormData();
-                    formData.append("titles", this.titles);
+                    formData.append("title", this.titles);
                     formData.append("descs", this.vdesc);
                     formData.append("cohort", this.selectedCohort);
                     formData.append("video", this.$refs.vFile.files[0])
@@ -270,11 +225,17 @@ $this->headtitle("Upload Video");
                         }
                     }).then((result) => {
                         if (result.status == 201) {
-
+                            window.location.reload();
                         }
+                        this.isSubmitting = false;
 
                     }).catch((err) => {
-
+                        Swal.fire({
+                            icon: "error",
+                            title: "An error occured",
+                            text: err.response.data.message,
+                        });
+                        this.isSubmitting = false;
                     });
                 }
             }
