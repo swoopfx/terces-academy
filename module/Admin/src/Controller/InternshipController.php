@@ -3,6 +3,7 @@
 namespace Admin\Controller;
 
 use Admin\Entity\ZoomVideo;
+use Application\Entity\InternshipCohort;
 use Application\Entity\InternshipRegister;
 use Doctrine\ORM\EntityManager;
 use General\Service\UploadService;
@@ -13,8 +14,10 @@ use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\MvcEvent;
 use Laminas\Validator\File\Extension;
 use Laminas\Validator\File\Size;
+use General\Entity\Image;
 use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
+use Ramsey\Uuid\Uuid;
 
 class InternshipController extends AbstractActionController
 {
@@ -73,8 +76,9 @@ class InternshipController extends AbstractActionController
             $files = $request->getFiles()->toArray();
             $merge = array_merge($post, $files);
             $inputFilter = new InputFilter();
+
             $inputFilter->add([
-                "name" => "license",
+                "name" => "video",
                 'required' => true,
                 'validators' => [      // Validators.
                     [
@@ -95,7 +99,7 @@ class InternshipController extends AbstractActionController
                         'name' => Size::class,
                         'options' => [
                             'min' => '1kB',  // minimum of 1kB
-                            'max' => '900MB',
+                            'max' => '1024MB',
                             'message' => 'File too large',
                         ],
                     ],
@@ -184,12 +188,27 @@ class InternshipController extends AbstractActionController
             if ($inputFilter->isValid()) {
                 $data = $inputFilter->getValues();
                 try {
-                    $data["keyname"] = "academy";
+                    // $data["keyname"] = "academy";zoomVideoEntity
+                    /**
+                     * @var Image
+                     */
                     $res = $this->uploadService->uploadLarge($data);
+                    $zoomVideoEntity = new ZoomVideo();
+                    $zoomVideoEntity->setTitles($data["title"])
+                        ->setCreatedOn(new \Datetime())
+                        ->setDescs($data["descs"])
+                        ->setUuid(Uuid::uuid4())
+                        ->setIsActive(true)
+                        ->setVideo($res)
+                        ->setCohort($em->find(InternshipCohort::class, $data["cohort"]));
+                    $em->persist($zoomVideoEntity);
+                    $em->flush();
+                    $response->setStatusCode(201);
+                    return $jsonModel;
                 } catch (\Throwable $th) {
                     $response->setStatusCode(400);
                     $jsonModel->setVariables([
-                        "message" => $inputFilter->getMessages()
+                        "message" => $th->getMessage()
                     ]);
                     return $jsonModel;
                 }

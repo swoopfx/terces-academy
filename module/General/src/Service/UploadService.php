@@ -27,7 +27,7 @@ class UploadService
     private $s3Config;
 
 
-    const MAX_FILE_SIZE = 10282853;
+    const MAX_FILE_SIZE = 102828530;
 
     const AWS_BUCKET_NAME = "aibnigeria";
 
@@ -69,7 +69,8 @@ class UploadService
         if ($file["size"] > self::MAX_FILE_SIZE) {
             // Trigger an event
             throw new \Exception($this->error_messages[2]);
-        } elseif ($file['tmp_name'] == NULL) {
+        } else
+        if ($file['tmp_name'] == NULL) {
             throw new \Exception($this->error_messages[4]);
         } else {
 
@@ -119,16 +120,17 @@ class UploadService
         $uploadEntity = new Image();
         $blobName = $this->cleanBlobName($file["name"]);
         $entityManager = $this->entityManager;
-        if ($file["size"] > self::MAX_FILE_SIZE) {
-            // Trigger an event
-            throw new \Exception($this->error_messages[2]);
-        } elseif ($file['tmp_name'] == NULL) {
+        // if ($file["size"] > self::MAX_FILE_SIZE) {
+        //     // Trigger an event
+        //     throw new \Exception($this->error_messages[2]);
+        // } else
+        if ($file['tmp_name'] == NULL) {
             throw new \Exception($this->error_messages[4]);
         } else {
             $result = $this->s3Instance->createMultipartUpload([
                 'Bucket'       => self::AWS_BUCKET_NAME,
-                'Key'          => $data["keyname"],
-                'StorageClass' => 'REDUCED_REDUNDANCY',
+                'Key'          => $blobName,
+                // 'StorageClass' => 'REDUCED_REDUNDANCY',
                 // 'Metadata'     => [
                 //     'param1' => 'value 1',
                 //     'param2' => 'value 2',
@@ -146,7 +148,7 @@ class UploadService
                 while (!feof($file)) {
                     $result = $this->s3Instance->uploadPart([
                         'Bucket'     => self::AWS_BUCKET_NAME,
-                        'Key'        => $data["keyname"],
+                        'Key'        => $blobName,
                         'UploadId'   => $uploadId,
                         'PartNumber' => $partNumber,
                         'Body'       => fread($file, 5 * 1024 * 1024),
@@ -163,23 +165,23 @@ class UploadService
             } catch (S3Exception $e) {
                 $result = $this->s3Instance->abortMultipartUpload([
                     'Bucket'   => self::AWS_BUCKET_NAME,
-                    'Key'        => $data["keyname"],
+                    'Key'        => $blobName,
                     'UploadId' => $uploadId
                 ]);
 
-                echo "Upload of $filename failed." . PHP_EOL;
+                throw new \Exception($e->getMessage());
             }
 
             // Complete the multipart upload.
             $result = $this->s3Instance->completeMultipartUpload([
                 'Bucket'   => self::AWS_BUCKET_NAME,
-                'Key'        => $data["keyname"],
+                'Key'        => $blobName,
                 'UploadId' => $uploadId,
                 'MultipartUpload'    => $parts,
             ]);
             $url = $result['Location'];
             $loadUri = $this->s3Instance->getEndpoint();
-            $docUrl = $loadUri . "/" . self::AWS_BUCKET_NAME . '/' . $blobName;
+            // $docUrl = $loadUri . "/" . self::AWS_BUCKET_NAME . '/' . $blobName;
 
             $mimeType = $file["type"];
             $uploadEntity->setCreatedOn(new \Datetime())
@@ -187,6 +189,7 @@ class UploadService
                 ->setImageName($blobName)
                 ->setImageUrl($url)
                 ->setIsHidden(FALSE)
+                
                 ->setMimeType($mimeType)
                 ->setDocExt($mimeType);
 

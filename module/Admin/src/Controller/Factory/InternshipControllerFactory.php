@@ -20,7 +20,7 @@ class InternshipControllerFactory implements FactoryInterface
         $generalService = $container->get(GeneralService::class);
         $ctr
             ->setEntityManager($generalService->getEntityManager())
-            // ->setUploadService($container->get(UploadService::class))
+            ->setUploadService($container->get(UploadService::class))
             ;
         return $ctr;
     }

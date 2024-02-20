@@ -31,8 +31,9 @@ class ResourceController extends AbstractActionController
         $em = $this->entityManager;
         $data = $em->getRepository(ZoomVideo::class)
             ->createQueryBuilder("z")
-            ->select(["z.id", "z.titles", "c.cohort", "z.isActive", "z.uuid"])
+            ->select(["z", "z.id", "z.titles", "z.descs", "z.createdOn", "v.imageUrl",  "v", "c.cohort", "z.isActive", "z.uuid"])
             ->leftJoin("z.cohort", "c")
+            ->leftJoin("z.video", "v")
             ->where("z.isActive = :active")->setParameters([
                 "active" => TRUE
             ])->getQuery()->getResult();
