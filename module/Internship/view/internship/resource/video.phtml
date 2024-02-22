@@ -1,4 +1,4 @@
-<?php echo $this->headtitle("Video"); 
+<?php echo $this->headtitle("Video");
 
 ?>
 
@@ -13,6 +13,7 @@
                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Title</th>
 
                             <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Description</th>
+                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Cohort</th>
                             <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Uploaded On</th>
                             <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"></th>
                         </tr>
@@ -34,13 +35,16 @@
                                     <p class="text-secondary mb-0 text-sm"><?= substr($da["descs"], 0, 100) . "..." ?></p>
                                 </td>
                                 <td class="align-middle text-center">
+                                    <span class="text-secondary text-sm"><?= $da["cohort"] ?></span>
+                                </td>
+                                <td class="align-middle text-center">
                                     <span class="text-secondary text-sm"><?= $this->dateFormat($da["createdOn"], IntlDateFormatter::LONG, IntlDateFormatter::NONE) ?></span>
                                 </td>
                                 <td class="align-middle text-center">
                                     <span class="text-secondary text-sm"><a href="<?= $da["imageUrl"] ?>"><i class="fa fa-download"></i></a></span>
                                 </td>
                             </tr>
-                        <?php 
+                        <?php
                         // var_dump($da["video"]);
                         endforeach ?>
                         <!--  <tr>
