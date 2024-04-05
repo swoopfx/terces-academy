@@ -229,12 +229,12 @@ class InternshipController extends AbstractActionController
     {
         $jsonModel = new JsonModel();
         $em = $this->entityManager;
-        $data = $em->getRepository(ZoomVideo::class)->createQueryBuilder("z")->select(["z.titles", "c.cohort", "z.createdOn"])
+        $data = $em->getRepository(ZoomVideo::class)->createQueryBuilder("z")->select(["z.titles", "z.uuid", "z.descs", "z.isActive",  "c.cohort", "z.createdOn"])
             ->leftJoin("z.cohort", "c")
-            ->where("z.isActive = :active")
-            ->setParameters([
-                "active" => TRUE
-            ])
+            // ->where("z.isActive = :active")
+            // ->setParameters([
+            //     "active" => TRUE
+            // ])
             ->setMaxResults(5)
             ->getQuery()->getArrayResult();
         $jsonModel->setVariables([

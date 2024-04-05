@@ -36,10 +36,16 @@ class ResourceController extends AbstractActionController
             ->leftJoin("z.video", "v")
             ->where("z.isActive = :active")->setParameters([
                 "active" => TRUE
-            ])->getQuery()->getResult();
+            ])->orderBy("c.cohort", "DESC")
+            ->getQuery()->getResult();
         $viewModel->setVariables([
             "data" => $data
         ]);
+        return $viewModel;
+    }
+
+    public function documentsAction(){
+        $viewModel = new ViewModel();
         return $viewModel;
     }
 

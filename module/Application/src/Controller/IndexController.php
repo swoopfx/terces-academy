@@ -26,6 +26,7 @@ use Laminas\View\Model\ViewModel;
 use Ramsey\Uuid\Uuid;
 use Doctrine\Common\Collections\Collection;
 use General\Service\GeneralService;
+use Laminas\Http\Client;
 use Laminas\InputFilter\InputFilter;
 
 class IndexController extends AbstractActionController
@@ -539,8 +540,22 @@ class IndexController extends AbstractActionController
         $request = $this->getRequest();
         $response = $this->getResponse();
 
+        $client = new Client();
+        $client->setUri("https://api.ipdata.co?api-key=639fe10fc4e7a411e874c00ad8b59be1fa07f4a08e29e1f89e0c36f6");
+        $client->setMethod("GET");
+
+
+
         $id = $this->params()->fromRoute("id", NULL);
         try {
+            $resp = $client->send();
+            $countryName = "";
+            $countryCode = "";
+            if ($resp->isSuccess()) {
+                $body = json_decode($resp->getBody());
+                $countryCode = $body->country_code;
+                $countryName = $body->country_name;
+            }
             if ($id == NULL) {
                 throw new \Exception("Identifier absent");
             }
@@ -553,7 +568,9 @@ class IndexController extends AbstractActionController
             $viewModel->setVariables([
                 "data" => $data,
                 "public_key" => $this->config["stripe"]["publishable_key"],
-                'url' => $this->config["uurl"]
+                'url' => $this->config["uurl"],
+                "country_code"=>$countryCode,
+                "country_name"=>$countryName,
             ]);
         } catch (\Throwable $th) {
             //throw $th;
@@ -571,7 +588,9 @@ class IndexController extends AbstractActionController
         $viewModel->setVariables([
             "data" => $data = '',
             "public_key" => $this->config["stripe"]["publishable_key"],
-            'url' => $this->config["uurl"]
+            'url' => $this->config["uurl"],
+            
+
         ]);
         return $viewModel;
     }
@@ -618,9 +637,9 @@ class IndexController extends AbstractActionController
             }
         }
         $viewModel->setVariables([
-            "usdExchaageRate"=>$this->config["naira_per_usd"],
-            "paystackPublicKey"=>$this->config["paystack"]["dev"]["public_key"],
-            "email"=>$auth->getEmail(),
+            "usdExchaageRate" => $this->config["naira_per_usd"],
+            "paystackPublicKey" => $this->config["paystack"]["dev"]["public_key"],
+            "email" => $auth->getEmail(),
         ]);
         return $viewModel;
     }

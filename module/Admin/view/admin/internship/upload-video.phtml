@@ -25,7 +25,15 @@ $this->headtitle("Upload Video");
                     </div><!-- card -->
                 </div><!-- col-6 -->
             </div><!-- row -->
+            <br>
+            <div class="alert alert-warning" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <strong>Warning!</strong> Uploading a file over 500MB might make the server inefiicient, however if you have any video over 500MB in size, it can be broken down into two 250MB files for easy and efficient upload
+            </div><!-- alert -->
         </div><!-- col-6 -->
+
         <div class="col-lg-6 mg-t-20 mg-sm-t-30 mg-lg-t-0">
             <div class="card">
                 <div class="card-body pd-30">
@@ -84,45 +92,38 @@ $this->headtitle("Upload Video");
 
 
     <div class="card card-table mg-t-20 mg-sm-t-30">
-        <div class="card-header">
-            <h6 class="slim-card-title">Product Purchases</h6>
-            <nav class="nav">
-                <a href="" class="nav-link active">Today</a>
-                <a href="" class="nav-link">This Week</a>
-                <a href="" class="nav-link">This Month</a>
-            </nav>
-        </div><!-- card-header -->
+
         <div class="table-responsive">
             <table class="table mg-b-0 tx-13">
                 <thead>
                     <tr class="tx-10">
-                       
+
                         <th class="pd-y-5">Item Details</th>
-                        <th class="pd-y-5 tx-right">Sold</th>
-                        <th class="pd-y-5 tx-center">Location</th>
+
+
                         <th class="pd-y-5">Gain</th>
                         <th class="pd-y-5 tx-right">Added</th>
-                        <th class="pd-y-5 tx-right">Updated</th>
+                        <th class="pd-y-5 tx-right">IsActive</th>
                         <th class="pd-y-5 tx-center">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="vi in recentVideos">
-                       
+
                         <td>
                             <a href="" class="tx-inverse tx-medium d-block">{{vi.titles}}</a>
-                            <span class="tx-12 d-block"><span class="square-8 bg-danger mg-r-5 rounded-circle"></span> 20 remaining</span>
+                            <span class="tx-12 d-block"><span class="square-8 bg-danger mg-r-5 rounded-circle"></span> {{vi.uuid}}</span>
                         </td>
-                        <td class="valign-middle tx-right">3,345</td>
-                        <td class="valign-middle tx-center"><span class="flag-icon flag-icon-ph tx-16"></span></td>
-                        <td class="valign-middle"><span class="tx-success"><i class="icon ion-android-arrow-up mg-r-5"></i>33.34%</span> from last week</td>
-                        <td class="valign-middle tx-right">10/21/2017</td>
-                        <td class="valign-middle tx-right">an hour ago</td>
+
+
+                        <td class="valign-middle"><span class="tx-success">{{vi.descs}}</span> </td>
+                        <td class="valign-middle tx-right">{{vi.createdOn.date}}</td>
+                        <td class="valign-middle tx-right">{{vi.isActive == true ? "True" : "False"}}</td>
                         <td class="valign-middle tx-center">
-                            <a href="" class="tx-gray-600 tx-24"><i class="icon ion-android-more-horizontal"></i></a>
+                            <a href="" class="tx-gray-600 tx-24"><i class="fa fa-eye"></i></a> | <a href="" class="tx-gray-600 tx-24"><i class="fa fa-trash"></i></a>
                         </td>
                     </tr>
-                  
+
                 </tbody>
             </table>
         </div><!-- table-responsive -->
