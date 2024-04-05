@@ -52,7 +52,7 @@ class PostMarkService
                 "product_url" => "https://academy.tercesjobs.com/",
                 "product_name" => GeneralService::COMPANY_NAME,
                 "name" => $data["name"],
-                "invite_sender_name" => "Tejiri",
+                "invite_sender_name" => "The Administrator",
                 "invite_sender_organization_name" => GeneralService::COMPANY_NAME,
                
             ]
