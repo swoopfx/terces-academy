@@ -176,34 +176,58 @@ class PaystackService
         ];
 
 
-        // $endPoint = "{$this->baseEndpoint}/transaction/initialize";
-
-        // $client = new Client();
-        // $headers["Content-Type"] = "application/json";
-        // $paystackAmount = $amount * 100;
-        // $body = [
-        //     "amount" => $paystackAmount,
-        //     "email" => $auth->getEmail(),
-        //     "currency" => "USD",
-        //     "callback_url" => "",
-        //     "channels" => ["card"]
-
-        // ];
-        // $headers["Authorization"] = "Bearer " . $this->secretKey;
-        // $client->setHeaders($headers);
-        // $client->setMethod("POST");
-        // $client->setRawBody(json_encode($body));
-        // //         $client->setParameterGet($getBody);
-        // $client->setUri($endPoint);
-
-        // $response = $client->send();
-
-        // if ($response->isSuccess()) {
-        // send transaction email here
+        $transactionEntity->setCreatedOn(new \Datetime())->setIsActive(TRUE)
+            ->setProgram($programEntity)
+            ->setTransactionId($transactionRef)->setUuid($uuid)
+            ->setStatus($em->find(TransactionStatus::class, TransactionService::TRANSACTION_STATUS_INITITED))
+            ->setUser($auth)
+            // ->setPaystackData()
+            ->setAmount($amount);
+        $em->persist($transactionEntity);
+        $em->flush();
 
 
-        // $rdata = $this->paypalService->createOrder($data);
-        // $decodedData = json_decode($rdata);
+        return $data;
+        // } else {
+        //     throw new \Exception("Could not get transaction status");
+        // }
+    }
+
+    public function intiatializeTransactionCareerServiceNaira()
+    {
+        // $settings = $this->generalService->getSettings();
+        $buyCourseSession = new Container("buy_course_uuid");
+        /**
+         * @var User
+         */
+        $auth = $this->generalService->getAuth()->getIdentity();
+        $sess  = new Container("career_service_schedule");
+        $transactionRef = TransactionService::transactionUid();
+        $em = $this->generalService->getEntityManager();
+        /**
+         * @var Programs
+         */
+        $programEntity = $em->getRepository(Programs::class)->findOneBy([
+            "uuid" => $buyCourseSession->uuid
+        ]);
+        /**
+         * This could also be a coupon or calculated amount 
+         */
+        $amount = 100;
+        $transactionEntity = new Transaction();
+
+        $uuid = Uuid::uuid4();
+
+
+        $data = [
+            "amount" => $amount * $this->usdExchaageRate,
+            "ref" => $transactionRef,
+            "email" => $auth->getEmail(),
+            "fullname" => $auth->getFullname(),
+
+        ];
+
+
         $transactionEntity->setCreatedOn(new \Datetime())->setIsActive(TRUE)
             ->setProgram($programEntity)
             ->setTransactionId($transactionRef)->setUuid($uuid)
@@ -357,6 +381,85 @@ class PaystackService
                 $this->postmarkService->acquisitionSuccessEmail($mail);
 
                 $em->persist($activeUserProgramEntity);
+                $em->persist($transactionEntity);
+                $em->flush();
+
+
+                // send EMailto customer
+            } else {
+                $transactionEntity->setUpdatedOn(new \Datetime())->setStatus($em->find(TransactionStatus::class, TransactionService::TRANSACTION_STATUS_FAILED));
+                $em->persist($transactionEntity);
+                $em->flush();
+                throw new \Exception("Payment was not completed");
+            }
+        } else {
+            throw new \Exception($response);
+        }
+    }
+
+    public function verifyCareerServiceTrasaction($data)
+    {
+        $endPoint = "{$this->baseEndpoint}/transaction/verify/" . $data["reference"];
+        $em = $this->entityManager;
+        $client = new Client();
+        $headers["Content-Type"] = "application/json";
+        //         $getBody = [
+        //             "transactionReference"=>$data["transactionReference"],
+        //         ];
+        $headers["Authorization"] = "Bearer " . $this->secretKey;
+        $client->setHeaders($headers);
+        $client->setMethod("GET");
+        //         $client->setParameterGet($getBody);
+        $client->setUri($endPoint);
+
+        $response = $client->send();
+        // var_dump()
+        if ($response->isSuccess()) {
+            // send transaction email here
+            // update transaction statusand 
+            $decodedData = Json::decode($response->getBody());
+            /**
+             * @var Transaction
+             */
+            $transactionEntity = $em->getRepository(Transaction::class)->findOneBy([
+                "transactionId" => $data["reference"]
+            ]);
+
+            if (filter_var($decodedData->status, FILTER_VALIDATE_BOOL)) {
+
+                $transactionEntity->setUpdatedOn(new \Datetime())->setStatus($em->find(TransactionStatus::class, TransactionService::TRANSACTION_STATUS_COMPLETED));
+
+
+                // create Active user Training f
+                // $buyCourseSession = new Container("buy_course_uuid");
+                $auth = $this->generalService->getAuth()->getIdentity();
+
+                // /**
+                //  * @var Programs
+                //  */
+                // $programEntity = $em->getRepository(Programs::class)->findOneBy([
+                //     "uuid" => $buyCourseSession->uuid
+                // ]);
+                // $activeUserProgramEntity = new ActiveUserProgram();
+                // $activeUserProgramEntity->setProgram($programEntity)->setUser($auth)
+                //     ->setCreatedOn(new \Datetime())
+                //     ->setIsActive(TRUE)
+                //     ->setIsInstallement(FALSE)
+                //     ->setStatus($em->find(ActiveUserProgramStatus::class, GeneralService::ACTIVE_USER_PROGRAM_STATUS_ACQUIRED))
+                //     ->setUuid(Uuid::uuid4());
+
+                $date = new \Datetime();
+
+                $mail["to"] = $auth->getEmail();
+                $mail["product_name"] = "Career Service";
+                $mail["customer_name"] = $auth->getFullname();
+                $mail["tx_ref"] = $transactionEntity->getUuid();
+                $mail["date"] = $date->format('Y-m-d');
+                $mail["amount"] = $transactionEntity->getAmount();
+
+                $this->postmarkService->acquisitionSuccessEmail($mail);
+
+                // $em->persist($activeUserProgramEntity);
                 $em->persist($transactionEntity);
                 $em->flush();
 
