@@ -494,7 +494,7 @@ class AppController extends  AbstractActionController
                 //     "trace" => $th->getTrace(),
                 //     "message" => $th->getMessage()
                 // ]);
-                var_dump($th->getMessage());
+                // var_dump($th->getMessage());
                 return $response;
             }
         }
@@ -550,8 +550,9 @@ class AppController extends  AbstractActionController
         if ($intentSession->intent == $query["payment_intent_client_secret"]) {
             try {
                 // $data = $this->paystackService->intiatializeTransaction();\
-
+                // var_dump("HHHHHH");
                 $data = $this->stripeService->final();
+                // var_dump("FRESSSSS");
                 return $this->redirect()->toRoute("app", ["action" => "stripe-success"]);
             } catch (\Throwable $th) {
                 $response->setStatusCode(400);
