@@ -103,6 +103,17 @@ class IndexController extends AbstractActionController
         return $viewModel;
     }
 
+    public function oracleP6Action()
+    {
+        $viewModel = new ViewModel();
+        $em = $this->entityManager;
+        $data = $em->find(Programs::class, 40);
+        $viewModel->setVariables([
+            "data" => $data
+        ]);
+        return $viewModel;
+    }
+
 
     public function getSectionOneAction()
     {
@@ -569,8 +580,8 @@ class IndexController extends AbstractActionController
                 "data" => $data,
                 "public_key" => $this->config["stripe"]["publishable_key"],
                 'url' => $this->config["uurl"],
-                "country_code"=>$countryCode,
-                "country_name"=>$countryName,
+                "country_code" => $countryCode,
+                "country_name" => $countryName,
             ]);
         } catch (\Throwable $th) {
             //throw $th;
@@ -589,7 +600,7 @@ class IndexController extends AbstractActionController
             "data" => $data = '',
             "public_key" => $this->config["stripe"]["publishable_key"],
             'url' => $this->config["uurl"],
-            
+
 
         ]);
         return $viewModel;

@@ -5,6 +5,7 @@
  */
 
 use General\Service\GeneralService;
+use Laminas\Session\Container;
 
 ?>
 <?= $this->doctype() ?>
@@ -87,68 +88,72 @@ use General\Service\GeneralService;
 
     <div class="slim-navbar">
         <div class="container">
-            <ul class="nav">
-                <li class="nav-item with-sub ">
-                    <a class="nav-link" href="<?= $this->url("admin", ["action" => "index"]) ?>">
-                        <i class="icon ion-ios-home-outline"></i>
-                        <span>Dashboard</span>
-                    </a>
+            <?php
+            $aminMenu = new Container("admin_menu");
+            if ($aminMenu->isMenu == "admin") : ?>
+                
+                <ul class="nav">
+                    <li class="nav-item with-sub ">
+                        <a class="nav-link" href="<?= $this->url("admin", ["action" => "index"]) ?>">
+                            <i class="icon ion-ios-home-outline"></i>
+                            <span>Dashboard</span>
+                        </a>
 
-                </li>
+                    </li>
 
-                <li class="nav-item with-sub">
-                    <a class="nav-link" href="#">
-                        <i class="icon ion-ios-analytics-outline"></i>
-                        <span>Payments</span>
-                    </a>
-                    <div class="sub-item">
-                        <ul>
-                            <li><a href="<?= $this->url("admin", ["action" => "interac-payment"]) ?>">Interac Payment</a></li>
-                            <!-- <li><a href="<?php echo $this->url("admin", ["action" => "active-program-lists"]) ?>">Registered
+                    <li class="nav-item with-sub">
+                        <a class="nav-link" href="#">
+                            <i class="icon ion-ios-analytics-outline"></i>
+                            <span>Payments</span>
+                        </a>
+                        <div class="sub-item">
+                            <ul>
+                                <li><a href="<?= $this->url("admin", ["action" => "interac-payment"]) ?>">Interac Payment</a></li>
+                                <!-- <li><a href="<?php echo $this->url("admin", ["action" => "active-program-lists"]) ?>">Registered
                                     Courses</a></li>
                             <li><a href="<?php $this->url("admin", ["action" => "active-program-lists"]) ?>">Active
                                     Courses</a></li> -->
 
-                        </ul>
-                    </div><!-- dropdown-menu -->
-                </li>
+                            </ul>
+                        </div><!-- dropdown-menu -->
+                    </li>
 
-                <li class="nav-item with-sub">
-                    <a class="nav-link" href="#" data-toggle="dropdown">
-                        <i class="icon ion-ios-filing-outline"></i>
-                        <span>Programs</span>
-                    </a>
+                    <li class="nav-item with-sub">
+                        <a class="nav-link" href="#" data-toggle="dropdown">
+                            <i class="icon ion-ios-filing-outline"></i>
+                            <span>Programs</span>
+                        </a>
 
-                    <div class="sub-item">
-                        <ul>
-                            <li><a href="<?= $this->url("admin", ["action" => "program-list"]) ?>">Programs</a></li>
-                            <li><a href="<?php echo $this->url("admin", ["action" => "internship-board"]) ?>">Internship</a></li>
-                            <!--  <li><a href="<?php $this->url("admin", ["action" => "active-program-lists"]) ?>">Active
+                        <div class="sub-item">
+                            <ul>
+                                <li><a href="<?= $this->url("admin", ["action" => "program-list"]) ?>">Programs</a></li>
+                                <li><a href="<?php echo $this->url("admin", ["action" => "internship-board"]) ?>">Internship</a></li>
+                                <!--  <li><a href="<?php $this->url("admin", ["action" => "active-program-lists"]) ?>">Active
                                     Courses</a></li> -->
 
-                        </ul>
-                    </div><!-- dropdown-menu -->
+                            </ul>
+                        </div><!-- dropdown-menu -->
 
-                </li>
+                    </li>
 
-                <li class="nav-item with-sub">
-                    <a class="nav-link" href="#" data-toggle="dropdown">
-                        <i class="icon ion-ios-gear-outline"></i>
-                        <span>Users</span>
-                    </a>
-                    <div class="sub-item">
-                        <ul>
-                        <li><a href="<?= $this->url("admin", ["action" => "create-user"]) ?>">Create User</a></li>
-                            <li><a href="<?= $this->url("admin", ["action" => "user-list"]) ?>">Registered User</a></li>
-                            <li><a href="<?php echo $this->url("admin", ["action" => "active-program-lists"]) ?>">Registered
-                                    Courses</a></li>
-                            <li><a href="<?php $this->url("admin", ["action" => "active-program-lists"]) ?>">Active
-                                    Courses</a></li>
+                    <li class="nav-item with-sub">
+                        <a class="nav-link" href="#" data-toggle="dropdown">
+                            <i class="icon ion-ios-gear-outline"></i>
+                            <span>Users</span>
+                        </a>
+                        <div class="sub-item">
+                            <ul>
+                                <li><a href="<?= $this->url("admin", ["action" => "create-user"]) ?>">Create User</a></li>
+                                <li><a href="<?= $this->url("admin", ["action" => "user-list"]) ?>">Registered User</a></li>
+                                <li><a href="<?php echo $this->url("admin", ["action" => "active-program-lists"]) ?>">Registered
+                                        Courses</a></li>
+                                <li><a href="<?php $this->url("admin", ["action" => "active-program-lists"]) ?>">Active
+                                        Courses</a></li>
 
-                        </ul>
-                    </div><!-- dropdown-menu -->
-                </li>
-                <!-- <li class="nav-item">
+                            </ul>
+                        </div><!-- dropdown-menu -->
+                    </li>
+                    <!-- <li class="nav-item">
                     <a class="nav-link" href="page-messages.html">
                         <i class="icon ion-ios-chatboxes-outline"></i>
                         <span>Messages</span>
@@ -173,7 +178,9 @@ use General\Service\GeneralService;
                         <span>Widgets</span>
                     </a>
                 </li> -->
-            </ul>
+                </ul>
+                <?php  elseif(): ?>
+            <?php endif; ?>
         </div><!-- container -->
     </div><!-- slim-navbar -->
 

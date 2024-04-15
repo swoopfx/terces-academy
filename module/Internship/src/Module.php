@@ -22,7 +22,7 @@ class Module
         $sharedEvent = $moduleManager->getEventManager()->getSharedManager();
         $sharedEvent->attach(__NAMESPACE__, 'dispatch', function ($e) {
             $controller = $e->getTarget();
-            $controller->layout('internship/layout');
+            $controller->layout('admin-layout');
         });
     }
 
@@ -51,6 +51,7 @@ class Module
         // var_dump( $routeMatch->getMatchedRouteName());
         if ($routeMatch->getMatchedRouteName() == "internship") {
             if (!$authService->hasIdentity()) {
+
                 $cont->refer = "/internships";
                 $response->setStatusCode(301);
                 // $referContainer->location = $request->getUriString();
