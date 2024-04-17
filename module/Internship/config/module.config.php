@@ -46,6 +46,10 @@ return [
         ],
         'template_map' => [
             'internship/layout'           => __DIR__ . '/../view/layout/internLayout.phtml',
+            'intern/layout'           => __DIR__ . '/../view/layout/intern-layout.phtml',
+            'partial/menu-internship'           => __DIR__ . '/../view/partial/intern-menu.phtml',
+            'partial/board-menu'           => __DIR__ . '/../view/partial/board-menu.phtml',
+            'partial/featured-courses'           => __DIR__ . '/../view/partial/featured-courses.phtml',
         ]
     ],
     'router' => [

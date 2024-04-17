@@ -22,7 +22,7 @@ class Module
         $sharedEvent = $moduleManager->getEventManager()->getSharedManager();
         $sharedEvent->attach(__NAMESPACE__, 'dispatch', function ($e) {
             $controller = $e->getTarget();
-            $controller->layout('admin-layout');
+            $controller->layout('intern/layout');
         });
     }
 
@@ -30,7 +30,7 @@ class Module
     {
         $application = $e->getApplication();
         $eventManager = $application->getEventManager();
-        $eventManager->attach("route", [$this, 'onRoute'], -100);
+        $eventManager->attach("route", [$this, 'onRoute'], -102);
     }
 
 
@@ -47,9 +47,14 @@ class Module
         $request = $e->getRequest();
         $authService = $generalService->getAuth();
         $cont = new Container("refer");
+        $aminMenu = new Container("admin_menu");
+
 
         // var_dump( $routeMatch->getMatchedRouteName());
         if ($routeMatch->getMatchedRouteName() == "internship") {
+           
+            $aminMenu->isMenu = "internship";
+           
             if (!$authService->hasIdentity()) {
 
                 $cont->refer = "/internships";

@@ -1,0 +1,182 @@
+<?php
+
+/**
+ * @var Laminas\View\Renderer\PhpRenderer $this
+ */
+
+use General\Service\GeneralService;
+use Laminas\Session\Container;
+
+?>
+<?= $this->doctype() ?>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <?= $this->headTitle('Terces Academy')->setSeparator(' - ')->setAutoEscape(false) ?>
+
+    <?= $this->headMeta()
+        ->appendName('viewport', 'width=device-width, initial-scale=1.0')
+        ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
+    ?>
+
+    <!-- Le styles -->
+    <?= $this->headLink([
+        'rel' => 'shortcut icon',
+        'type' => 'image/vnd.microsoft.icon',
+        'href' => $this->basePath() . '/img/favicon.ico'
+    ])
+
+        ->prependStylesheet($this->basePath("/intern/css/app/app.css"))
+        ->prependStylesheet($this->basePath('/intern/css/vendor/all.css'))
+
+    ?>
+
+
+
+
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue-toast-notification@3"></script>
+    <link href="https://cdn.jsdelivr.net/npm/vue-toast-notification@3/dist/theme-sugar.css" rel="stylesheet">
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://checkout.flutterwave.com/v3.js"></script>
+
+
+    <!-- Scripts -->
+    <?= $this->headScript() ?>
+</head>
+
+<body>
+    <div class="navbar navbar-default navbar-fixed-top navbar-size-large navbar-size-xlarge paper-shadow" data-z="0" data-animated role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-nav">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <div class="navbar-brand navbar-brand-logo">
+                    <a class="svg" href="<?= $this->url("home") ?>">
+                        <img width="143" height="42" src="/assets/images/oie_3QNUOMetbJh7.png" alt="Terces - Online Learning Platform"></a>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="main-nav">
+                <ul class="nav navbar-nav navbar-nav-margin-left">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Board Home <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="index.html">Home page</a></li>
+                            <li><a href="pricing.html">Pricing</a></li>
+                            <li><a href="tutors.html">Tutors</a></li>
+                            <li><a href="survey.html">Survey</a></li>
+                            <li><a href="website-forum.html">Forum Home</a></li>
+                            <li><a href="website-forum-category.html">Forum Category</a></li>
+                            <li><a href="website-forum-thread.html">Forum Thread</a></li>
+                            <li><a href="website-blog.html">Blog Listing</a></li>
+                            <li><a href="website-blog-post.html">Blog Post</a></li>
+                            <li><a href="website-contact.html">Contact</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Courses <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="website-directory-grid.html">Grid Directory</a></li>
+                            <li><a href="website-directory-list.html">List Directory</a></li>
+                            <li><a href="website-course.html">Single Course</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown active">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Student <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li class="active"><a href="website-student-dashboard.html">Dashboard</a></li>
+                            <li><a href="website-student-courses.html">My Courses</a></li>
+                            <li><a href="website-take-course.html">Take Course</a></li>
+                            <li><a href="website-course-forums.html">Course Forums</a></li>
+                            <li><a href="website-take-quiz.html">Take Quiz</a></li>
+                            <li><a href="website-student-messages.html">Messages</a></li>
+                            <li><a href="website-student-profile.html">Private Profile</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Instructor <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="website-instructor-dashboard.html">Dashboard</a></li>
+                            <li><a href="website-instructor-courses.html">My Courses</a></li>
+                            <li><a href="website-instructor-course-edit-course.html">Edit Course</a></li>
+                            <li><a href="website-instructor-earnings.html">Earnings</a></li>
+                            <li><a href="website-instructor-statement.html">Statement</a></li>
+                            <li><a href="website-instructor-messages.html">Messages</a></li>
+                            <li><a href="website-instructor-profile.html">Private Profile</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">UI <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="essential-buttons.html">Buttons</a></li>
+                            <li><a href="essential-icons.html">Icons</a></li>
+                            <li><a href="essential-progress.html">Progress</a></li>
+                            <li><a href="essential-grid.html">Grid</a></li>
+                            <li><a href="essential-forms.html">Forms</a></li>
+                            <li><a href="essential-tables.html">Tables</a></li>
+                            <li><a href="essential-tabs.html">Tabs</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <div class="navbar-right">
+                    <ul class="nav navbar-nav navbar-nav-bordered navbar-nav-margin-right">
+                        <!-- user -->
+                        <li class="dropdown user active">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <img src="/intern/images/people/110/guy-6.jpg" alt="" class="img-circle" /> Bill<span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li class="active"><a href="website-student-dashboard.html"><i class="fa fa-bar-chart-o"></i> Dashboard</a></li>
+                                <li><a href="website-student-courses.html"><i class="fa fa-mortar-board"></i> My Courses</a></li>
+                                <li><a href="website-student-profile.html"><i class="fa fa-user"></i> Profile</a></li>
+                                <li><a href="login.html"><i class="fa fa-sign-out"></i> Logout</a></li>
+                            </ul>
+                        </li>
+                        <!-- // END user -->
+                    </ul>
+                    <a href="login.html" class="navbar-btn btn btn-primary">Log In</a>
+                </div>
+            </div>
+            <!-- /.navbar-collapse -->
+
+        </div>
+    </div>
+    <br>
+    <div class="parallax overflow-hidden bg-blue-400 page-section third">
+        <div class="container parallax-layer" data-opacity="true">
+
+        </div>
+    </div>
+
+
+    <div class="container">
+
+        <?= $this->content; ?>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <strong>Learning</strong> v1.1.0 &copy; Copyright 2015
+    </footer>
+    <!-- // Footer -->
+
+</body>
+<?= $this->inlineScript()
+    ->prependFile($this->basePath('/intern/js/vendor/all.js'))
+    ->prependFile($this->basePath('/intern/js/app/app.js')) ?>
+
+
+</html>

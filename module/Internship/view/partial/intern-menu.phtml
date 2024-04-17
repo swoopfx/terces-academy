@@ -2,7 +2,7 @@
     <li class="nav-item with-sub ">
         <a class="nav-link" href="<?= $this->url("admin", ["action" => "index"]) ?>">
             <i class="icon ion-ios-home-outline"></i>
-            <span>Dashboard</span>
+            <span>Board Home</span>
         </a>
 
     </li>
@@ -10,15 +10,16 @@
     <li class="nav-item with-sub">
         <a class="nav-link" href="#">
             <i class="icon ion-ios-analytics-outline"></i>
-            <span>Payments</span>
+            <span>Class</span>
         </a>
         <div class="sub-item">
             <ul>
-                <li><a href="<?= $this->url("admin", ["action" => "interac-payment"]) ?>">Interac Payment</a></li>
-                <!-- <li><a href="<?php echo $this->url("admin", ["action" => "active-program-lists"]) ?>">Registered
-                                    Courses</a></li>
-                            <li><a href="<?php $this->url("admin", ["action" => "active-program-lists"]) ?>">Active
-                                    Courses</a></li> -->
+                <li><a href="<?php echo $this->url("admin", ["action" => "active-program-lists"]) ?>">My
+                        Courses</a></li>
+                <li><a href="<?= $this->url("admin", ["action" => "interac-payment"]) ?>">Zoom Meet Class</a></li>
+
+                <li><a href="<?php $this->url("admin", ["action" => "active-program-lists"]) ?>">Active
+                        Courses</a></li>
 
             </ul>
         </div><!-- dropdown-menu -->
@@ -27,27 +28,27 @@
     <li class="nav-item with-sub">
         <a class="nav-link" href="#" data-toggle="dropdown">
             <i class="icon ion-ios-filing-outline"></i>
-            <span>Programs</span>
+            <span>Course Tools</span>
         </a>
 
         <div class="sub-item">
             <ul>
-                <li><a href="<?= $this->url("admin", ["action" => "program-list"]) ?>">Programs</a></li>
-                <li><a href="<?php echo $this->url("admin", ["action" => "internship-board"]) ?>">Internship</a></li>
-                <!--  <li><a href="<?php $this->url("admin", ["action" => "active-program-lists"]) ?>">Active
-                                    Courses</a></li> -->
+                <li><a href="<?= $this->url("admin", ["action" => "program-list"]) ?>">Recorded Videos</a></li>
+                <li><a href="<?php echo $this->url("admin", ["action" => "internship-board"]) ?>">Documents</a></li>
+                <!-- <li><a href="<?php $this->url("admin", ["action" => "active-program-lists"]) ?>">Active
+                        Courses</a></li> -->
 
             </ul>
-        </div><!-- dropdown-menu -->
+        </div>
 
     </li>
 
     <li class="nav-item with-sub">
         <a class="nav-link" href="#" data-toggle="dropdown">
             <i class="icon ion-ios-gear-outline"></i>
-            <span>Users</span>
+            <span>Assignments</span>
         </a>
-        <div class="sub-item">
+        <!--  <div class="sub-item">
             <ul>
                 <li><a href="<?= $this->url("admin", ["action" => "create-user"]) ?>">Create User</a></li>
                 <li><a href="<?= $this->url("admin", ["action" => "user-list"]) ?>">Registered User</a></li>
@@ -57,7 +58,7 @@
                         Courses</a></li>
 
             </ul>
-        </div><!-- dropdown-menu -->
+        </div> dropdown-menu -->
     </li>
     <!-- <li class="nav-item">
                     <a class="nav-link" href="page-messages.html">

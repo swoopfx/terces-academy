@@ -90,8 +90,9 @@ use Laminas\Session\Container;
         <div class="container">
             <?php
             $aminMenu = new Container("admin_menu");
+
             if ($aminMenu->isMenu == "admin") : ?>
-                
+
                 <ul class="nav">
                     <li class="nav-item with-sub ">
                         <a class="nav-link" href="<?= $this->url("admin", ["action" => "index"]) ?>">
@@ -179,7 +180,8 @@ use Laminas\Session\Container;
                     </a>
                 </li> -->
                 </ul>
-                <?php  elseif(): ?>
+            <?php elseif ($aminMenu->isMenu == "internship") : ?>
+                <?= $this->partial("partial/menu-internship"); ?>
             <?php endif; ?>
         </div><!-- container -->
     </div><!-- slim-navbar -->
