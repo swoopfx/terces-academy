@@ -34,13 +34,17 @@ class Module
         $request = $e->getRequest();
         $authService = $generalService->getAuth();
         $cont = new Container("refer");
+        $adminMenu = new Container("admin_menu");
+        $adminMenu->isMenu = " ";
 
 
 
         // var_dump( $routeMatch->getMatchedRouteName());
         if ($routeMatch->getMatchedRouteName() == "admin" || $routeMatch->getMatchedRouteName() == "admin-process" || $routeMatch->getMatchedRouteName() == "admin-general") {
+            $adminMenu->isMenu = "admin";
             if (!$authService->hasIdentity()) {
                 $cont->refer = "/admin";
+
                 $response->setStatusCode(301);
                 // $referContainer->location = $request->getUriString();
                 $controller = $e->getTarget();

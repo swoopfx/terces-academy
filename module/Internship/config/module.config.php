@@ -2,12 +2,16 @@
 
 namespace Internship;
 
+use Internship\Controller\ClassesController;
+use Internship\Controller\Factory\ClassesControllerFactory;
 use Internship\Controller\Factory\InternshipControllerFactory;
 use Internship\Controller\Factory\ProjectsControllerFactory;
 use Internship\Controller\Factory\ResourceControllerFactory;
+use Internship\Controller\Factory\ToolsControllerFactory;
 use Internship\Controller\InternshipController;
 use Internship\Controller\ProjectController;
 use Internship\Controller\ResourceController;
+use Internship\Controller\ToolsController;
 use Laminas\Router\Http\Segment;
 
 return [
@@ -16,10 +20,14 @@ return [
             InternshipController::class => InternshipControllerFactory::class,
             ProjectController::class => ProjectsControllerFactory::class,
             ResourceController::class => ResourceControllerFactory::class,
+            ToolsController::class => ToolsControllerFactory::class,
+            ClassesController::class => ClassesControllerFactory::class,
         ],
         "aliases" => [
             "internship" => InternshipController::class,
-            "resources" => ResourceController::class
+            "resources" => ResourceController::class,
+            "tools" => ToolsController::class,
+            "classes" => ClassesController::class,
         ]
     ],
 
@@ -46,6 +54,10 @@ return [
         ],
         'template_map' => [
             'internship/layout'           => __DIR__ . '/../view/layout/internLayout.phtml',
+            'intern/layout'           => __DIR__ . '/../view/layout/intern-layout.phtml',
+            'partial/menu-internship'           => __DIR__ . '/../view/partial/intern-menu.phtml',
+            'partial/board-menu'           => __DIR__ . '/../view/partial/board-menu.phtml',
+            'partial/featured-courses'           => __DIR__ . '/../view/partial/featured-courses.phtml',
         ]
     ],
     'router' => [

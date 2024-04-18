@@ -1,0 +1,83 @@
+<?php
+
+/**
+ * @var Laminas\View\Renderer\PhpRenderer $this
+ */
+
+use General\Service\GeneralService;
+use Laminas\Session\Container;
+
+?>
+<?= $this->doctype() ?>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <?= $this->headTitle('Terces Academy')->setSeparator(' - ')->setAutoEscape(false) ?>
+
+    <?= $this->headMeta()
+        ->appendName('viewport', 'width=device-width, initial-scale=1.0')
+        ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
+    ?>
+
+    <!-- Le styles -->
+    <?= $this->headLink([
+        'rel' => 'shortcut icon',
+        'type' => 'image/vnd.microsoft.icon',
+        'href' => $this->basePath() . '/img/favicon.ico'
+    ])
+
+        ->prependStylesheet($this->basePath("/intern/css/app/app.css"))
+        ->prependStylesheet($this->basePath('/intern/css/vendor/all.css'))
+
+    ?>
+
+
+
+
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue-toast-notification@3"></script>
+    <link href="https://cdn.jsdelivr.net/npm/vue-toast-notification@3/dist/theme-sugar.css" rel="stylesheet">
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://checkout.flutterwave.com/v3.js"></script>
+
+
+    <!-- Scripts -->
+    <?= $this->headScript() ?>
+</head>
+
+<body>
+    <div class="navbar navbar-default navbar-fixed-top navbar-size-large navbar-size-xlarge paper-shadow" data-z="0" data-animated role="navigation">
+        <?= $this->partial("partial/menu-internship"); ?>
+    </div>
+    <br>
+    <div class="parallax overflow-hidden bg-blue-400 page-section third">
+        <div class="container parallax-layer" data-opacity="true">
+
+        </div>
+    </div>
+
+
+    <div class="container">
+
+        <?= $this->content; ?>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <strong>Learning</strong> v1.1.0 &copy; Copyright 2015
+    </footer>
+    <!-- // Footer -->
+
+</body>
+<?= $this->inlineScript()
+    ->prependFile($this->basePath('/intern/js/vendor/all.js'))
+    ->prependFile($this->basePath('/intern/js/app/app.js')) ?>
+
+
+</html>

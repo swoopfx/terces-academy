@@ -19,6 +19,8 @@ class GeneralService
 
     const GENERAL_INTERNSHIP_ON_JOB_TRAINING = "Business Analysis - on the job training";
 
+    const GENERAL_ORACLE_P6 = "Primavera P6 Enterprise Project Portfolio Management";
+
     const GENERAL_INTERNSHIP_PRICE = 1500;
 
 
