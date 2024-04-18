@@ -1,27 +1,35 @@
 <?php
+
 namespace Internship\Controller;
 
 use Doctrine\ORM\EntityManager;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 
-class ToolsController extends AbstractActionController{
+class CoursesController extends AbstractActionController
+{
 
+    /**
+     * Undocumented variable
+     *
+     * @var EntityManager
+     */
     private EntityManager $entityManager;
 
-    public function toolsAction(){
-        
+    public function coursesAction()
+    {
         $viewModel = new ViewModel();
-        // echo 
         return $viewModel;
     }
 
     /**
-     * Set the value of entityManager
+     * Set undocumented variable
+     *
+     * @param  EntityManager  $entityManager  Undocumented variable
      *
      * @return  self
-     */ 
-    public function setEntityManager($entityManager)
+     */
+    public function setEntityManager(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
 
