@@ -3,7 +3,9 @@
 namespace Internship;
 
 use Internship\Controller\ClassesController;
+use Internship\Controller\CoursesController;
 use Internship\Controller\Factory\ClassesControllerFactory;
+use Internship\Controller\Factory\CoursesControllerFactory;
 use Internship\Controller\Factory\InternshipControllerFactory;
 use Internship\Controller\Factory\ProjectsControllerFactory;
 use Internship\Controller\Factory\ResourceControllerFactory;
@@ -22,12 +24,14 @@ return [
             ResourceController::class => ResourceControllerFactory::class,
             ToolsController::class => ToolsControllerFactory::class,
             ClassesController::class => ClassesControllerFactory::class,
+            CoursesController::class => CoursesControllerFactory::class
         ],
         "aliases" => [
             "internship" => InternshipController::class,
             "resources" => ResourceController::class,
             "tools" => ToolsController::class,
             "classes" => ClassesController::class,
+            "courses" => CoursesController::class
         ]
     ],
 
