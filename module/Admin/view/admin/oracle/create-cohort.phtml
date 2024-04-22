@@ -1,0 +1,102 @@
+<?= $this->headtitle("Create Cohort"); ?>
+
+<div id="p6" class="row row-sm mg-t-20">
+    <div class="col-lg-6">
+        <div class="section-wrapper">
+            <label class="section-title">Create P6 Cohort</label>
+            <!--  <p class="mg-b-20 mg-sm-b-40">A basic form where labels are aligned in left.</p> -->
+
+            <div class="form-layout form-layout-4">
+                <div class="row">
+                    <label class="col-sm-4 form-control-label">Cohort Name: <span class="tx-danger">*</span></label>
+                    <div class="col-sm-8 mg-t-10 mg-sm-t-0">
+                        <input type="text" class="form-control" placeholder="Enter Name">
+                    </div>
+                </div><!-- row -->
+                <div class="row mg-t-20">
+                    <label class="col-sm-4 form-control-label">Start Date: <span class="tx-danger">*</span></label>
+                    <div class="col-sm-8 mg-t-10 mg-sm-t-0">
+                        <input type="date" class="form-control">
+                    </div>
+                </div>
+                <div class="row mg-t-20">
+                    <label class="col-sm-4 form-control-label">Publish: <span class="tx-danger">*</span></label>
+                    <div class="col-sm-8 mg-t-10 mg-sm-t-0">
+                        <input type="text" class="form-control" placeholder="Enter email address">
+                    </div>
+                </div>
+
+                <div class="form-layout-footer mg-t-30">
+                    <button class="btn btn-primary bd-0">Submit Form</button>
+                    <button class="btn btn-secondary bd-0">Cancel</button>
+                </div><!-- form-layout-footer -->
+            </div><!-- form-layout -->
+        </div><!-- section-wrapper -->
+    </div><!-- col-6 -->
+    <div class="col-lg-6 mg-t-20 mg-lg-t-0">
+        <div class="section-wrapper">
+            <label class="section-title">Right Label Alignment</label>
+            <p class="mg-b-20 mg-sm-b-40">A basic form where labels are aligned in right.</p>
+            <div class="form-layout form-layout-5">
+                <div class="row">
+                    <label class="col-sm-4 form-control-label"><span class="tx-danger">*</span> Firstname:</label>
+                    <div class="col-sm-8 mg-t-10 mg-sm-t-0">
+                        <input type="text" class="form-control" placeholder="Enter firstname">
+                    </div>
+                </div><!-- row -->
+                <div class="row mg-t-20">
+                    <label class="col-sm-4 form-control-label"><span class="tx-danger">*</span> Lastname:</label>
+                    <div class="col-sm-8 mg-t-10 mg-sm-t-0">
+                        <input type="text" class="form-control" placeholder="Enter lastname">
+                    </div>
+                </div>
+                <div class="row mg-t-20">
+                    <label class="col-sm-4 form-control-label"><span class="tx-danger">*</span> Email:</label>
+                    <div class="col-sm-8 mg-t-10 mg-sm-t-0">
+                        <input type="text" class="form-control" placeholder="Enter email address">
+                    </div>
+                </div>
+                <div class="row mg-t-20">
+                    <label class="col-sm-4 form-control-label"><span class="tx-danger">*</span> Address:</label>
+                    <div class="col-sm-8 mg-t-10 mg-sm-t-0">
+                        <textarea rows="2" class="form-control" placeholder="Enter your address"></textarea>
+                    </div>
+                </div><!-- row -->
+                <div class="row mg-t-30">
+                    <div class="col-sm-8 mg-l-auto">
+                        <div class="form-layout-footer">
+                            <button class="btn btn-primary bd-0">Submit Form</button>
+                            <button class="btn btn-secondary bd-0">Cancel</button>
+                        </div><!-- form-layout-footer -->
+                    </div><!-- col-8 -->
+                </div>
+            </div><!-- form-layout -->
+        </div><!-- section-wrapper -->
+    </div><!-- col-6 -->
+</div><!-- row -->
+
+<script>
+    const p6cohortApp = Vue.createApp({
+        data() {
+            return {
+                cohort: []
+            }
+        },
+        mounted() {
+            this.getCohort();
+        },
+
+        methods: {
+            getCohort() {
+                axios.get("/admins/oracle/get-cohort").then((result) => {
+                    if (result.status == 200) {
+                        this.cohort = result.data.data;
+                    }
+                }).catch((err) => {
+
+                });
+            }
+        },
+    });
+    p6cohortApp.mount("#p6");
+</script>
