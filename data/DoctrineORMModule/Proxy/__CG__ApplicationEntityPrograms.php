@@ -67,10 +67,10 @@ class Programs extends \Application\Entity\Programs implements \Doctrine\ORM\Pro
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'id', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'uuid', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'programId', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'cost', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'title', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'duration', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'description', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'createdOn', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'updatedon', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'isActive', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'banner', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'courses'];
+            return ['__isInitialized__', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'id', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'uuid', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'programId', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'cost', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'title', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'duration', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'description', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'createdOn', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'updatedon', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'isActive', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'banner', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'courses', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'instructors'];
         }
 
-        return ['__isInitialized__', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'id', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'uuid', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'programId', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'cost', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'title', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'duration', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'description', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'createdOn', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'updatedon', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'isActive', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'banner', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'courses'];
+        return ['__isInitialized__', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'id', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'uuid', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'programId', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'cost', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'title', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'duration', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'description', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'createdOn', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'updatedon', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'isActive', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'banner', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'courses', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'instructors'];
     }
 
     /**
@@ -133,7 +133,7 @@ class Programs extends \Application\Entity\Programs implements \Doctrine\ORM\Pro
      * {@inheritDoc}
      * @internal generated method: use only when explicitly handling proxy specific loading logic
      */
-    public function __setInitializer(\Closure $initializer = null): void
+    public function __setInitializer(?\Closure $initializer = null): void
     {
         $this->__initializer__ = $initializer;
     }
@@ -151,7 +151,7 @@ class Programs extends \Application\Entity\Programs implements \Doctrine\ORM\Pro
      * {@inheritDoc}
      * @internal generated method: use only when explicitly handling proxy specific loading logic
      */
-    public function __setCloner(\Closure $cloner = null): void
+    public function __setCloner(?\Closure $cloner = null): void
     {
         $this->__cloner__ = $cloner;
     }

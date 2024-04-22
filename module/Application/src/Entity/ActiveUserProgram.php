@@ -100,6 +100,14 @@ class ActiveUserProgram
     private $paidInstallment;
 
 
+    /**
+     * Undocumented variable
+     * @ORM\OneToOne(targetEntity="ActiveP6Cohort", mappedBy="activeUserProgram")
+     * @var ActiveP6Cohort
+     */
+    private ActiveP6Cohort  $oracleCohort;
+
+
     public function __construct()
     {
         $this->activeInstallment = new ArrayCollection();
@@ -356,5 +364,29 @@ class ActiveUserProgram
     public function getActiveInstallment()
     {
         return $this->activeInstallment;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  ActiveP6Cohort
+     */ 
+    public function getOracleCohort()
+    {
+        return $this->oracleCohort;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  ActiveP6Cohort  $oracleCohort  Undocumented variable
+     *
+     * @return  self
+     */ 
+    public function setOracleCohort(ActiveP6Cohort $oracleCohort)
+    {
+        $this->oracleCohort = $oracleCohort;
+
+        return $this;
     }
 }

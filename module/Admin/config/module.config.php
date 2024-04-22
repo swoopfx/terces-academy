@@ -9,7 +9,9 @@ use Admin\Controller\Factory\ZoomControllerFactory;
 use Admin\Controller\ZoomController;
 use Admin\Controller\Factory\AdminControllerFactory;
 use Admin\Controller\Factory\InternshipControllerFactory;
+use Admin\Controller\Factory\OracleControllerFactory;
 use Admin\Controller\InternshipController;
+use Admin\Controller\OracleController;
 use Laminas\Router\Http\Segment;
 
 return [
@@ -24,9 +26,11 @@ return [
             AdminController::class => AdminControllerFactory::class,
             AdminProcessController::class => AdminProcessControllerFactory::class,
             InternshipController::class => InternshipControllerFactory::class,
+            OracleController::class => OracleControllerFactory::class,
         ],
         "aliases" => [
-            "admin-intern" => InternshipController::class
+            "admin-intern" => InternshipController::class,
+            "oracle" => OracleController::class
         ]
 
 

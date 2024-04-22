@@ -1,336 +1,55 @@
-<?php ?>
+<?php $this->headtitle("Course"); ?>
 
 
-
-<div class="page-section">
+<div id="course" class="page-section">
     <div class="row">
 
         <div class="col-md-9">
 
-            <div class="row" data-toggle="isotope">
-                <div class="item col-xs-12 col-sm-6 col-lg-4">
-                    <div class="panel panel-default paper-shadow" data-z="0.5">
+            <?php foreach ($data as $dat) : ?>
+                <div class="panel panel-default paper-shadow" data-z="0.5">
+                    <div class="panel-body">
 
-                        <div class="cover overlay cover-image-full hover">
-                            <span class="img icon-block height-150 bg-default"></span>
-                            <a href="website-course.html" class="padding-none overlay overlay-full icon-block bg-default">
-                                <span class="v-center">
-                                    <i class="fa fa-github"></i>
-                                </span>
-                            </a>
-
-                            <a href="website-course.html" class="overlay overlay-full overlay-hover overlay-bg-white">
-                                <span class="v-center">
-                                    <span class="btn btn-circle btn-white btn-lg"><i class="fa fa-graduation-cap"></i></span>
-                                </span>
-                            </a>
-
-                        </div>
-
-                        <div class="panel-body">
-                            <h4 class="text-headline margin-v-0-10"><a href="website-course.html">Github Webhooks for Beginners</a></h4>
-
-                            <p class="small margin-none">
-                                <span class="fa fa-fw fa-star text-yellow-800"></span>
-                                <span class="fa fa-fw fa-star text-yellow-800"></span>
-                                <span class="fa fa-fw fa-star text-yellow-800"></span>
-                                <span class="fa fa-fw fa-star-o text-yellow-800"></span>
-                                <span class="fa fa-fw fa-star-o text-yellow-800"></span>
-                            </p>
-
-                        </div>
-                        <hr class="margin-none" />
-                        <div class="panel-body">
-
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet commodi delectus, excepturi.</p>
-
-                            <div class="media v-middle">
-                                <div class="media-left">
-                                    <img src="images/people/50/guy-6.jpg" alt="People" class="img-circle width-40" />
-                                </div>
-                                <div class="media-body">
-                                    <h4><a href="">Adrian Demian</a>
-                                        <br />
-                                    </h4>
-                                    Instructor
+                        <div class="media media-clearfix-xs">
+                            <div class="media-left text-center">
+                                <div class="cover width-150 width-100pc-xs overlay cover-image-full hover margin-v-0-10">
+                                    <span class="img icon-block height-130 bg-default"></span>
+                                    <span class="overlay overlay-full padding-none icon-block bg-default">
+                                        <span class="v-center">
+                                            <img src="<?= $dat->getProgram()->getBanner(); ?>">
+                                        </span>
+                                    </span>
+                                    <a href="website-course.html" class="overlay overlay-full overlay-hover overlay-bg-white">
+                                        <span class="v-center">
+                                            <span class="btn btn-circle btn-white btn-lg"><i class="fa fa-graduation-cap"></i></span>
+                                        </span>
+                                    </a>
                                 </div>
                             </div>
+                            <div class="media-body">
+                                <h4 class="text-headline margin-v-5-0"><a href="<?= $this->url("internship", ["controller"=>"courses", "action"=>"info", "id"=>$dat->getProgram()->getUuid()]) ?>"><?= $dat->getProgram()->getTitle() ?></h4>
+                               
+                                <hr class="margin-v-8" />
+                                <div class="media v-middle">
+                                    <div class="media-left">
+                                        <img src="images/people/50/guy-2.jpg" alt="People" class="img-circle width-40" />
+                                    </div>
+                                    <div class="media-body">
+                                        <h4><a href="">Adrian Demian</a>
+                                            <br />
+                                        </h4>
+                                        Instructor
+                                    </div>
+                                </div>
 
+                            </div>
                         </div>
 
                     </div>
                 </div>
-                <div class="item col-xs-12 col-sm-6 col-lg-4">
-                    <div class="panel panel-default paper-shadow" data-z="0.5">
-
-                        <div class="cover overlay cover-image-full hover">
-                            <span class="img icon-block height-150 bg-primary"></span>
-                            <a href="website-course.html" class="padding-none overlay overlay-full icon-block bg-primary">
-                                <span class="v-center">
-                                    <i class="fa fa-css3"></i>
-                                </span>
-                            </a>
-
-                            <a href="website-course.html" class="overlay overlay-full overlay-hover overlay-bg-white">
-                                <span class="v-center">
-                                    <span class="btn btn-circle btn-primary btn-lg"><i class="fa fa-graduation-cap"></i></span>
-                                </span>
-                            </a>
-
-                        </div>
-
-                        <div class="panel-body">
-                            <h4 class="text-headline margin-v-0-10"><a href="website-course.html">Awesome CSS with LESS Processing</a></h4>
-
-                            <p class="small margin-none">
-                                <span class="fa fa-fw fa-star text-yellow-800"></span>
-                                <span class="fa fa-fw fa-star text-yellow-800"></span>
-                                <span class="fa fa-fw fa-star text-yellow-800"></span>
-                                <span class="fa fa-fw fa-star-o text-yellow-800"></span>
-                                <span class="fa fa-fw fa-star-o text-yellow-800"></span>
-                            </p>
-
-                        </div>
-                        <hr class="margin-none" />
-                        <div class="panel-body">
-
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet commodi delectus, excepturi.</p>
-
-                            <div class="media v-middle">
-                                <div class="media-left">
-                                    <img src="images/people/50/guy-2.jpg" alt="People" class="img-circle width-40" />
-                                </div>
-                                <div class="media-body">
-                                    <h4><a href="">Adrian Demian</a>
-                                        <br />
-                                    </h4>
-                                    Instructor
-                                </div>
-                            </div>
-
-                        </div>
-
-                    </div>
-                </div>
-                <div class="item col-xs-12 col-sm-6 col-lg-4">
-                    <div class="panel panel-default paper-shadow" data-z="0.5">
-
-                        <div class="cover overlay cover-image-full hover">
-                            <span class="img icon-block height-150 bg-lightred"></span>
-                            <a href="website-course.html" class="padding-none overlay overlay-full icon-block bg-lightred">
-                                <span class="v-center">
-                                    <i class="fa fa-windows"></i>
-                                </span>
-                            </a>
-
-                            <a href="website-course.html" class="overlay overlay-full overlay-hover overlay-bg-white">
-                                <span class="v-center">
-                                    <span class="btn btn-circle btn-red-500 btn-lg"><i class="fa fa-graduation-cap"></i></span>
-                                </span>
-                            </a>
-
-                        </div>
-
-                        <div class="panel-body">
-                            <h4 class="text-headline margin-v-0-10"><a href="website-course.html">Vagrant Portable Environments</a></h4>
-
-                            <p class="small margin-none">
-                                <span class="fa fa-fw fa-star text-yellow-800"></span>
-                                <span class="fa fa-fw fa-star text-yellow-800"></span>
-                                <span class="fa fa-fw fa-star text-yellow-800"></span>
-                                <span class="fa fa-fw fa-star-o text-yellow-800"></span>
-                                <span class="fa fa-fw fa-star-o text-yellow-800"></span>
-                            </p>
-
-                        </div>
-                        <hr class="margin-none" />
-                        <div class="panel-body">
-
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet commodi delectus, excepturi.</p>
-
-                            <div class="media v-middle">
-                                <div class="media-left">
-                                    <img src="images/people/50/guy-3.jpg" alt="People" class="img-circle width-40" />
-                                </div>
-                                <div class="media-body">
-                                    <h4><a href="">Adrian Demian</a>
-                                        <br />
-                                    </h4>
-                                    Instructor
-                                </div>
-                            </div>
-
-                        </div>
-
-                    </div>
-                </div>
-                <div class="item col-xs-12 col-sm-6 col-lg-4">
-                    <div class="panel panel-default paper-shadow" data-z="0.5">
-
-                        <div class="cover overlay cover-image-full hover">
-                            <span class="img icon-block height-150 bg-brown"></span>
-                            <a href="website-course.html" class="padding-none overlay overlay-full icon-block bg-brown">
-                                <span class="v-center">
-                                    <i class="fa fa-wordpress"></i>
-                                </span>
-                            </a>
-
-                            <a href="website-course.html" class="overlay overlay-full overlay-hover overlay-bg-white">
-                                <span class="v-center">
-                                    <span class="btn btn-circle btn-orange-500 btn-lg"><i class="fa fa-graduation-cap"></i></span>
-                                </span>
-                            </a>
-
-                        </div>
-
-                        <div class="panel-body">
-                            <h4 class="text-headline margin-v-0-10"><a href="website-course.html">WordPress Theme Development</a></h4>
-
-                            <p class="small margin-none">
-                                <span class="fa fa-fw fa-star text-yellow-800"></span>
-                                <span class="fa fa-fw fa-star text-yellow-800"></span>
-                                <span class="fa fa-fw fa-star text-yellow-800"></span>
-                                <span class="fa fa-fw fa-star-o text-yellow-800"></span>
-                                <span class="fa fa-fw fa-star-o text-yellow-800"></span>
-                            </p>
-
-                        </div>
-                        <hr class="margin-none" />
-                        <div class="panel-body">
-
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet commodi delectus, excepturi.</p>
-
-                            <div class="media v-middle">
-                                <div class="media-left">
-                                    <img src="images/people/50/guy-6.jpg" alt="People" class="img-circle width-40" />
-                                </div>
-                                <div class="media-body">
-                                    <h4><a href="">Adrian Demian</a>
-                                        <br />
-                                    </h4>
-                                    Instructor
-                                </div>
-                            </div>
-
-                        </div>
-
-                    </div>
-                </div>
-                <div class="item col-xs-12 col-sm-6 col-lg-4">
-                    <div class="panel panel-default paper-shadow" data-z="0.5">
-
-                        <div class="cover overlay cover-image-full hover">
-                            <span class="img icon-block height-150 bg-purple"></span>
-                            <a href="website-course.html" class="padding-none overlay overlay-full icon-block bg-purple">
-                                <span class="v-center">
-                                    <i class="fa fa-jsfiddle"></i>
-                                </span>
-                            </a>
-
-                            <a href="website-course.html" class="overlay overlay-full overlay-hover overlay-bg-white">
-                                <span class="v-center">
-                                    <span class="btn btn-circle btn-purple-500 btn-lg"><i class="fa fa-graduation-cap"></i></span>
-                                </span>
-                            </a>
-
-                        </div>
-
-                        <div class="panel-body">
-                            <h4 class="text-headline margin-v-0-10"><a href="website-course.html">Browserify: Writing Modular JavaScript</a></h4>
-
-                            <p class="small margin-none">
-                                <span class="fa fa-fw fa-star text-yellow-800"></span>
-                                <span class="fa fa-fw fa-star text-yellow-800"></span>
-                                <span class="fa fa-fw fa-star text-yellow-800"></span>
-                                <span class="fa fa-fw fa-star-o text-yellow-800"></span>
-                                <span class="fa fa-fw fa-star-o text-yellow-800"></span>
-                            </p>
-
-                        </div>
-                        <hr class="margin-none" />
-                        <div class="panel-body">
-
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet commodi delectus, excepturi.</p>
-
-                            <div class="media v-middle">
-                                <div class="media-left">
-                                    <img src="images/people/50/guy-5.jpg" alt="People" class="img-circle width-40" />
-                                </div>
-                                <div class="media-body">
-                                    <h4><a href="">Adrian Demian</a>
-                                        <br />
-                                    </h4>
-                                    Instructor
-                                </div>
-                            </div>
-
-                        </div>
-
-                    </div>
-                </div>
-                <div class="item col-xs-12 col-sm-6 col-lg-4">
-                    <div class="panel panel-default paper-shadow" data-z="0.5">
-
-                        <div class="cover overlay cover-image-full hover">
-                            <span class="img icon-block height-150 bg-pink-400 text-white"></span>
-                            <a href="website-course.html" class="padding-none overlay overlay-full icon-block bg-pink-400 text-white">
-                                <span class="v-center">
-                                    <i class="fa fa-cc-visa"></i>
-                                </span>
-                            </a>
-
-                            <a href="website-course.html" class="overlay overlay-full overlay-hover overlay-bg-white">
-                                <span class="v-center">
-                                    <span class="btn btn-circle btn-pink-500 btn-lg"><i class="fa fa-graduation-cap"></i></span>
-                                </span>
-                            </a>
-
-                        </div>
-
-                        <div class="panel-body">
-                            <h4 class="text-headline margin-v-0-10"><a href="website-course.html">Super Easy Online Payments with Stripe</a></h4>
-
-                            <p class="small margin-none">
-                                <span class="fa fa-fw fa-star text-yellow-800"></span>
-                                <span class="fa fa-fw fa-star text-yellow-800"></span>
-                                <span class="fa fa-fw fa-star text-yellow-800"></span>
-                                <span class="fa fa-fw fa-star-o text-yellow-800"></span>
-                                <span class="fa fa-fw fa-star-o text-yellow-800"></span>
-                            </p>
-
-                        </div>
-                        <hr class="margin-none" />
-                        <div class="panel-body">
-
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet commodi delectus, excepturi.</p>
-
-                            <div class="media v-middle">
-                                <div class="media-left">
-                                    <img src="images/people/50/guy-4.jpg" alt="People" class="img-circle width-40" />
-                                </div>
-                                <div class="media-body">
-                                    <h4><a href="">Adrian Demian</a>
-                                        <br />
-                                    </h4>
-                                    Instructor
-                                </div>
-                            </div>
-
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-
-            <ul class="pagination margin-top-none">
-                <li class="disabled"><a href="#">&laquo;</a></li>
-                <li class="active"><a href="#">1</a></li>
-                <li><a href="#">2</a></li>
-                <li><a href="#">3</a></li>
-                <li><a href="#">&raquo;</a></li>
-            </ul>
-
-            <br />
+            <?php endforeach; ?>
+          
+         
             <br />
 
         </div>
@@ -605,3 +324,24 @@
 
     </div>
 </div>
+
+<script>
+    const courseApp = Vue.createApp({
+        data() {
+            return {
+                registeredCourses: [],
+
+            }
+        },
+        methods: {
+            getCourses() {
+                axios.get().then((result) => {
+
+                }).catch((err) => {
+
+                });
+            }
+        },
+    });
+    courseApp.mount("#course");
+</script>

@@ -99,6 +99,13 @@ class Programs
      */
     private $courses;
 
+    /**
+     * Undocumented variable
+     *
+     * @var [type]
+     */
+    private $instructors;
+
     public function __construct()
     {
         $this->courses = new ArrayCollection();
@@ -334,7 +341,7 @@ class Programs
      * Get undocumented variable
      *
      * @return  string
-     */ 
+     */
     public function getBanner()
     {
         return $this->banner;
@@ -346,7 +353,7 @@ class Programs
      * @param  string  $banner  Undocumented variable
      *
      * @return  self
-     */ 
+     */
     public function setBanner(string $banner)
     {
         $this->banner = $banner;
@@ -358,7 +365,7 @@ class Programs
      * Get undocumented variable
      *
      * @return  Collection
-     */ 
+     */
     public function getCourses()
     {
         return $this->courses;
