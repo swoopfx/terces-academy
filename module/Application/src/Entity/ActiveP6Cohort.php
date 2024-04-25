@@ -65,10 +65,10 @@ class ActiveP6Cohort
 
     /**
      * Undocumented variable
-     * @ORM\ManyToOne(targetEntity="ActiveUserProgramStatus")
-     * @var ActiveUserProgramStatus
+     * @ORM\ManyToOne(targetEntity="ActiveP6CohortStatus")
+     * @var ActiveP6CohortStatus
      */
-    private ActiveUserProgramStatus $status;
+    private ActiveP6CohortStatus $status;
 
     /**
      * Undocumented variable
@@ -184,7 +184,7 @@ class ActiveP6Cohort
     public function setCreatedOn(\DateTime $createdOn)
     {
         $this->createdOn = $createdOn;
-
+        $this->updatedOn = $createdOn;
         return $this;
     }
 
@@ -263,7 +263,7 @@ class ActiveP6Cohort
     /**
      * Get undocumented variable
      *
-     * @return  ActiveUserProgramStatus
+     * @return  ActiveP6CohortStatus
      */ 
     public function getStatus()
     {
@@ -273,11 +273,11 @@ class ActiveP6Cohort
     /**
      * Set undocumented variable
      *
-     * @param  ActiveUserProgramStatus  $status  Undocumented variable
+     * @param  ActiveP6CohortStatus  $status  Undocumented variable
      *
      * @return  self
      */ 
-    public function setStatus(ActiveUserProgramStatus $status)
+    public function setStatus(ActiveP6CohortStatus $status)
     {
         $this->status = $status;
 
