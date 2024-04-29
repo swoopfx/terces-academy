@@ -1,0 +1,49 @@
+<?php $this->headtitle("Create Content"); ?>
+
+
+
+<div id="cohortList" class="row">
+    <div v-if="cohort.length" v-for="co in cohort" class="card card-body pd-25 tx-center">
+        <div class="card-icon-wrapper success">
+            <i class="icon ion-ios-paper-outline"></i>
+        </div><!-- icon-wrapper -->
+        <h4 class="tx-gray-800 mg-b-25">{{co.cohort}}</h4>
+        <p class="mg-b-25">{{formatPHPDate(co.startDate.date).toDateString()}}</p>
+        <a href="/admins/oracle/content-room" class="btn btn-success btn-block">CREATE CONTENT</a>
+    </div><!-- card -->
+
+
+</div>
+
+<script>
+    const cohortList = Vue.createApp({
+        data() {
+            return {
+                cohort: [],
+            }
+        },
+
+        mounted() {
+            this.getCohort();
+        },
+
+        methods: {
+            formatPHPDate(date) {
+                // myDate = date.replace(/-/g, "/");
+                return new Date(date);
+
+            },
+            getCohort() {
+                axios.get("/admins/oracle/get-cohort").then((result) => {
+                    if (result.status == 200) {
+                        // console.log(result.data.data);
+                        this.cohort = result.data.data;
+                    }
+                }).catch((err) => {
+
+                });
+            }
+        },
+    });
+    cohortList.mount("#cohortList");
+</script>

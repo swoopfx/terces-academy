@@ -36,26 +36,26 @@ RUN apt-get install --yes libicu-dev \
 ###
 
 ## mbstring for i18n string support
-# RUN docker-php-ext-install mbstring
+RUN docker-php-ext-install mbstring
 
 ###
 ## Some laminas/laminas-db supported PDO extensions
 ###
 
 ## MySQL PDO support
-# RUN docker-php-ext-install pdo_mysql
+RUN docker-php-ext-install pdo_mysql
 
 ## PostgreSQL PDO support
-# RUN apt-get install --yes libpq-dev \
-#     && docker-php-ext-install pdo_pgsql
+RUN apt-get install --yes libpq-dev \
+    && docker-php-ext-install pdo_pgsql
 
 ###
 ## laminas/laminas-cache supported extensions
 ###
 
 ## APCU
-# RUN pecl install apcu \
-#     && docker-php-ext-enable apcu
+RUN pecl install apcu \
+    && docker-php-ext-enable apcu
 
 ## Memcached
 # RUN apt-get install --yes libmemcached-dev \
