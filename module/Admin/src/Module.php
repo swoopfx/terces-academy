@@ -43,6 +43,7 @@ class Module
         if ($routeMatch->getMatchedRouteName() == "admin" || $routeMatch->getMatchedRouteName() == "admin-process" || $routeMatch->getMatchedRouteName() == "admin-general") {
             $adminMenu->isMenu = "admin";
             if (!$authService->hasIdentity()) {
+
                 $cont->refer = "/admin";
 
                 $response->setStatusCode(301);
@@ -56,7 +57,7 @@ class Module
                 // $e->stopPropagation();
             } else {
                 $userEntity = $authService->getIdentity();
-                if ($userEntity->getRole()->getId() != UserService::USER_ROLE_ADMIN) {
+                if ($userEntity->getRole()->getId() < UserService::USER_ROLE_ADMIN) {
                     $uri = $request->getUri();
                     $fullLink = sprintf('%s://%s', $uri->getScheme(), $uri->getHost());
                     // var_dump("JJJJ");
@@ -68,6 +69,8 @@ class Module
                     $response->sendHeaders();
 
                     exit;
+                } else if ($userEntity->getRole()->getId() == UserService::USER_ROLE_ORACLE_P6) {
+                    $adminMenu->isMenu = "p6";
                 }
             }
         }

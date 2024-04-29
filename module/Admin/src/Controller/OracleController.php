@@ -37,6 +37,12 @@ class OracleController extends AbstractActionController
         return $viewModel;
     }
 
+    public function contentRoomAction()
+    {
+        $viewModel = new ViewModel();
+        return $viewModel;
+    }
+
     public function assignToCohortAction()
     {
         $viewModel = new JsonModel();

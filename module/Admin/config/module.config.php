@@ -19,6 +19,10 @@ return [
         'template_path_stack' => [
             __DIR__ . '/../view',
         ],
+        'template_map' => [
+            'admin/main/menu'           => __DIR__ . '/../view/partial/admin-menu.phtml',
+            'admin/oraclep6/menu'           => __DIR__ . '/../view/partial/oracle-menu.phtml',
+        ]
     ],
     "controllers" => [
         "factories" => [

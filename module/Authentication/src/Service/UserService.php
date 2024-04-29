@@ -14,6 +14,8 @@ class UserService
 
     const USER_ROLE_ADMIN = 1000;
 
+    const USER_ROLE_ORACLE_P6 = 1100;
+
 
     const USER_STATE_ENABLED = 1;
 
