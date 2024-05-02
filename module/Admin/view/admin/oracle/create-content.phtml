@@ -9,7 +9,7 @@
         </div><!-- icon-wrapper -->
         <h4 class="tx-gray-800 mg-b-25">{{co.cohort}}</h4>
         <p class="mg-b-25">{{formatPHPDate(co.startDate.date).toDateString()}}</p>
-        <a href="/admins/oracle/content-room" class="btn btn-success btn-block">CREATE CONTENT</a>
+        <a :href="createLink(co.uuid)" class="btn btn-success btn-block">CREATE CONTENT</a>
     </div><!-- card -->
 
 
@@ -28,6 +28,9 @@
         },
 
         methods: {
+            createLink(link) {
+                return `/admins/oracle/content-room/${link}`;
+            },
             formatPHPDate(date) {
                 // myDate = date.replace(/-/g, "/");
                 return new Date(date);

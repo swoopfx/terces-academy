@@ -2,6 +2,7 @@
 
 namespace Internship\Entity;
 
+use Admin\Entity\OracleClasses;
 use Application\Entity\P6Cohort;
 use Doctrine\ORM\Mapping as ORM;
 use General\Entity\RoomType;
@@ -47,6 +48,13 @@ class Room
 
     /**
      * Undocumented variable
+     * @ORM\Column(nullable=true, type="text")
+     * @var string
+     */
+    private string $roomContent;
+
+    /**
+     * Undocumented variable
      * @ORM\Column(type="datetime", nullable=true)
      * @var \DateTime
      */
@@ -58,6 +66,14 @@ class Room
      * @var \DateTime
      */
     private \DateTime $updatedOn;
+
+
+    /**
+     * Undocumented variable
+     * @ORM\ManyToOne(targetEntity="Admin\Entity\OracleClasses")
+     * @var OracleClasses
+     */
+    private OracleClasses $oracleClasses;
 
     public function __construct()
     {
@@ -215,6 +231,54 @@ class Room
     public function setUpdatedOn(\DateTime $updatedOn)
     {
         $this->updatedOn = $updatedOn;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  OracleClasses
+     */
+    public function getOracleClasses()
+    {
+        return $this->oracleClasses;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  OracleClasses  $oracleClasses  Undocumented variable
+     *
+     * @return  self
+     */
+    public function setOracleClasses(OracleClasses $oracleClasses)
+    {
+        $this->oracleClasses = $oracleClasses;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  string
+     */
+    public function getRoomContent()
+    {
+        return $this->roomContent;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  string  $roomContent  Undocumented variable
+     *
+     * @return  self
+     */
+    public function setRoomContent(string $roomContent)
+    {
+        $this->roomContent = $roomContent;
 
         return $this;
     }
