@@ -40,6 +40,16 @@ class OracleController extends AbstractActionController
     public function contentRoomAction()
     {
         $viewModel = new ViewModel();
+        $uuid = $this->params()->fromRoute("id", NULL);
+        try {
+            if ($uuid == NULL) {
+                throw new \Exception("Absent identifier");
+            }
+            // get all Zoom resources 
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+
         return $viewModel;
     }
 
