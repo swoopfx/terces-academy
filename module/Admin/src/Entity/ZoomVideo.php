@@ -3,6 +3,7 @@
 namespace Admin\Entity;
 
 use Application\Entity\InternshipCohort;
+use Authentication\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 use General\Entity\Image;
 
@@ -76,6 +77,14 @@ class ZoomVideo
      * @var \DateTime
      */
     private \DateTime $updatedOn;
+
+   
+    /**
+     * Undocumented variable
+     * @ORM\ManyToOne(targetEntity="Authentication\Entity\User")
+     * @var User
+     */
+    private User $admin;
 
     /**
      * Get @ORM\Column(name="id", type="integer")
@@ -275,6 +284,30 @@ class ZoomVideo
     public function setUpdatedOn(\DateTime $updatedOn)
     {
         $this->updatedOn = $updatedOn;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  User
+     */ 
+    public function getAdmin()
+    {
+        return $this->admin;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  User  $admin  Undocumented variable
+     *
+     * @return  self
+     */ 
+    public function setAdmin(User $admin)
+    {
+        $this->admin = $admin;
 
         return $this;
     }

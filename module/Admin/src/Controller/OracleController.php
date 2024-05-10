@@ -8,6 +8,7 @@ use Application\Entity\ActiveUserProgram;
 use Application\Entity\ActiveUserProgramStatus;
 use Application\Entity\P6Cohort;
 use Doctrine\ORM\EntityManager;
+use General\Entity\RoomType;
 use Laminas\InputFilter\InputFilter;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\MvcEvent;
@@ -41,10 +42,38 @@ class OracleController extends AbstractActionController
     {
         $viewModel = new ViewModel();
         $uuid = $this->params()->fromRoute("id", NULL);
+        $em = $this->entityManager;
         try {
             if ($uuid == NULL) {
                 throw new \Exception("Absent identifier");
             }
+
+            $cohort = $em->getRepository(P6Cohort::class)->createQueryBuilder("c")
+                ->select(["c"])
+                ->where("c.uuid = :uuid")
+                ->setParameters([
+                    "uuid" => $uuid
+                ])->setMaxResults(10)->orderBy("c.id", "DESC")->getQuery()->getArrayResult();
+
+
+            $activeMembers = $em->getRepository(ActiveP6Cohort::class)
+                ->createQueryBuilder("a")
+                ->select(["a", "p", "u", "s", "aup"])
+                ->leftJoin("a.user", "u")
+                ->leftJoin("a.p6Cohort", "p")
+                ->leftJoin("a.status", "s")
+                ->leftJoin("a.activeUserProgram", "aup")
+                ->where("p.id = :p6")
+                ->setParameters([
+                    "p6" => $cohort[0]["id"]
+                ])
+                ->getQuery()
+                ->getArrayResult();
+
+            $viewModel->setVariables([
+                "cohort" => $cohort[0],
+                "students" => $activeMembers
+            ]);
             // get all Zoom resources 
         } catch (\Throwable $th) {
             //throw $th;
@@ -52,6 +81,8 @@ class OracleController extends AbstractActionController
 
         return $viewModel;
     }
+
+    // public function get
 
     public function assignToCohortAction()
     {
@@ -340,6 +371,22 @@ class OracleController extends AbstractActionController
             ->setParameters([
                 "active" => TRUE
             ])->setMaxResults(10)->orderBy("c.id", "DESC")->getQuery()->getArrayResult();
+        $viewModel->setVariables([
+            "data" => $data
+        ]);
+        return $viewModel;
+    }
+
+    public function getRoomTypesAction()
+    {
+        $viewModel = new JsonModel();
+        $em = $this->entityManager;
+        $data = $em->getRepository(RoomType::class)->createQueryBuilder("c")
+            ->select(["c"])
+            ->where("c.isActive = :active")
+            ->setParameters([
+                "active" => TRUE
+            ])->setMaxResults(10)->orderBy("c.id", "ASC")->getQuery()->getArrayResult();
         $viewModel->setVariables([
             "data" => $data
         ]);
