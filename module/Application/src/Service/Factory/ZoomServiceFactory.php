@@ -13,27 +13,36 @@ class ZoomServiceFactory  implements FactoryInterface
     public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
     {
         $xserv = new ZoomService();
-        // $config = $container->get("config");
-        // $zoomConfig = $config["zoom"];
+        $config = $container->get("config");
+        $zoomConfig = $config["zoom"];
         // $activeZoomConfig = $zoomConfig[$config["active_env"]];
-        // $client = new Client();
-        // $base64 = base64_encode($activeZoomConfig["client_id"] . ":" . $activeZoomConfig["client_secret"]);
-        // $client->setUri("https://zoom.us/oauth/token");
-        // $client->setHeaders([
-        //     "Authorization" => "Basic " . $base64,
-        //     "Content-Type" => "application/x-www-form-urlencoded",
-        // ]);
-        // $body = [
-        //     "grant_type" => "account_credentials",
-        //     "account_id" => $activeZoomConfig["account_id"]
-        // ];
+        $activeZoomConfig = $config["zoom"][$config["active_env"]];
+        $client = new Client();
+        $base64 = base64_encode($activeZoomConfig["client_id"] . ":" . $activeZoomConfig["client_secret"]);
+        $client->setUri("https://zoom.us/oauth/token");
+        $client->setMethod("POST");
+        $client->setHeaders([
+            "Authorization" => "Basic " . $base64,
+            "Content-Type" => "application/x-www-form-urlencoded",
+        ]);
+        $body = [
+            "grant_type" => "account_credentials",
+            "account_id" => $activeZoomConfig["account_id"]
+        ];
+
         // $client->setRawBody(json_encode($body));
-        // $response = $client->send();
-        // if ($response->isSuccess()) {
-        //     $xserv->setZoomTokenRes(json_decode($response->getBody(), true));
-        // } else {
-        //     throw new \Exception($response->getReasonPhrase());
-        // }
+        $client->setParameterPost($body);
+        $response = $client->send();
+        // var_dump()
+        if ($response->isSuccess()) {
+               var_dump(json_decode($response->getBody(), true));
+            $xserv->setZoomTokenRes(json_decode($response->getBody(), true));
+        } else {
+            // printf($response);
+            // throw new \Exception($response->getReasonPhrase());
+            // throw new \Exception($response->getStatusCode());
+            echo $response->getStatusCode();
+        }
         // $xserv->setConfig($config)->setZoomConfig($zoomConfig);
 
         return $xserv;
