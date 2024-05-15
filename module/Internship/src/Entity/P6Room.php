@@ -7,7 +7,11 @@ use Application\Entity\P6Cohort;
 use Doctrine\ORM\Mapping as ORM;
 use General\Entity\RoomType;
 
-class Room
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="p6room")
+ */
+class P6Room
 {
     /**
      *
@@ -74,6 +78,9 @@ class Room
      * @var OracleClasses
      */
     private OracleClasses $oracleClasses;
+
+
+
 
     public function __construct()
     {

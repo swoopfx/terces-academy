@@ -5,6 +5,7 @@ namespace Admin\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * This provides a list of weekly activity for the oracle classes 
  * @ORM\Entity
  * @ORM\Table(name="oracle_classes")
  */
@@ -58,7 +59,7 @@ class OracleClasses
      * Get @ORM\Column(name="id", type="integer")
      *
      * @return  integer
-     */ 
+     */
     public function getId()
     {
         return $this->id;
@@ -68,7 +69,7 @@ class OracleClasses
      * Get undocumented variable
      *
      * @return  string
-     */ 
+     */
     public function getWeekName()
     {
         return $this->weekName;
@@ -80,7 +81,7 @@ class OracleClasses
      * @param  string  $weekName  Undocumented variable
      *
      * @return  self
-     */ 
+     */
     public function setWeekName(string $weekName)
     {
         $this->weekName = $weekName;
@@ -92,7 +93,7 @@ class OracleClasses
      * Get undocumented variable
      *
      * @return  string
-     */ 
+     */
     public function getWeekDefinition()
     {
         return $this->weekDefinition;
@@ -104,7 +105,7 @@ class OracleClasses
      * @param  string  $weekDefinition  Undocumented variable
      *
      * @return  self
-     */ 
+     */
     public function setWeekDefinition(string $weekDefinition)
     {
         $this->weekDefinition = $weekDefinition;
@@ -116,7 +117,7 @@ class OracleClasses
      * Get undocumented variable
      *
      * @return  string
-     */ 
+     */
     public function getWeekDesc()
     {
         return $this->weekDesc;
@@ -128,7 +129,7 @@ class OracleClasses
      * @param  string  $weekDesc  Undocumented variable
      *
      * @return  self
-     */ 
+     */
     public function setWeekDesc(string $weekDesc)
     {
         $this->weekDesc = $weekDesc;
@@ -140,7 +141,7 @@ class OracleClasses
      * Get undocumented variable
      *
      * @return  string
-     */ 
+     */
     public function getCreatedOn()
     {
         return $this->createdOn;
@@ -152,7 +153,7 @@ class OracleClasses
      * @param  string  $createdOn  Undocumented variable
      *
      * @return  self
-     */ 
+     */
     public function setCreatedOn(string $createdOn)
     {
         $this->createdOn = $createdOn;
@@ -164,7 +165,7 @@ class OracleClasses
      * Get undocumented variable
      *
      * @return  string
-     */ 
+     */
     public function getUuid()
     {
         return $this->uuid;
@@ -176,7 +177,7 @@ class OracleClasses
      * @param  string  $uuid  Undocumented variable
      *
      * @return  self
-     */ 
+     */
     public function setUuid(string $uuid)
     {
         $this->uuid = $uuid;

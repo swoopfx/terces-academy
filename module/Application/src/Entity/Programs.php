@@ -101,10 +101,10 @@ class Programs
 
     /**
      * Undocumented variable
-     *
-     * @var [type]
+     * @ORM\Column(nullable=true)
+     * @var string
      */
-    private $instructors;
+    private $instructor;
 
     public function __construct()
     {
@@ -369,5 +369,29 @@ class Programs
     public function getCourses()
     {
         return $this->courses;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  string
+     */
+    public function getInstructor()
+    {
+        return $this->instructor;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  string  $instructor  Undocumented variable
+     *
+     * @return  self
+     */
+    public function setInstructor(string $instructor)
+    {
+        $this->instructor = $instructor;
+
+        return $this;
     }
 }

@@ -1,0 +1,66 @@
+<div class="card card-table">
+    <div class="card-header">
+        <h6 class="slim-card-title">Zoom Classes</h6>
+    </div><!-- card-header -->
+    <div class="table-responsive">
+        <table class="table mg-b-0 tx-13">
+            <thead>
+                <tr class="tx-10">
+                    <th class="pd-y-5">&nbsp;</th>
+                    <th class="pd-y-5">Week</th>
+                    <th class="pd-y-5">Tutorial</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-if="oraclep6Classes" v-for="clas in oraclep6Classes">
+
+                    <td></td>
+                    <td>
+                        <a href="" class="tx-inverse tx-14 tx-medium d-block">{{clas.weekName}}</a>
+
+                    </td>
+                    <td class="valign-middle">{{clas.weekDefinition}}</td>
+
+                    <td class="valign-middle tx-center">
+
+                        <button href="#modaldemo1" data-toggle="modal" data-effect="effect-scale" v-if="classroomState(clas.id)" class="modal-effect btn btn-success btn-block mg-b-10">Create Classroom</button>
+                        <button v-else class="btn btn-info btn-block mg-b-10">View Classroom</button>
+                        <!--  <a href="" class="tx-gray-600 tx-24"><i class="icon ion-android-more-horizontal"></i></a> -->
+
+
+                        <div id="modaldemo1" class="modal fade">
+                            <div class="modal-dialog modal-dialog-vertical-center" role="document">
+                                <div class="modal-content bd-0 tx-14">
+                                    <div class="modal-header">
+                                        <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Create a Training</h6>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body pd-25">
+                                        
+                                        <!--   <h5 class="lh-3 mg-b-20"><a href="" class="tx-inverse hover-primary">Why We Use Electoral College, Not Popular Vote</a></h5>
+                                        <p class="mg-b-5">It is a long established fact that a 
+                                            reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here',
+                                             making it look like readable English. </p> -->
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-primary">Save changes</button>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div><!-- modal-dialog -->
+                        </div><!-- modal -->
+
+
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div><!-- table-responsive -->
+    <div class="card-footer tx-12 pd-y-15 bg-transparent">
+        <a href=""><i class="fa fa-angle-down mg-r-5"></i>View All Products</a>
+    </div><!-- card-footer -->
+</div><!-- card -->

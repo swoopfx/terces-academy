@@ -22,6 +22,7 @@ return [
         'template_map' => [
             'admin/main/menu'           => __DIR__ . '/../view/partial/admin-menu.phtml',
             'admin/oraclep6/menu'           => __DIR__ . '/../view/partial/oracle-menu.phtml',
+            'partial/content-room-zoom-list'           => __DIR__ . '/../view/partial/content-room-zoom-list.phtml',
         ]
     ],
     "controllers" => [

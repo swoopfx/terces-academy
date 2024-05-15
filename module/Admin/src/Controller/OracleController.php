@@ -2,12 +2,15 @@
 
 namespace Admin\Controller;
 
+use Admin\Entity\OracleClasses;
 use Application\Entity\ActiveP6Cohort;
 use Application\Entity\ActiveP6CohortStatus;
 use Application\Entity\ActiveUserProgram;
 use Application\Entity\ActiveUserProgramStatus;
 use Application\Entity\P6Cohort;
 use Doctrine\ORM\EntityManager;
+use General\Entity\RoomType;
+use Internship\Entity\P6Room;
 use Laminas\InputFilter\InputFilter;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\MvcEvent;
@@ -41,10 +44,38 @@ class OracleController extends AbstractActionController
     {
         $viewModel = new ViewModel();
         $uuid = $this->params()->fromRoute("id", NULL);
+        $em = $this->entityManager;
         try {
             if ($uuid == NULL) {
                 throw new \Exception("Absent identifier");
             }
+
+            $cohort = $em->getRepository(P6Cohort::class)->createQueryBuilder("c")
+                ->select(["c"])
+                ->where("c.uuid = :uuid")
+                ->setParameters([
+                    "uuid" => $uuid
+                ])->setMaxResults(10)->orderBy("c.id", "DESC")->getQuery()->getArrayResult();
+
+
+            $activeMembers = $em->getRepository(ActiveP6Cohort::class)
+                ->createQueryBuilder("a")
+                ->select(["a", "p", "u", "s", "aup"])
+                ->leftJoin("a.user", "u")
+                ->leftJoin("a.p6Cohort", "p")
+                ->leftJoin("a.status", "s")
+                ->leftJoin("a.activeUserProgram", "aup")
+                ->where("p.id = :p6")
+                ->setParameters([
+                    "p6" => $cohort[0]["id"]
+                ])
+                ->getQuery()
+                ->getArrayResult();
+
+            $viewModel->setVariables([
+                "cohort" => $cohort[0],
+                "students" => $activeMembers
+            ]);
             // get all Zoom resources 
         } catch (\Throwable $th) {
             //throw $th;
@@ -52,6 +83,66 @@ class OracleController extends AbstractActionController
 
         return $viewModel;
     }
+
+    public function getZoomRoomTypeAction()
+    {
+        $jsonModel = new JsonModel();
+
+        return $jsonModel;
+    }
+
+    public function getOracleClassesAction()
+    {
+        $jsonModel = new JsonModel();
+        $em = $this->entityManager;
+        $data = $em->getRepository(OracleClasses::class)->createQueryBuilder("o")
+            ->select("o")->getQuery()->getArrayResult();
+        $jsonModel->setVariables(["data" => $data]);
+        return $jsonModel;
+    }
+
+    public function retriveClassroomDetailsAction()
+    {
+        $jsonModel = new JsonModel();
+        $em = $this->entityManager;
+        $response = $this->getResponse();
+        try {
+            $params = $this->params()->fromQuery();
+            // var_dump($params);
+            if ($params["oracle_class"] == NULL || $params["cohort"] == NULL || $params["room_type"] == NULL) {
+                throw new \Exception("Required parameter is NULL");
+            }
+            $data = $em->getRepository(P6Room::class)
+                ->createQueryBuilder("r")->select(["r", "p", "rt", "oc"])
+                ->leftJoin("r.p6cohort", "p")
+                ->leftJoin("r.roomType", "rt")
+                ->leftJoin("r.oracleClasses", "oc")
+                ->where("p.id = :cohort")
+                ->andWhere("rt.id = :room_type")
+                ->andWhere("oc.id = :oracle_class")
+                ->setParameters([
+                    "cohort" => $params["cohort"],
+                    "room_type" => $params["room_type"],
+                    "oracle_class" => $params["oracle_class"]
+                ])
+                ->getQuery()
+                ->getArrayResult();
+
+            $jsonModel->setVariables([
+                "data" => $data
+            ]);
+            return $jsonModel;
+        } catch (\Throwable $th) {
+            //throw $th;
+            $response->setStatusCode(400);
+            $jsonModel->setVariables([
+                "message" => $th->getMessage()
+            ]);
+        }
+        return $jsonModel;
+    }
+
+    // public function get
 
     public function assignToCohortAction()
     {
@@ -340,6 +431,22 @@ class OracleController extends AbstractActionController
             ->setParameters([
                 "active" => TRUE
             ])->setMaxResults(10)->orderBy("c.id", "DESC")->getQuery()->getArrayResult();
+        $viewModel->setVariables([
+            "data" => $data
+        ]);
+        return $viewModel;
+    }
+
+    public function getRoomTypesAction()
+    {
+        $viewModel = new JsonModel();
+        $em = $this->entityManager;
+        $data = $em->getRepository(RoomType::class)->createQueryBuilder("c")
+            ->select(["c"])
+            ->where("c.isActive = :active")
+            ->setParameters([
+                "active" => TRUE
+            ])->setMaxResults(10)->orderBy("c.id", "ASC")->getQuery()->getArrayResult();
         $viewModel->setVariables([
             "data" => $data
         ]);

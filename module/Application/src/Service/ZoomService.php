@@ -8,7 +8,7 @@ class ZoomService
 {
 
     /**
-     * Undocumented variable
+     * Zoom Token response
      *
      * @var array
      */
