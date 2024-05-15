@@ -2,6 +2,7 @@
 
 namespace Admin\Controller;
 
+use Admin\Entity\OracleClasses;
 use Application\Entity\ActiveP6Cohort;
 use Application\Entity\ActiveP6CohortStatus;
 use Application\Entity\ActiveUserProgram;
@@ -9,6 +10,7 @@ use Application\Entity\ActiveUserProgramStatus;
 use Application\Entity\P6Cohort;
 use Doctrine\ORM\EntityManager;
 use General\Entity\RoomType;
+use Internship\Entity\P6Room;
 use Laminas\InputFilter\InputFilter;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\MvcEvent;
@@ -80,6 +82,64 @@ class OracleController extends AbstractActionController
         }
 
         return $viewModel;
+    }
+
+    public function getZoomRoomTypeAction()
+    {
+        $jsonModel = new JsonModel();
+
+        return $jsonModel;
+    }
+
+    public function getOracleClassesAction()
+    {
+        $jsonModel = new JsonModel();
+        $em = $this->entityManager;
+        $data = $em->getRepository(OracleClasses::class)->createQueryBuilder("o")
+            ->select("o")->getQuery()->getArrayResult();
+        $jsonModel->setVariables(["data" => $data]);
+        return $jsonModel;
+    }
+
+    public function retriveClassroomDetailsAction()
+    {
+        $jsonModel = new JsonModel();
+        $em = $this->entityManager;
+        $response = $this->getResponse();
+        try {
+            $params = $this->params()->fromQuery();
+            // var_dump($params);
+            if ($params["oracle_class"] == NULL || $params["cohort"] == NULL || $params["room_type"] == NULL) {
+                throw new \Exception("Required parameter is NULL");
+            }
+            $data = $em->getRepository(P6Room::class)
+                ->createQueryBuilder("r")->select(["r", "p", "rt", "oc"])
+                ->leftJoin("r.p6cohort", "p")
+                ->leftJoin("r.roomType", "rt")
+                ->leftJoin("r.oracleClasses", "oc")
+                ->where("p.id = :cohort")
+                ->andWhere("rt.id = :room_type")
+                ->andWhere("oc.id = :oracle_class")
+                ->setParameters([
+                    "cohort" => $params["cohort"],
+                    "room_type" => $params["room_type"],
+                    "oracle_class" => $params["oracle_class"]
+                ])
+                ->getQuery()
+                ->getArrayResult();
+
+            $jsonModel->setVariables([
+                "data" => $data
+            ]);
+            return $jsonModel;
+        } catch (\Throwable $th) {
+            //throw $th;
+            $response->setStatusCode(400);
+            $jsonModel->setVariables([
+                "message" => $th->getMessage()
+            ]);
+        }
+        return $jsonModel;
     }
 
     // public function get

@@ -70,6 +70,7 @@ return [
             'partial/menu-internship'           => __DIR__ . '/../view/partial/intern-menu.phtml',
             'partial/board-menu'           => __DIR__ . '/../view/partial/board-menu.phtml',
             'partial/course-info-menu'           => __DIR__ . '/../view/partial/course-info-menu.phtml',
+            'partial/my-course-menu'           => __DIR__ . '/../view/partial/my-course-menu.phtml',
             'partial/featured-courses'           => __DIR__ . '/../view/partial/featured-courses.phtml',
         ]
     ],

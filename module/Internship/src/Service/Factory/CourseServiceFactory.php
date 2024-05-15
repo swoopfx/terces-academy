@@ -15,7 +15,7 @@ class CourseServiceFactory implements FactoryInterface
         /**
          * @var GeneralService
          */
-        $generalService  = new $container->get(GeneralService::class);
+        $generalService  = $container->get(GeneralService::class);
         $xserv->setEntityManager($generalService->getEntityManager());
         return $xserv;
     }

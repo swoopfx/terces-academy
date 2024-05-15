@@ -12,29 +12,37 @@
                 <span>Students</span>
             </div>
 
+
+
         </div>
     </div><!-- dash-headline-two -->
 
     <div class="nav-statistics-wrapper">
         <nav v-if="roomType.length" class="nav">
-            <a v-for="type in roomType" href="" class="nav-link">{{type.type}}</a>
+            <a v-for="type in roomType" href="#" @click="activateRoom(type.id)" class="nav-link">{{type.type}}</a>
         </nav>
-       
+
+        <nav class="nav">
+            <a href="" class="nav-link"></a>
+
+        </nav>
     </div><!-- nav-statistics-wrapper -->
 
     <div class="row row-statistics mg-b-30">
-        <div class="col-md-5">
-            <h1 class="tx-inverse tx-56 tx-lato tx-bold">34,100</h1>
-            <h6 class="tx-15 tx-inverse tx-bold mg-b-20">Total hours spent (7 days)</h6>
-            <p>Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem</p>
-            <p class="tx-12">
-                <a href="">View Details</a>
-                <a href="">Edit Settings</a>
-            </p>
+        <div class="col-md-8">
+
+            <div v-if="activeRoomtype == 100 ">
+                <?= $this->partial("partial/content-room-zoom-list"); ?>
+            </div>
+            <div v-else-if="activeRoomtype == 200">
+
+            </div>
+
+
         </div><!-- col-5 -->
-        <div class="col-md-7 mg-t-20 mg-md-t-0">
+        <!--  <div class="col-md-7 mg-t-20 mg-md-t-0">
             <canvas id="chartBar1" height="280"></canvas>
-        </div><!-- col-7 -->
+        </div>col-7 -->
     </div><!-- row -->
 
     <hr>
@@ -227,6 +235,10 @@
         data() {
             return {
                 roomType: [],
+                activeRoomtype: 0,
+                oraclep6Classes: [],
+                cohortId: '<?= $cohort["id"] ?>',
+                classRoomDetails: []
             }
         },
 
@@ -240,6 +252,75 @@
                     if (result.status == 200) {
                         // console.log(result.data.data);
                         this.roomType = result.data.data;
+                    }
+                }).catch((err) => {
+
+                });
+            },
+
+            activateRoom(id) {
+                this.activeRoomtype = id;
+                if (id == 100) {
+                    this.getOracleClasess()
+                }
+            },
+
+            classroomState(id) {
+
+                // console.log(this.classRoomDetails);
+                let res = "";
+                return this.getClassromDetails(id).then((result) => {
+
+                    if (result.length) {
+                        return false;
+                    } else {
+                        return true
+                    }
+
+                }).catch((err) => {
+
+                });
+
+                // console.log(res);
+            },
+
+            async getClassromDetails(oracleclassId) {
+
+                return await axios.get("/admins/oracle/retrive-classroom-details", {
+                    params: {
+                        oracle_class: oracleclassId,
+                        cohort: this.cohortId,
+                        room_type: this.activeRoomtype
+                    }
+                }).then((result) => {
+                    if (result.status == 200) {
+                        // console.log("H");
+                        // this.classRoomDetails = result.data.data;
+                        // return this
+                        return "BBB";
+                        // return result.data.data;
+                    }
+                }).catch((err) => {
+                    return "GTTT";
+                });
+            },
+
+            getZoomRoomType() {
+                if (this.activeRoomtype != 0) {
+                    axios.get("admins/oracle/").then((result) => {
+                        if (result.status == 200) {
+                            this.oraclep6Classes = result.data.data;
+                        }
+                    }).catch((err) => {
+
+                    });
+                }
+            },
+
+            getOracleClasess() {
+                axios.get("/admins/oracle/get-oracle-classes").then((result) => {
+                    if (result.status == 200) {
+                        this.oraclep6Classes = result.data.data;
                     }
                 }).catch((err) => {
 
