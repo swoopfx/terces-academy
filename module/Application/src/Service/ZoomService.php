@@ -30,20 +30,34 @@ class ZoomService
 
 
 
-    public function createMeeting($data)
+    /**
+     * Undocumented function
+     *
+     * @param array $data || agenda, user_email, date_time , duration
+     * @return void
+     */
+    public function createMeeting(array $data)
     {
         $token = $this->zoomTokenRes;
         $client = new Client();
+
+        // $meetingDatime =  new \DateTime('2011-12-25 13:00:00');
+        $meetingDatime =  $data["date_time"];
+        $meetingDatime->setTimezone(new \DateTimeZone('UTC'));
+        $meetingDatime->format('Y-m-d\TH:i:s\Z');
+
+        // Change the timezone to GMT.
+
         $client->setUri($this->zoomConfig["base_url"] . "/users/me/meetings");
         $client->setHeaders([
             "Authorization" => "Bearer {$token["access_token"]}",
             "Content-Type" => "application/x-www-form-urlencoded",
         ]);
         $body = [
-            "agenda" => "Career Talk",
+            "agenda" => $data["agenda"],
             "default_password" => false,
-            "duration" => 30,
-            "password" => "Simple123@",
+            "duration" => $data["duration"],
+            "password" => "123456",
             "pre_schedule" => false,
             "schedule_for" => $data["user_email"],
 
@@ -52,7 +66,7 @@ class ZoomService
                 //     "TY"
                 // ],
                 "allow_multiple_devices" => true,
-                // "alternative_hosts" => "jchill@example.com;thill@example.com",
+                "alternative_hosts" => "app@tercesjobs.com;Teeveyan@yahoo.com;" . $data["user_email"],
                 "alternative_hosts_email_notification" => true,
                 "approval_type" => 0,
                 // "approved_or_denied_countries_or_regions" => [
@@ -152,12 +166,15 @@ class ZoomService
                 // ]
             ],
             "start_time" => $data["date_time"],
-            "timezone" => "America/Montreal",
-            "topic" => ""
+            "timezone" => "UTC",
+            "topic" => $data["agenda"],
+            "tracking_fields" => [],
+            "type" => 2
 
 
         ];
-        $client->setRawBody(json_encode($body));
+        // $client->setRawBody(json_encode($body));
+        $client->setParameterPost($body);
         $response = $client->send();
         if ($response->isSuccess()) {
             $body = json_decode($response->getBody());
@@ -165,6 +182,14 @@ class ZoomService
         } else {
             throw new \Exception("could not create the meeting");
         }
+    }
+
+    public function deleteMeeting(){
+
+    }
+
+    public function updateMeeting(){
+        
     }
 
     /**

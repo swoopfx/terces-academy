@@ -8,6 +8,7 @@ use Application\Entity\ActiveP6CohortStatus;
 use Application\Entity\ActiveUserProgram;
 use Application\Entity\ActiveUserProgramStatus;
 use Application\Entity\P6Cohort;
+use Application\Service\ZoomService;
 use Doctrine\ORM\EntityManager;
 use General\Entity\RoomType;
 use Internship\Entity\P6Room;
@@ -28,10 +29,114 @@ class OracleController extends AbstractActionController
      */
     private EntityManager $entityManager;
 
+    /**
+     * zoom service
+     *
+     * @var ZoomService
+     */
+    private ZoomService $zoomService;
+
     public function onDispatch(MvcEvent $e)
     {
         $response = parent::onDispatch($e);
         $this->layout()->setTemplate("admin-layout");
+    }
+
+    public function createZoomEventAction()
+    {
+        $jsonModel = new JsonModel();
+        $request = $this->getRequest();
+        $post = $request->getPost()->toArray();
+        // var_dump($post);
+        if ($request->isPost()) {
+            $inputFilter = new InputFilter();
+            $inputFilter->add([
+                'name' => 'eventDate',
+                'required' => true,
+                'break_chain_on_failure' => true,
+                'filters' => [
+                    [
+                        'name' => 'StripTags'
+                    ],
+                    [
+                        'name' => 'StringTrim'
+                    ]
+                ],
+                'validators' => [
+                    [
+                        'name' => 'NotEmpty',
+                        'options' => [
+                            'messages' => [
+                                'isEmpty' => 'Event Date is required'
+                            ]
+                        ]
+                    ]
+                ]
+            ]);
+
+            $inputFilter->add([
+                'name' => 'duration',
+                'required' => true,
+                'break_chain_on_failure' => true,
+                'filters' => [
+                    [
+                        'name' => 'StripTags'
+                    ],
+                    [
+                        'name' => 'StringTrim'
+                    ]
+                ],
+                'validators' => [
+                    [
+                        'name' => 'NotEmpty',
+                        'options' => [
+                            'messages' => [
+                                'isEmpty' => 'Duration is required'
+                            ]
+                        ]
+                    ]
+                ]
+            ]);
+
+            $inputFilter->add([
+                'name' => 'classRoomId',
+                'required' => true,
+                'break_chain_on_failure' => true,
+                'filters' => [
+                    [
+                        'name' => 'StripTags'
+                    ],
+                    [
+                        'name' => 'StringTrim'
+                    ]
+                ],
+                'validators' => [
+                    [
+                        'name' => 'NotEmpty',
+                        'options' => [
+                            'messages' => [
+                                'isEmpty' => 'Classrom is required'
+                            ]
+                        ]
+                    ]
+                ]
+            ]);
+            
+
+            $inputFilter->setData($post);
+            if ($inputFilter->isValid()) {
+                $user = $this->identity();
+                $data = $inputFilter->getValues();
+                $eventDate = \DateTime::createFromFormat("Y-m-d\TH:i", $data["eventDate"]);
+                $zoom_data["date_time"] = $eventDate;
+                $zoom_data["user_email"] = $user->getEmail();
+                $zoom_data["agenda"] = "Oracle p6 {$data}";
+
+           
+            }
+            // var_dump($eventDate);
+        }
+        return $jsonModel;
     }
 
     public function createContentAction()
@@ -497,6 +602,20 @@ class OracleController extends AbstractActionController
     public function setEntityManager(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
+
+        return $this;
+    }
+
+    /**
+     * Set zoom service
+     *
+     * @param  ZoomService  $zoomService  zoom service
+     *
+     * @return  self
+     */ 
+    public function setZoomService(ZoomService $zoomService)
+    {
+        $this->zoomService = $zoomService;
 
         return $this;
     }

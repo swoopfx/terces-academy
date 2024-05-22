@@ -238,7 +238,13 @@
                 activeRoomtype: 0,
                 oraclep6Classes: [],
                 cohortId: '<?= $cohort["id"] ?>',
-                classRoomDetails: []
+                classRoomDetails: [],
+                isCreatingEvent: false,
+                selectedClassroom: "",
+
+
+                formSelectedEventDatetime: "",
+                formSelectedDUration: "",
             }
         },
 
@@ -325,6 +331,34 @@
                 }).catch((err) => {
 
                 });
+            },
+
+            selectClassroomEvent(id) {
+                this.selectedClassroom = id;
+            },
+
+            // Create Event Meeting
+            createEventMeeting() {
+                this.isCreatingEvent = true;
+                if (this.formSelectedEventDatetime == "" || this.formSelectedDUration == "") {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Required Field",
+                        text: "A Required Field is empty",
+                    });
+
+                } else {
+                    let formData = new FormData();
+                    formData.append("classRoomId", this.selectedClassroom);
+                    formData.append("duration", this.formSelectedDUration);
+                    formData.append("eventDate", this.formSelectedEventDatetime);
+                    axios.post("/admins/oracle/create-zoom-event", formData).then((result) => {
+
+                    }).catch((err) => {
+
+                    });
+
+                }
             }
         },
 

@@ -12,7 +12,7 @@ class UserService
 
     const USER_ROLE_CUSTOMER = 10;
 
-    const USER_ROLE_ADMIN = 1000;
+    const USER_ROLE_ADMIN = 10000;
 
     const USER_ROLE_ORACLE_P6 = 1100;
 
