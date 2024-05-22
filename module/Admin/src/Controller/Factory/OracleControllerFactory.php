@@ -14,8 +14,9 @@ class OracleControllerFactory implements FactoryInterface
     {
         $ctr = new $requestedName();
         $generalService = $container->get(GeneralService::class);
-        $ctr->setEntityManager($generalService->getEntityManager());
         $zoomService = $container->get(ZoomService::class);
+        $ctr->setEntityManager($generalService->getEntityManager())->setZoomService($zoomService);
+        
         return $ctr;
     }
 }

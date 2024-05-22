@@ -35,7 +35,7 @@ class ZoomServiceFactory  implements FactoryInterface
         $response = $client->send();
         // var_dump()
         if ($response->isSuccess()) {
-               var_dump(json_decode($response->getBody(), true));
+            //    var_dump(json_decode($response->getBody(), true));
             $xserv->setZoomTokenRes(json_decode($response->getBody(), true));
         } else {
             // printf($response);

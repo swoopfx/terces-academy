@@ -727,7 +727,7 @@ class IndexController extends AbstractActionController
     {
         $jsonModel = new JsonModel();
         $em = $this->entityManager;
-        $data = $em->getRepository(InternshipCohort::class)->createQueryBuilder("s")->select("s")->getQuery()->getArrayResult();
+        $data = $em->getRepository(InternshipCohort::class)->createQueryBuilder("s")->select("s")->orderBy("s.id", "DESC")->getQuery()->getArrayResult();
         $jsonModel->setVariables([
             "data" => $data
         ]);

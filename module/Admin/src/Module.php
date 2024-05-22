@@ -71,6 +71,8 @@ class Module
                     exit;
                 } else if ($userEntity->getRole()->getId() == UserService::USER_ROLE_ORACLE_P6) {
                     $adminMenu->isMenu = "p6";
+                }else{
+                    $adminMenu->isMenu = "admin";
                 }
             }
         }

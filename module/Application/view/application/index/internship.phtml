@@ -60,7 +60,7 @@
                                         <label for="input_jubject" class="input_title">Select Cohort</label>
                                         <select v-if="cohort.length" v-model="selectedCohort" name="subject" id="input_jubject">
                                             <!--  <option value="subject" selected>Choose Subject</option> -->
-                                            <option v-for="coo in cohort" :value="coo.id">{{coo.cohort}} ({{coo.startDate.date}})</option>
+                                            <option v-for="coo in cohort" :value="coo.id">{{coo.cohort}} ({{formatPHPDate(coo.startDate.date).toDateString()}})</option>
 
 
                                         </select>
@@ -122,6 +122,11 @@
                 }).catch((err) => {
 
                 });
+            },
+            formatPHPDate(date) {
+                // myDate = date.replace(/-/g, "/");
+                return new Date(date);
+
             },
 
             submitCohort() {

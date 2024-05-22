@@ -285,7 +285,7 @@ use General\Service\GeneralService;
                                                 </a>
                                             </li>
                                             <?php if ($this->identity() != NULL) :
-                                                if ($this->identity()->getRole()->getId() > UserService::USER_ROLE_ADMIN) : ?>
+                                                if ($this->identity()->getRole()->getId() > 1000) : ?>
                                                     <li>
                                                         <a href="<?= $this->url("admin") ?>">
                                                             <span class="item_icon"><i class="fas fa-caret-right"></i></span>
