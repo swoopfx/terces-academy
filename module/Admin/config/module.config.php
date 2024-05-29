@@ -10,8 +10,10 @@ use Admin\Controller\ZoomController;
 use Admin\Controller\Factory\AdminControllerFactory;
 use Admin\Controller\Factory\InternshipControllerFactory;
 use Admin\Controller\Factory\OracleControllerFactory;
+use Admin\Controller\Factory\ProgramsControllerFactory;
 use Admin\Controller\InternshipController;
 use Admin\Controller\OracleController;
+use Admin\Controller\ProgramsController;
 use Laminas\Router\Http\Segment;
 
 return [
@@ -23,6 +25,7 @@ return [
             'admin/main/menu'           => __DIR__ . '/../view/partial/admin-menu.phtml',
             'admin/oraclep6/menu'           => __DIR__ . '/../view/partial/oracle-menu.phtml',
             'partial/content-room-zoom-list'           => __DIR__ . '/../view/partial/content-room-zoom-list.phtml',
+            'programs/partial/registered-user-partial'           => __DIR__ . '/../view/admin/programs/partial/registered-user-partial.phtml',
         ]
     ],
     "controllers" => [
@@ -32,10 +35,12 @@ return [
             AdminProcessController::class => AdminProcessControllerFactory::class,
             InternshipController::class => InternshipControllerFactory::class,
             OracleController::class => OracleControllerFactory::class,
+            ProgramsController::class => ProgramsControllerFactory::class
         ],
         "aliases" => [
             "admin-intern" => InternshipController::class,
-            "oracle" => OracleController::class
+            "oracle" => OracleController::class,
+            'programs' => ProgramsController::class,
         ]
 
 

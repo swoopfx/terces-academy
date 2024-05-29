@@ -35,6 +35,14 @@ class InternshipCohort
      */
     private $startDate;
 
+
+    /**
+     * Undocumented variable
+     * @ORM\Column(nullable=false, options={"default":1})
+     * @var boolean
+     */
+    private bool $isActive;
+
     /**
      * Undocumented variable
      * @ORM\Column(type="boolean", options={"default":0})
@@ -126,6 +134,30 @@ class InternshipCohort
     public function setPresentlyActive(bool $presentlyActive)
     {
         $this->presentlyActive = $presentlyActive;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  boolean
+     */
+    public function getIsActive()
+    {
+        return $this->isActive;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  boolean  $isActive  Undocumented variable
+     *
+     * @return  self
+     */
+    public function setIsActive(bool $isActive)
+    {
+        $this->isActive = $isActive;
 
         return $this;
     }

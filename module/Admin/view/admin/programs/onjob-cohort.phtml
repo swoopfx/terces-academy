@@ -1,0 +1,145 @@
+<?php
+?>
+
+<div id="p6" class="row row-sm mg-t-20">
+    <div class="col-lg-6">
+        <div class="section-wrapper">
+            <label class="section-title">On The Job Training Cohort</label>
+            <!--  <p class="mg-b-20 mg-sm-b-40">A basic form where labels are aligned in left.</p> -->
+
+            <div class="form-layout form-layout-4">
+                <div class="row">
+                    <label class="col-sm-4 form-control-label">Cohort Name: <span class="tx-danger">*</span></label>
+                    <div class="col-sm-8 mg-t-10 mg-sm-t-0">
+                        <input type="text" v-model="cname" class="form-control" placeholder="Enter Name">
+                    </div>
+                </div><!-- row -->
+                <div class="row mg-t-20">
+                    <label class="col-sm-4 form-control-label">Start Date: <span class="tx-danger">*</span></label>
+                    <div class="col-sm-8 mg-t-10 mg-sm-t-0">
+                        <input type="date" v-model="cSTdate" class="form-control">
+                    </div>
+                </div>
+                <div class="row mg-t-20">
+
+                    <label class="col-sm-4 form-control-label">Publish: <span class="tx-danger">*</span></label>
+                    <div class="col-sm-8 mg-t-10 mg-sm-t-0">
+                        <input :checked="isActive" @change="toggleIsActive()" type="checkbox" class="form-control">
+                    </div>
+                </div>
+
+                <div class="form-layout-footer mg-t-30">
+                    <button @click="createCohort()" class="btn btn-primary bd-0">Submit Form</button>
+                    <button class="btn btn-secondary bd-0">Cancel</button>
+                </div><!-- form-layout-footer -->
+            </div><!-- form-layout -->
+        </div><!-- section-wrapper -->
+    </div><!-- col-6 -->
+    <div class="col-lg-6 mg-t-20 mg-lg-t-0">
+        <div class="list-group list-group-striped list-group-user">
+            <div v-if="cohort.length" v-for="co in cohort" class="list-group-item">
+
+                <div class="user-name-address">
+                    <p><strong>Cohort : </strong>{{co.cohort}}</p>
+                    <span><strong>Start Date: </strong>{{formatPHPDate(co.startDate.date).toDateString()}}</span>
+                </div>
+                <div class="user-btn-wrapper">
+
+                    <a href="#" @click="deactivateCohort(co.uuid)" class="btn btn-outline-danger btn-icon">
+                        <div class="tx-20"><i class="icon ion-android-remove"></i></div>
+                    </a>
+
+                </div>
+            </div><!-- list-group-item -->
+
+        </div><!-- list-group -->
+    </div><!-- col-6 -->
+</div><!-- row -->
+
+<script>
+    const p6cohortApp = Vue.createApp({
+        data() {
+            return {
+                cohort: [],
+                cname: "",
+                cSTdate: "",
+                isActive: true,
+            }
+        },
+        mounted() {
+            this.getCohort();
+        },
+
+        methods: {
+            toggleIsActive() {
+                this.isActive = !this.isActive;
+            },
+            createCohort() {
+                if (this.cname == "" || this.cSTdate == "") {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Required Field',
+                        text: "A required field is empty"
+                    });
+
+                } else {
+                    let formData = new FormData();
+                    formData.append("cohort_name", this.cname);
+                    formData.append("stDate", this.cSTdate);
+                    formData.append("active", this.isActive);
+                    axios.post("/admins/programs/certification-cohort", formData).then((result) => {
+                        if (result.status == 201) {
+                            this.cohort = result.data.data;
+                            window.location.reload();
+                        }
+                    }).catch((err) => {
+                        Swal.fire({
+                            icon: "error",
+                            title: "An error occured",
+                            text: err.response.data.message,
+                        });
+                    });
+                }
+
+            },
+            formatPHPDate(date) {
+                // myDate = date.replace(/-/g, "/");
+                return new Date(date);
+
+            },
+            deactivateCohort(uuid) {
+                Swal.fire({
+                    title: "Do you want to save the changes?You are about to deactivtae this cohort",
+                    showDenyButton: true,
+                    showCancelButton: true,
+                    confirmButtonText: "Deactivate",
+                    denyButtonText: `Don't save`
+                }).then((result) => {
+                    /* Read more about isConfirmed, isDenied below */
+                    if (result.isConfirmed) {
+                        axios.get(`/admins/programs/deactivate-cohort/${uuid}`).then((result) => {
+                            if (result.status == 202) {
+                                window.location.reload();
+                            }
+                        }).catch((err) => {
+
+                        });
+                    } else if (result.isDenied) {
+                        window.location.reload();
+                    }
+                });
+            },
+            getCohort() {
+                axios.get("/admins/programs/get-onjob-cohort").then((result) => {
+                    if (result.status == 200) {
+                        // console.log(result.data.data);
+                        this.cohort = result.data.data;
+                    }
+                }).catch((err) => {
+
+                });
+            }
+        },
+    });
+    p6cohortApp.mount("#p6");
+</script>
