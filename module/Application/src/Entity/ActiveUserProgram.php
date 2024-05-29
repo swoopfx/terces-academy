@@ -107,6 +107,13 @@ class ActiveUserProgram
      */
     private ActiveP6Cohort  $oracleCohort;
 
+    /**
+     * Undocumented variable
+     * @ORM\OneToOne(targetEntity="ActiveCertificationCohort", mappedBy="activeUserProgram")
+     * @var ActiveCertificationCohort
+     */
+    private ActiveCertificationCohort  $certificationCohort;
+
 
     public function __construct()
     {
@@ -370,7 +377,7 @@ class ActiveUserProgram
      * Get undocumented variable
      *
      * @return  ActiveP6Cohort
-     */ 
+     */
     public function getOracleCohort()
     {
         return $this->oracleCohort;
@@ -382,10 +389,34 @@ class ActiveUserProgram
      * @param  ActiveP6Cohort  $oracleCohort  Undocumented variable
      *
      * @return  self
-     */ 
+     */
     public function setOracleCohort(ActiveP6Cohort $oracleCohort)
     {
         $this->oracleCohort = $oracleCohort;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  ActiveCertificationCohort
+     */ 
+    public function getCertificationCohort()
+    {
+        return $this->certificationCohort;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  ActiveCertificationCohort  $certificationCohort  Undocumented variable
+     *
+     * @return  self
+     */ 
+    public function setCertificationCohort(ActiveCertificationCohort $certificationCohort)
+    {
+        $this->certificationCohort = $certificationCohort;
 
         return $this;
     }
