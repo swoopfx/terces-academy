@@ -40,7 +40,7 @@
             <div v-if="cohort.length" v-for="co in cohort" class="list-group-item">
 
                 <div class="user-name-address">
-                    <p><strong>Cohort : </strong>{{co.cohort}}</p>
+                    <p><strong>Cohort : </strong>{{co.cohortName}}</p>
                     <span><strong>Start Date: </strong>{{formatPHPDate(co.startDate.date).toDateString()}}</span>
                 </div>
                 <div class="user-btn-wrapper">
@@ -87,7 +87,7 @@
                     formData.append("cohort_name", this.cname);
                     formData.append("stDate", this.cSTdate);
                     formData.append("active", this.isActive);
-                    axios.post("/admins/programs/certification-cohort", formData).then((result) => {
+                    axios.post("/admins/programs/create-onjob-cohort", formData).then((result) => {
                         if (result.status == 201) {
                             this.cohort = result.data.data;
                             window.location.reload();

@@ -23,10 +23,10 @@ class InternshipCohort
 
     /**
      * Undocumented variable
-     * @ORM\Column(type="string")
+     * @ORM\Column(name="cohort", type="string")
      * @var string
      */
-    private $cohort;
+    private $cohortName;
 
     /**
      * Undocumented variable
@@ -49,6 +49,13 @@ class InternshipCohort
      * @var bool
      */
     private bool $presentlyActive;
+
+    /**
+     * Undocumented variable
+     *  @ORM\Column(type="datetime", nullable=true)
+     * @var \DateTime
+     */
+    private \DateTime $createdOn;
 
 
     public function __construct()
@@ -73,7 +80,7 @@ class InternshipCohort
      */
     public function getCohort()
     {
-        return $this->cohort;
+        return $this->cohortName;
     }
 
     /**
@@ -85,7 +92,7 @@ class InternshipCohort
      */
     public function setCohort(string $cohort)
     {
-        $this->cohort = $cohort;
+        $this->cohortName = $cohort;
 
         return $this;
     }
@@ -158,6 +165,54 @@ class InternshipCohort
     public function setIsActive(bool $isActive)
     {
         $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  \DateTime
+     */
+    public function getCreatedOn()
+    {
+        return $this->createdOn;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  \DateTime  $createdOn  Undocumented variable
+     *
+     * @return  self
+     */
+    public function setCreatedOn(\DateTime $createdOn)
+    {
+        $this->createdOn = $createdOn;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  string
+     */
+    public function getCohortName()
+    {
+        return $this->cohortName;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  string  $cohortName  Undocumented variable
+     *
+     * @return  self
+     */
+    public function setCohortName(string $cohortName)
+    {
+        $this->cohortName = $cohortName;
 
         return $this;
     }

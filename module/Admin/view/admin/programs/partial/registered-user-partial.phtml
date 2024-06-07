@@ -23,23 +23,25 @@
                     <td class="valign-middle tx-right">{{user.program.title}}</td>
                     <td class="valign-middle tx-right">{{user.status.status}}</td>
                     <td class="valign-middle tx-center">
-                        <a v-if="user.status.id == 100" href="#" data-toggle="modal" data-target="#assgnCertification" class="tx-gray-600 tx-24"><i class="fa fa-share"></i></a>
+                        <a v-if="user.status.id == 100" href="#" title="Assign to Cohort" data-toggle="modal" data-target="#assgnCertification" class="tx-gray-600 tx-24"><i class="fa fa-share"></i></a>
 
                         <div id="assgnCertification" class="modal fade">
                             <div class="modal-dialog modal-lg" role="document">
                                 <div class="modal-content tx-size-sm">
                                     <div class="modal-header pd-x-20">
-                                        <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Message Preview</h6>
+                                        <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Assign To Cohort</h6>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                     </div>
                                     <div class="modal-body pd-20">
-                                        <h5 class=" lh-3 mg-b-20"><a href="" class="tx-inverse hover-primary">Why We Use Electoral College, Not Popular Vote</a></h5>
-                                        <p class="mg-b-5">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. </p>
+                                        <label>Select Cohort</label>
+                                        <select v-if="cohort.length" v-model="activeChort" class="form-control" @change="activeChort=$event.target.value">
+                                            <option v-for="co in cohort" :value="co.id">{{co.cohortName}} ({{formatPHPDate(co.startDate.date).toDateString()}})</option>
+                                        </select>
                                     </div><!-- modal-body -->
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-primary">Save changes</button>
+                                        <button @click="assign()" type="button" class="btn btn-primary">Assign</button>
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                     </div>
                                 </div>

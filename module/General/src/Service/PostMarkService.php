@@ -54,7 +54,7 @@ class PostMarkService
                 "name" => $data["name"],
                 "invite_sender_name" => "The Administrator",
                 "invite_sender_organization_name" => GeneralService::COMPANY_NAME,
-               
+
             ]
         );
     }
@@ -181,6 +181,122 @@ class PostMarkService
     public function adminCareerTalkNotification($data)
     {
         // Send an email:
+        $sendResult = $this->postmarkClient->sendEmailWithTemplate(
+            "app@tercesjobs.com",
+            "Emuveyanoghenetejiri@gmail.com",
+            33551173,
+            [
+
+
+                "product_name" => "Terces Academy",
+                "name" => $data["name"],
+                "admin" => "Admin",
+                "sch_date" => $data["sch_date"],
+                "sch_time" => $data["sch_time"],
+                "company_name" => GeneralService::COMPANY_NAME,
+                "company_address" => GeneralService::COMPANY_ADDRESS,
+
+
+
+            ]
+        );
+    }
+
+
+    public function welcomeOnjobTraining($data)
+    {
+        $sendResult = $this->postmarkClient->sendEmailWithTemplate(
+            "app@tercesjobs.com",
+            "Emuveyanoghenetejiri@gmail.com",
+            33551173,
+            [
+
+
+                "product_name" => "Terces Academy",
+                "name" => $data["name"],
+                "admin" => "Admin",
+                "sch_date" => $data["sch_date"],
+                "sch_time" => $data["sch_time"],
+                "company_name" => GeneralService::COMPANY_NAME,
+                "company_address" => GeneralService::COMPANY_ADDRESS,
+
+
+
+            ]
+        );
+    }
+
+    public function welcomeCareerService($data)
+    {
+        $sendResult = $this->postmarkClient->sendEmailWithTemplate(
+            "app@tercesjobs.com",
+            "Emuveyanoghenetejiri@gmail.com",
+            33551173,
+            [
+
+
+                "product_name" => "Terces Academy",
+                "name" => $data["name"],
+                "admin" => "Admin",
+                "sch_date" => $data["sch_date"],
+                "sch_time" => $data["sch_time"],
+                "company_name" => GeneralService::COMPANY_NAME,
+                "company_address" => GeneralService::COMPANY_ADDRESS,
+
+
+
+            ]
+        );
+    }
+
+    public function welcomeCertification($data)
+    {
+        $sendResult = $this->postmarkClient->sendEmailWithTemplate(
+            "app@tercesjobs.com",
+            "Emuveyanoghenetejiri@gmail.com",
+            33551173,
+            [
+
+
+                "product_name" => "Terces Academy",
+                "name" => $data["name"],
+                "admin" => "Admin",
+                "sch_date" => $data["sch_date"],
+                "sch_time" => $data["sch_time"],
+                "company_name" => GeneralService::COMPANY_NAME,
+                "company_address" => GeneralService::COMPANY_ADDRESS,
+
+
+
+            ]
+        );
+    }
+
+    public function welcomeOracle($data)
+    {
+        $sendResult = $this->postmarkClient->sendEmailWithTemplate(
+            "app@tercesjobs.com",
+            "Emuveyanoghenetejiri@gmail.com",
+            33551173,
+            [
+
+
+                "product_name" => "Terces Academy",
+                "name" => $data["name"],
+                "admin" => "Admin",
+                "sch_date" => $data["sch_date"],
+                "sch_time" => $data["sch_time"],
+                "company_name" => GeneralService::COMPANY_NAME,
+                "company_address" => GeneralService::COMPANY_ADDRESS,
+
+
+
+            ]
+        );
+    }
+
+    public function welcomeSelfstudy($data)
+    {
         $sendResult = $this->postmarkClient->sendEmailWithTemplate(
             "app@tercesjobs.com",
             "Emuveyanoghenetejiri@gmail.com",
