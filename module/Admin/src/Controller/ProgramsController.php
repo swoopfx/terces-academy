@@ -72,6 +72,12 @@ class ProgramsController extends AbstractActionController
         return $viewModel;
     }
 
+    public function onjobTrainingAsignedCohortAction()
+    {
+        $jsonModel = new JsonModel();
+        return $jsonModel;
+    }
+
     public function onjobCohortAction()
     {
         $viewModel = new ViewModel();
@@ -97,6 +103,125 @@ class ProgramsController extends AbstractActionController
 
     public function createOnjobCohortAction()
     {
+
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        $jsonModel = new JsonModel();
+        if ($request->isPost()) {
+            $post = $request->getPost()->toArray();
+
+            $inputFilter = new InputFilter();
+            $inputFilter->add([
+                'name' => 'cohort_name',
+                'required' => true,
+                'break_chain_on_failure' => true,
+                'filters' => [
+                    [
+                        'name' => 'StripTags'
+                    ],
+                    [
+                        'name' => 'StringTrim'
+                    ]
+                ],
+                'validators' => [
+                    [
+                        'name' => 'NotEmpty',
+                        'options' => [
+                            'messages' => [
+                                'isEmpty' => 'Cohort name is required'
+                            ]
+                        ]
+                    ]
+                ]
+            ]);
+
+            $inputFilter->add([
+                'name' => 'stDate',
+                'required' => true,
+                'break_chain_on_failure' => true,
+                'filters' => [
+                    [
+                        'name' => 'StripTags'
+                    ],
+                    [
+                        'name' => 'StringTrim'
+                    ]
+                ],
+                'validators' => [
+                    [
+                        'name' => 'NotEmpty',
+                        'options' => [
+                            'messages' => [
+                                'isEmpty' => 'Cohort name is required'
+                            ]
+                        ]
+                    ]
+                ]
+            ]);
+
+            $inputFilter->add([
+                'name' => 'active',
+                'required' => true,
+                'break_chain_on_failure' => true,
+                'filters' => [
+                    [
+                        'name' => 'StripTags'
+                    ],
+                    [
+                        'name' => 'StringTrim'
+                    ]
+                ],
+                'validators' => [
+                    [
+                        'name' => 'NotEmpty',
+                        'options' => [
+                            'messages' => [
+                                'isEmpty' => 'Cohort name is required'
+                            ]
+                        ]
+                    ]
+                ]
+            ]);
+            $inputFilter->setData($post);
+            if ($inputFilter->isValid()) {
+
+                try {
+                    $em = $this->entityManager;
+                    $data = $inputFilter->getValues();
+                    $cohortEntity = new InternshipCohort();
+                    $startDate = \DateTime::createFromFormat("Y-m-d", $data["stDate"]);
+                    $cohortEntity->setCreatedOn(new \DateTime())
+                        ->setCohort($data["cohort_name"])
+                        ->setIsActive(filter_var($data["active"], FILTER_VALIDATE_BOOL))
+                        ->setStartDate($startDate);
+
+                    $em->persist($cohortEntity);
+                    $em->flush();
+
+                    $response->setStatusCode(201);
+
+                    $jsonModel->setVariables([
+                        "success" => true
+                    ]);
+                    return $jsonModel;
+                } catch (\Throwable $th) {
+                    //throw $th;
+                    $response->setStatusCode(500);
+                    $jsonModel->setVariables([
+                        "message" => $th->getMessage()
+                    ]);
+                    return $jsonModel;
+                }
+            } else {
+                $response->setStatusCode(500);
+                $jsonModel->setVariables([
+                    "success" => false
+                ]);
+                return $jsonModel;
+            }
+        }
+        $response->setStatusCode(500);
+        return $jsonModel;
     }
 
     public function certificationAction()

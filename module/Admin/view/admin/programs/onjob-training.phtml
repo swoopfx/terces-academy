@@ -103,14 +103,62 @@
         data() {
             return {
                 registeredUser: [],
+                cohort: [],
+                activeChort: "",
 
             }
         },
         mounted() {
             this.getUsers();
+            this.getCohort();
         },
 
         methods: {
+            getCohort() {
+                axios.get("/admins/programs/get-onjob-cohort").then((result) => {
+                    if (result.status == 200) {
+                        // console.log(result.data.data);
+                        this.cohort = result.data.data;
+                    }
+                }).catch((err) => {
+
+                });
+            },
+
+            // isChangeCohort(event) {
+            //     console.log(event.target);
+            //     // this.activeChort = event.target.value;
+            //     // alert(this.activeChort);
+            // },
+            assign() {
+                // alert(this.activeChort);
+                if (this.activeChort == "") {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Required Field",
+                        text: "A Required Field is empty "
+                    });
+                } else {
+
+                    let formData = new FormData();
+                    formData.append("cohort", this.activeChort);
+                    formData.append("user", this.registeredUser.id);
+                    axios.post("/admins/programs/onjob-training-asigned-cohort", formData).then((result) => {
+                        if (result.status == 201) {
+                            window.location.reload();
+                        }
+
+                    }).catch((err) => {
+
+                    });
+
+                }
+            },
+            formatPHPDate(date) {
+                // myDate = date.replace(/-/g, "/");
+                return new Date(date);
+
+            },
             getUsers() {
                 // let formData = new FormData();
                 axios.get("/admins/programs/get-registered-user", {
