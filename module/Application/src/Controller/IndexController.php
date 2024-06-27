@@ -11,6 +11,7 @@ use Application\Entity\CourseContent;
 use Application\Entity\Courses;
 use Application\Entity\Installement;
 use Application\Entity\InternshipCohort;
+use Application\Entity\InternshipRegister;
 use Application\Entity\PaymentMethod;
 use Application\Entity\Programs;
 use Application\Entity\Quiz;
@@ -26,6 +27,7 @@ use Laminas\View\Model\ViewModel;
 use Ramsey\Uuid\Uuid;
 use Doctrine\Common\Collections\Collection;
 use General\Service\GeneralService;
+use General\Service\PostMarkService;
 use Laminas\Http\Client;
 use Laminas\InputFilter\InputFilter;
 
@@ -43,6 +45,13 @@ class IndexController extends AbstractActionController
      * @var array
      */
     private $config;
+
+    /**
+     * Undocumented variable
+     *
+     * @var PostMarkService
+     */
+    private PostMarkService $postmarkService;
 
     public function indexAction()
     {
@@ -100,6 +109,70 @@ class IndexController extends AbstractActionController
     public function businessAnalysisMasterclassAction()
     {
         $viewModel = new ViewModel();
+        return $viewModel;
+    }
+
+    public function businessAnalysisMasterclassRegisterAction()
+    {
+        $viewModel = new ViewModel();
+        $session = new Container("free_business_analyss");
+        $uuid = Uuid::uuid4()->toString();
+        $em = $this->entityManager;
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        $jsonModel = new JsonModel();
+        $user = $this->identity();
+        if ($request->isPost()) {
+            $post = $request->getPost()->toArray();
+            try {
+                if ($session->uuid != $post["uuid"]) {
+                    throw new \Exception("invalid Seed");
+                } else {
+                    // hydrate to cebtral database
+                    $hydrate = new ActiveUserProgram();
+                    $hydrate->setProgram($em->find(Programs::class, 4))
+                        ->setUser($user)
+                        ->setCreatedOn(new \Datetime())
+                        ->setIsActive(TRUE)
+                        ->setIsInstallement(FALSE)
+                        ->setStatus($em->find(ActiveUserProgramStatus::class, GeneralService::ACTIVE_USER_PROGRAM_STATUS_ACQUIRED))
+                        ->setUuid(Uuid::uuid4()->toString());
+
+                    $internshipRegister = new InternshipRegister();
+                    $internshipRegister
+                        ->setCreatedOn(new \Datetime())->setUser($user)
+                        ->setIsPayment(true)
+                        ->setIsPartialpayment(false)
+                        ->setIsFullpayment(true);
+
+                    $em->persist($hydrate);
+                    $em->persist($internshipRegister);
+                    $em->flush();
+
+                    // send email
+                    $mailData["to"] = $user->getEmail();
+
+                    $this->postmarkService->freeBusinessAnalysisMasterClassRegister($mailData);
+
+                    $response->setStatusCode(201);
+                    $jsonModel->setVariables([
+                        "success" => true
+                    ]);
+
+                    return $jsonModel;
+                }
+            } catch (\Throwable $th) {
+                //throw $th;
+                $jsonModel->setVariables([
+                    "message" => $th->getMessage(),
+                ]);
+                return $jsonModel;
+            }
+        }
+        $session->uuid = $uuid;
+        $viewModel->setVariables([
+            "uuid" => $uuid
+        ]);
         return $viewModel;
     }
 
@@ -788,6 +861,20 @@ class IndexController extends AbstractActionController
     public function setConfig(array $config)
     {
         $this->config = $config;
+
+        return $this;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  PostMarkService  $postmarkService  Undocumented variable
+     *
+     * @return  self
+     */
+    public function setPostmarkService(PostMarkService $postmarkService)
+    {
+        $this->postmarkService = $postmarkService;
 
         return $this;
     }

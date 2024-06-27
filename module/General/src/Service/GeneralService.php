@@ -9,7 +9,7 @@ use General\Entity\Settings;
 class GeneralService
 {
 
-    const GENERAL_TRAINING_FREE = "Business Analysis Free Hands on training";
+    const GENERAL_TRAINING_FREE = "Free Business Analysis Free Master Class";
 
     const GENERAL_TRAINING_WORK_EXPERIENCE = "Business Analysis- Self Study";
 

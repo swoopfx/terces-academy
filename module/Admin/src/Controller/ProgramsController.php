@@ -23,6 +23,12 @@ class ProgramsController extends AbstractActionController
      */
     private EntityManager $entityManager;
 
+
+    public function freeMasterClassAction(){
+        $viewModel = new ViewModel();
+        return $viewModel;
+    }
+
     public function getRegisteredUserAction()
     {
         $jsonModel  = new JsonModel();
@@ -79,6 +85,12 @@ class ProgramsController extends AbstractActionController
     }
 
     public function onjobCohortAction()
+    {
+        $viewModel = new ViewModel();
+        return $viewModel;
+    }
+
+    public function processCohortAction()
     {
         $viewModel = new ViewModel();
         return $viewModel;

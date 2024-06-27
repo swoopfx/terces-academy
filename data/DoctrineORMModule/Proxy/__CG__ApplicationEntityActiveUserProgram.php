@@ -67,10 +67,10 @@ class ActiveUserProgram extends \Application\Entity\ActiveUserProgram implements
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', '' . "\0" . 'Application\\Entity\\ActiveUserProgram' . "\0" . 'id', '' . "\0" . 'Application\\Entity\\ActiveUserProgram' . "\0" . 'user', '' . "\0" . 'Application\\Entity\\ActiveUserProgram' . "\0" . 'program', '' . "\0" . 'Application\\Entity\\ActiveUserProgram' . "\0" . 'isActive', '' . "\0" . 'Application\\Entity\\ActiveUserProgram' . "\0" . 'createdOn', '' . "\0" . 'Application\\Entity\\ActiveUserProgram' . "\0" . 'updatedOn', '' . "\0" . 'Application\\Entity\\ActiveUserProgram' . "\0" . 'uuid', '' . "\0" . 'Application\\Entity\\ActiveUserProgram' . "\0" . 'status', '' . "\0" . 'Application\\Entity\\ActiveUserProgram' . "\0" . 'isInstallement', '' . "\0" . 'Application\\Entity\\ActiveUserProgram' . "\0" . 'activeInstallment', '' . "\0" . 'Application\\Entity\\ActiveUserProgram' . "\0" . 'paidInstallment', '' . "\0" . 'Application\\Entity\\ActiveUserProgram' . "\0" . 'oracleCohort'];
+            return ['__isInitialized__', '' . "\0" . 'Application\\Entity\\ActiveUserProgram' . "\0" . 'id', '' . "\0" . 'Application\\Entity\\ActiveUserProgram' . "\0" . 'user', '' . "\0" . 'Application\\Entity\\ActiveUserProgram' . "\0" . 'program', '' . "\0" . 'Application\\Entity\\ActiveUserProgram' . "\0" . 'isActive', '' . "\0" . 'Application\\Entity\\ActiveUserProgram' . "\0" . 'createdOn', '' . "\0" . 'Application\\Entity\\ActiveUserProgram' . "\0" . 'updatedOn', '' . "\0" . 'Application\\Entity\\ActiveUserProgram' . "\0" . 'uuid', '' . "\0" . 'Application\\Entity\\ActiveUserProgram' . "\0" . 'status', '' . "\0" . 'Application\\Entity\\ActiveUserProgram' . "\0" . 'isInstallement', '' . "\0" . 'Application\\Entity\\ActiveUserProgram' . "\0" . 'activeInstallment', '' . "\0" . 'Application\\Entity\\ActiveUserProgram' . "\0" . 'paidInstallment', '' . "\0" . 'Application\\Entity\\ActiveUserProgram' . "\0" . 'oracleCohort', '' . "\0" . 'Application\\Entity\\ActiveUserProgram' . "\0" . 'certificationCohort'];
         }
 
-        return ['__isInitialized__', '' . "\0" . 'Application\\Entity\\ActiveUserProgram' . "\0" . 'id', '' . "\0" . 'Application\\Entity\\ActiveUserProgram' . "\0" . 'user', '' . "\0" . 'Application\\Entity\\ActiveUserProgram' . "\0" . 'program', '' . "\0" . 'Application\\Entity\\ActiveUserProgram' . "\0" . 'isActive', '' . "\0" . 'Application\\Entity\\ActiveUserProgram' . "\0" . 'createdOn', '' . "\0" . 'Application\\Entity\\ActiveUserProgram' . "\0" . 'updatedOn', '' . "\0" . 'Application\\Entity\\ActiveUserProgram' . "\0" . 'uuid', '' . "\0" . 'Application\\Entity\\ActiveUserProgram' . "\0" . 'status', '' . "\0" . 'Application\\Entity\\ActiveUserProgram' . "\0" . 'isInstallement', '' . "\0" . 'Application\\Entity\\ActiveUserProgram' . "\0" . 'activeInstallment', '' . "\0" . 'Application\\Entity\\ActiveUserProgram' . "\0" . 'paidInstallment', '' . "\0" . 'Application\\Entity\\ActiveUserProgram' . "\0" . 'oracleCohort'];
+        return ['__isInitialized__', '' . "\0" . 'Application\\Entity\\ActiveUserProgram' . "\0" . 'id', '' . "\0" . 'Application\\Entity\\ActiveUserProgram' . "\0" . 'user', '' . "\0" . 'Application\\Entity\\ActiveUserProgram' . "\0" . 'program', '' . "\0" . 'Application\\Entity\\ActiveUserProgram' . "\0" . 'isActive', '' . "\0" . 'Application\\Entity\\ActiveUserProgram' . "\0" . 'createdOn', '' . "\0" . 'Application\\Entity\\ActiveUserProgram' . "\0" . 'updatedOn', '' . "\0" . 'Application\\Entity\\ActiveUserProgram' . "\0" . 'uuid', '' . "\0" . 'Application\\Entity\\ActiveUserProgram' . "\0" . 'status', '' . "\0" . 'Application\\Entity\\ActiveUserProgram' . "\0" . 'isInstallement', '' . "\0" . 'Application\\Entity\\ActiveUserProgram' . "\0" . 'activeInstallment', '' . "\0" . 'Application\\Entity\\ActiveUserProgram' . "\0" . 'paidInstallment', '' . "\0" . 'Application\\Entity\\ActiveUserProgram' . "\0" . 'oracleCohort', '' . "\0" . 'Application\\Entity\\ActiveUserProgram' . "\0" . 'certificationCohort'];
     }
 
     /**
@@ -432,6 +432,28 @@ class ActiveUserProgram extends \Application\Entity\ActiveUserProgram implements
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'setOracleCohort', [$oracleCohort]);
 
         return parent::setOracleCohort($oracleCohort);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getCertificationCohort()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getCertificationCohort', []);
+
+        return parent::getCertificationCohort();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setCertificationCohort(\Application\Entity\ActiveCertificationCohort $certificationCohort)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setCertificationCohort', [$certificationCohort]);
+
+        return parent::setCertificationCohort($certificationCohort);
     }
 
 }

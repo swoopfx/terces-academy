@@ -4,6 +4,7 @@ namespace Application\Controller\Factory;
 
 use Application\Controller\IndexController;
 use General\Service\GeneralService;
+use General\Service\PostMarkService;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Psr\Container\ContainerInterface;
 
@@ -14,7 +15,9 @@ class IndexControllerFactory implements FactoryInterface
         $ctr = new IndexController();
         $generalService = $container->get(GeneralService::class);
         $config = $container->get("config");
-        $ctr->setEntityManager($generalService->getEntityManager())->setConfig($config);
+        $ctr->setEntityManager($generalService->getEntityManager())
+            ->setConfig($config)
+            ->setPostmarkService($container->get(PostMarkService::class));
         return $ctr;
     }
 }

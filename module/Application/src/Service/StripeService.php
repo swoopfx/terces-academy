@@ -536,6 +536,11 @@ class StripeService
 
     }
 
+    public function welcomeMailLogic($programId)
+    {
+        // if($programId == GeneralService::)
+    }
+
 
     function buildLineItem($item)
     {
