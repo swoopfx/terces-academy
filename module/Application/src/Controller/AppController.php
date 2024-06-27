@@ -581,7 +581,7 @@ class AppController extends  AbstractActionController
         $uuid = $sess->uuid;
         if ($uuid != NULL) {
             try {
-                // $data = $this->paystackService->intiatializeTransaction();\
+                // $data = $this->paystackService->intiatializeTransaction();
 
                 $data = $this->stripeService->finalCareerService();
                 return $this->redirect()->toRoute("app", ["action" => "stripe-success"]);

@@ -39,7 +39,9 @@ use General\Service\GeneralService;
                             </div>
                         </li>
                         <li>
-                            <a href="<?= $this->url("register") ?>" class="btn btn_dark">
+                            <a href="<?php if($this->identity()){ 
+                                echo $this->url('application', ["action" => "business-analysis-masterclass-register"]);
+                            }else{ echo $this->url("register") ;} ?>" class="btn btn_dark">
                                 <span>
                                     <small>Register Now</small>
                                     <small>Register Now</small>

@@ -67,10 +67,10 @@ class InternshipCohort extends \Application\Entity\InternshipCohort implements \
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'id', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'cohort', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'startDate', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'presentlyActive'];
+            return ['__isInitialized__', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'id', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'cohortName', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'startDate', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'isActive', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'presentlyActive', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'createdOn'];
         }
 
-        return ['__isInitialized__', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'id', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'cohort', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'startDate', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'presentlyActive'];
+        return ['__isInitialized__', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'id', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'cohortName', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'startDate', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'isActive', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'presentlyActive', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'createdOn'];
     }
 
     /**
@@ -256,6 +256,72 @@ class InternshipCohort extends \Application\Entity\InternshipCohort implements \
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'setPresentlyActive', [$presentlyActive]);
 
         return parent::setPresentlyActive($presentlyActive);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getIsActive()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getIsActive', []);
+
+        return parent::getIsActive();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setIsActive(bool $isActive)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setIsActive', [$isActive]);
+
+        return parent::setIsActive($isActive);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getCreatedOn()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getCreatedOn', []);
+
+        return parent::getCreatedOn();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setCreatedOn(\DateTime $createdOn)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setCreatedOn', [$createdOn]);
+
+        return parent::setCreatedOn($createdOn);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getCohortName()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getCohortName', []);
+
+        return parent::getCohortName();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setCohortName(string $cohortName)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setCohortName', [$cohortName]);
+
+        return parent::setCohortName($cohortName);
     }
 
 }

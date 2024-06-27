@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="active_certification_status")
  */
-class ActiveCertificationStatus
+class ActiveCertificationCohortStatus
 {
 
     /**
