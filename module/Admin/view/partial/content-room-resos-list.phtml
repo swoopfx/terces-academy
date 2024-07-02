@@ -1,0 +1,121 @@
+<div class="form-group">
+    <div class="row row-sm">
+        <div class="col-lg-9">
+            <label class="ckbox">
+                <input type="checkbox" checked><span>All Master Class Cohort</span>
+            </label>
+        </div><!-- col -->
+    </div>
+</div>
+<div class="form-group">
+    <div class="row row-sm">
+        <div class="custom-file">
+            <input ref="vFile" type="file" accept=".mp4,.mov,.avi,.doc,.pdf,.docx,.xslt, .png,.jpg,.jpeg" class="custom-file-input" id="customFile2">
+            <label class="custom-file-label custom-file-label-primary" for="customFile">Choose file</label>
+        </div><!-- custom-file -->
+    </div>
+</div>
+<div class="form-group">
+    <div v-if="isSubmittingResos">
+        <div class="d-flex bg-gray-200 ht-50 pos-relative align-items-center">
+            <div class="sk-folding-cube">
+                <div class="sk-cube1 sk-cube"></div>
+                <div class="sk-cube2 sk-cube"></div>
+                <div class="sk-cube4 sk-cube"></div>
+                <div class="sk-cube3 sk-cube"></div>
+            </div>
+        </div><!-- d-flex -->
+    </div>
+    <div v-else>
+        <button @click="createResos()" class="btn btn-primary pd-x-20">Submit</button>
+        <button class="btn btn-secondary pd-x-20">Cancel</button>
+    </div>
+</div>
+<hr>
+<div class="card card-table">
+    <div class="card-header">
+        <h6 class="slim-card-title">Uploaded Resources</h6>
+    </div><!-- card-header -->
+    <div class="table-responsive">
+        <table class="table mg-b-0 tx-13">
+            <thead>
+                <tr class="tx-10">
+                    <th class="pd-y-5">&nbsp;</th>
+                    <th class="pd-y-5">Title</th>
+                    <th class="pd-y-5"></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-if="oraclep6Classes" v-for="clas in oraclep6Classes">
+
+                    <td></td>
+                    <td>
+                        <a href="" class="tx-inverse tx-14 tx-medium d-block">{{clas.weekName}}</a>
+
+                    </td>
+                    <td class="valign-middle">{{clas.weekDefinition}}</td>
+
+                    <td class="valign-middle tx-center">
+
+                        <button @click="selectClassroomEvent(clas.id)" href="#modaldemo1" data-toggle="modal" data-effect="effect-scale" v-if="classroomState(clas.id)" class="modal-effect btn btn-success btn-block mg-b-10">Create Classroom</button>
+                        <button v-else class="btn btn-info btn-block mg-b-10">View Classroom</button>
+                        <!--  <a href="" class="tx-gray-600 tx-24"><i class="icon ion-android-more-horizontal"></i></a> -->
+
+
+                        <div id="modaldemo1" class="modal fade">
+                            <div class="modal-dialog modal-dialog-vertical-center" role="document">
+                                <div class="modal-content bd-0 tx-14">
+                                    <div class="modal-header">
+                                        <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Create a Training</h6>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body pd-25">
+                                        <div class="alert alert-outline alert-warning" role="alert">
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                            <strong>TIMEZONE</strong> All timezone are registered as UTC
+                                        </div><!-- alert -->
+                                        <div class="row">
+                                            <label for="eventTime">Select Event Time</label>
+                                            <input v-model="formSelectedEventDatetime" class="form-control" type="datetime-local" id="eventTime" name="eventTime">
+                                        </div>
+                                        <br>
+
+                                        <div class="row">
+                                            <label for="eventDuration">Duration</label>
+                                            <select v-model="formSelectedDUration" class="form-control">
+                                                <option>45min</option>
+                                                <option>60min</option>
+                                                <option>120min</option>
+                                                <option>180min</option>
+                                            </select>
+                                        </div>
+
+                                        <!--   <h5 class="lh-3 mg-b-20"><a href="" class="tx-inverse hover-primary">Why We Use Electoral College, Not Popular Vote</a></h5>
+                                        <p class="mg-b-5">It is a long established fact that a 
+                                            reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here',
+                                             making it look like readable English. </p> -->
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button @click="createEventMeeting()" type="button" class="btn btn-primary">Create Event</button>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div><!-- modal-dialog -->
+                        </div><!-- modal -->
+
+
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div><!-- table-responsive -->
+    <div class="card-footer tx-12 pd-y-15 bg-transparent">
+        <a href=""><i class="fa fa-angle-down mg-r-5"></i>View All Products</a>
+    </div><!-- card-footer -->
+</div><!-- card -->

@@ -2,16 +2,21 @@
 
 namespace Admin\Controller;
 
+use Application\Entity\ActiveBusinessMasterclassCohort;
 use Application\Entity\ActiveUserProgram;
 use Application\Entity\CertificationsCohort;
 use Application\Entity\InternshipCohort;
+use Application\Entity\MasterClassClasses;
+use Application\Entity\MasterClassCohort;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\Expr\Func;
+use Internship\Entity\InternshipResource;
 use Laminas\InputFilter\InputFilter;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\MvcEvent;
 use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
+use Ramsey\Uuid\Uuid;
 
 class ProgramsController extends AbstractActionController
 {
@@ -24,8 +29,245 @@ class ProgramsController extends AbstractActionController
     private EntityManager $entityManager;
 
 
-    public function freeMasterClassAction(){
+    public function getResosAction()
+    {
+        $jsonModel = new JsonModel();
+        $roomType = $this->params()->fromQuery("roomtype", NULL);
+        $cohortId = $this->params()->fromQuery("cohortid", NULL);
+        $em = $this->entityManager;
+        $query = $em->getRepository(InternshipResource::class)->createQueryBuilder("i")
+            ->select(["i", "c", "m", "r", "rt"])
+            ->leftJoin("i.cohort", "c")
+            ->leftJoin("i.masterClassCohort", "m")
+            ->leftJoin("i.resos", "r")
+            ->leftJoin("i.roomType", "rt");
+            // ->where("rt.id = :roomTypeId");
+
+            // if($roomType == 100){
+            //     // Resources Room Type
+            //     $query->where("rt.id = :roomType")->setParameters([
+
+            //     ])
+            // }
+
+        return $jsonModel;
+    }
+
+    public function freeMasterClassAction()
+    {
         $viewModel = new ViewModel();
+        return $viewModel;
+    }
+
+    public function freeMasterClassCohortAction()
+    {
+        $viewModel = new ViewModel();
+        return $viewModel;
+    }
+
+    public function getMasterclassClassesAction()
+    {
+        $jsonModel = new JsonModel();
+        $em = $this->entityManager;
+        $data = $em->getRepository(MasterClassClasses::class)->createQueryBuilder("o")
+            ->select("o")->getQuery()->getArrayResult();
+        $jsonModel->setVariables(["data" => $data]);
+        return $jsonModel;
+    }
+
+    public function createFreeMasterClassCohortAction()
+    {
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        $jsonModel = new JsonModel();
+        if ($request->isPost()) {
+            $post = $request->getPost()->toArray();
+
+            $inputFilter = new InputFilter();
+            $inputFilter->add([
+                'name' => 'cohort_name',
+                'required' => true,
+                'break_chain_on_failure' => true,
+                'filters' => [
+                    [
+                        'name' => 'StripTags'
+                    ],
+                    [
+                        'name' => 'StringTrim'
+                    ]
+                ],
+                'validators' => [
+                    [
+                        'name' => 'NotEmpty',
+                        'options' => [
+                            'messages' => [
+                                'isEmpty' => 'Cohort name is required'
+                            ]
+                        ]
+                    ]
+                ]
+            ]);
+
+            $inputFilter->add([
+                'name' => 'stDate',
+                'required' => true,
+                'break_chain_on_failure' => true,
+                'filters' => [
+                    [
+                        'name' => 'StripTags'
+                    ],
+                    [
+                        'name' => 'StringTrim'
+                    ]
+                ],
+                'validators' => [
+                    [
+                        'name' => 'NotEmpty',
+                        'options' => [
+                            'messages' => [
+                                'isEmpty' => 'Cohort name is required'
+                            ]
+                        ]
+                    ]
+                ]
+            ]);
+
+            $inputFilter->add([
+                'name' => 'active',
+                'required' => true,
+                'break_chain_on_failure' => true,
+                'filters' => [
+                    [
+                        'name' => 'StripTags'
+                    ],
+                    [
+                        'name' => 'StringTrim'
+                    ]
+                ],
+                'validators' => [
+                    [
+                        'name' => 'NotEmpty',
+                        'options' => [
+                            'messages' => [
+                                'isEmpty' => 'Cohort name is required'
+                            ]
+                        ]
+                    ]
+                ]
+            ]);
+            $inputFilter->setData($post);
+            if ($inputFilter->isValid()) {
+
+                try {
+                    $em = $this->entityManager;
+                    $data = $inputFilter->getValues();
+                    $cohortEntity = new MasterClassCohort();
+                    $startDate = \DateTime::createFromFormat("Y-m-d", $data["stDate"]);
+                    $cohortEntity->setCreatedOn(new \DateTime())
+                        ->setCohortName($data["cohort_name"])
+                        ->setUuid(Uuid::uuid4()->toString())
+                        ->setIsActive(filter_var($data["active"], FILTER_VALIDATE_BOOL))
+                        ->setStartDate($startDate);
+
+                    $em->persist($cohortEntity);
+                    $em->flush();
+
+                    $response->setStatusCode(201);
+
+                    $jsonModel->setVariables([
+                        "success" => true
+                    ]);
+                    return $jsonModel;
+                } catch (\Throwable $th) {
+                    //throw $th;
+                    $response->setStatusCode(500);
+                    $jsonModel->setVariables([
+                        "message" => $th->getMessage()
+                    ]);
+                    return $jsonModel;
+                }
+            } else {
+                $response->setStatusCode(500);
+                $jsonModel->setVariables([
+                    "success" => false
+                ]);
+                return $jsonModel;
+            }
+        }
+        $response->setStatusCode(500);
+        return $jsonModel;
+    }
+
+    public function getFreeMasterClassCohortAction()
+    {
+        $viewModel = new JsonModel();
+        $em = $this->entityManager;
+        $data = $em->getRepository(MasterClassCohort::class)->createQueryBuilder("c")
+            ->select(["c"])
+            ->where("c.isActive = :active")
+            ->setParameters([
+                "active" => TRUE
+            ])->setMaxResults(10)->orderBy("c.id", "DESC")->getQuery()->getArrayResult();
+        $viewModel->setVariables([
+            "data" => $data
+        ]);
+        return $viewModel;
+    }
+
+    public function processMasterclassAction()
+    {
+        $viewModel = new ViewModel();
+        $uuid = $this->params()->fromRoute("id", NULL);
+        $em = $this->entityManager;
+        try {
+            if ($uuid == NULL) {
+                throw new \Exception("Absent identifier");
+            }
+
+            $cohort = $em->getRepository(MasterClassCohort::class)->createQueryBuilder("c")
+                ->select(["c"])
+                ->where("c.uuid = :uuid")
+                ->setParameters([
+                    "uuid" => $uuid
+                ])->setMaxResults(10)->orderBy("c.id", "DESC")->getQuery()->getArrayResult();
+
+            if ($cohort != NULL) {
+                $activeMembers = $em->getRepository(ActiveBusinessMasterclassCohort::class)
+                    ->createQueryBuilder("a")
+                    ->select(["a", "u", "s", "aup"])
+                    ->leftJoin("a.user", "u")
+                    // ->leftJoin("a.p6Cohort", "p")
+                    ->leftJoin("a.status", "s")
+                    ->leftJoin("a.activeUserProgram", "aup")
+                    // ->where("p.id = :p6")
+                    // ->setParameters([
+                    //     "p6" => $cohort[0]["id"]
+                    // ])
+                    ->getQuery()
+                    ->getArrayResult();
+            }
+
+
+            $viewModel->setVariables([
+                "cohort" => $cohort[0],
+                "students" => $activeMembers
+            ]);
+            // get all Zoom resources 
+        } catch (\Throwable $th) {
+            //throw $th;
+            var_dump($th->getMessage());
+        }
+        return $viewModel;
+    }
+
+    public function userAction()
+    {
+        $viewModel = new ViewModel();
+        $ext = $this->params()->fromQuery("ext", NULL);
+
+        $viewModel->setVariables([
+            "ext" => $ext
+        ]);
         return $viewModel;
     }
 

@@ -2,6 +2,7 @@
 
 namespace Application\Entity;
 
+use Authentication\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -21,10 +22,24 @@ class ActiveBusinessMasterclassCohort
 
     /**
      * Undocumented variable
-     * @ORM\ManyToOne(targetEntity="CertificationsCohort")
+     * @ORM\ManyToOne(targetEntity="Authentication\Entity\User")
+     * @var User
+     */
+    private User $user;
+
+    /**
+     * Undocumented variable
+     * @ORM\ManyToOne(targetEntity="MasterClassCohort")
+     * @var MasterClassCohort
+     */
+    private MasterClassCohort $cohort;
+
+    /**
+     * Undocumented variable
+     * @ORM\ManyToOne(targetEntity="ActiveBusinessMasterclassCohortStatus")
      * @var ActiveBusinessMasterclassCohortStatus
      */
-    private ActiveBusinessMasterclassCohortStatus $cohort;
+    private ActiveBusinessMasterclassCohortStatus $status;
 
     /**
      * Undocumented variable
@@ -55,44 +70,28 @@ class ActiveBusinessMasterclassCohort
     private string $uuid;
 
     /**
+     * Undocumented variable
+     * @ORM\OneToOne(targetEntity="ActiveUserProgram", inversedBy="masterClassCohort")
+     * @var ActiveUserProgram
+     */
+    private ActiveUserProgram $activeUserProgram;
+
+    /**
      * Get @ORM\Column(name="id", type="integer", nullable=false, options={"unsigned"=true})
      *
      * @return  int
-     */ 
+     */
     public function getId()
     {
         return $this->id;
     }
 
-    /**
-     * Get undocumented variable
-     *
-     * @return  ActiveBusinessMasterclassCohortStatus
-     */ 
-    public function getCohort()
-    {
-        return $this->cohort;
-    }
-
-    /**
-     * Set undocumented variable
-     *
-     * @param  ActiveBusinessMasterclassCohortStatus  $cohort  Undocumented variable
-     *
-     * @return  self
-     */ 
-    public function setCohort(ActiveBusinessMasterclassCohortStatus $cohort)
-    {
-        $this->cohort = $cohort;
-
-        return $this;
-    }
 
     /**
      * Get undocumented variable
      *
      * @return  boolean
-     */ 
+     */
     public function getIsActive()
     {
         return $this->isActive;
@@ -104,7 +103,7 @@ class ActiveBusinessMasterclassCohort
      * @param  boolean  $isActive  Undocumented variable
      *
      * @return  self
-     */ 
+     */
     public function setIsActive(bool $isActive)
     {
         $this->isActive = $isActive;
@@ -116,7 +115,7 @@ class ActiveBusinessMasterclassCohort
      * Get undocumented variable
      *
      * @return  \DateTime
-     */ 
+     */
     public function getCreatedOn()
     {
         return $this->createdOn;
@@ -128,7 +127,7 @@ class ActiveBusinessMasterclassCohort
      * @param  \DateTime  $createdOn  Undocumented variable
      *
      * @return  self
-     */ 
+     */
     public function setCreatedOn(\DateTime $createdOn)
     {
         $this->createdOn = $createdOn;
@@ -140,7 +139,7 @@ class ActiveBusinessMasterclassCohort
      * Get undocumented variable
      *
      * @return  \DateTime
-     */ 
+     */
     public function getUpdatedOn()
     {
         return $this->updatedOn;
@@ -152,7 +151,7 @@ class ActiveBusinessMasterclassCohort
      * @param  \DateTime  $updatedOn  Undocumented variable
      *
      * @return  self
-     */ 
+     */
     public function setUpdatedOn(\DateTime $updatedOn)
     {
         $this->updatedOn = $updatedOn;
@@ -164,7 +163,7 @@ class ActiveBusinessMasterclassCohort
      * Get undocumented variable
      *
      * @return  string
-     */ 
+     */
     public function getUuid()
     {
         return $this->uuid;
@@ -176,10 +175,106 @@ class ActiveBusinessMasterclassCohort
      * @param  string  $uuid  Undocumented variable
      *
      * @return  self
-     */ 
+     */
     public function setUuid(string $uuid)
     {
         $this->uuid = $uuid;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  ActiveUserProgram
+     */
+    public function getActiveUserProgram()
+    {
+        return $this->activeUserProgram;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  ActiveUserProgram  $activeUserProgram  Undocumented variable
+     *
+     * @return  self
+     */
+    public function setActiveUserProgram(ActiveUserProgram $activeUserProgram)
+    {
+        $this->activeUserProgram = $activeUserProgram;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  MasterClassCohort
+     */
+    public function getCohort()
+    {
+        return $this->cohort;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  MasterClassCohort  $cohort  Undocumented variable
+     *
+     * @return  self
+     */
+    public function setCohort(MasterClassCohort $cohort)
+    {
+        $this->cohort = $cohort;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  ActiveBusinessMasterclassCohortStatus
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  ActiveBusinessMasterclassCohortStatus  $status  Undocumented variable
+     *
+     * @return  self
+     */
+    public function setStatus(ActiveBusinessMasterclassCohortStatus $status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  User
+     */ 
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  User  $user  Undocumented variable
+     *
+     * @return  self
+     */ 
+    public function setUser(User $user)
+    {
+        $this->user = $user;
 
         return $this;
     }

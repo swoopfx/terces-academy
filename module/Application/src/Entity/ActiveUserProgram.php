@@ -114,6 +114,13 @@ class ActiveUserProgram
      */
     private ActiveCertificationCohort  $certificationCohort;
 
+    /**
+     * Undocumented variable
+     * @ORM\OneToOne(targetEntity="ActiveBusinessMasterclassCohort", mappedBy="activeUserProgram")
+     * @var ActiveBusinessMasterclassCohort
+     */
+    private ActiveBusinessMasterclassCohort $masterClassCohort;
+
 
     public function __construct()
     {

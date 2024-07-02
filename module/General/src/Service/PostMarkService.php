@@ -21,12 +21,14 @@ class PostMarkService
         $sendResult = $this->postmarkClient->sendEmailWithTemplate(
             "app@tercesjobs.com",
             $data["to"],
-            32356487,
+            36465788,
             [
-                "action_url" => $data["link"],
+
+                "product_name" => $data["product_name"],
+                "organization_name"=> GeneralService::COMPANY_NAME,
                 "company_name" => GeneralService::COMPANY_NAME,
                 "company_address" => GeneralService::COMPANY_ADDRESS,
-                "name_value" => $data["name"],
+                "name" => $data["name"],
 
             ]
         );

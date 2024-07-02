@@ -151,6 +151,8 @@ class IndexController extends AbstractActionController
 
                     // send email
                     $mailData["to"] = $user->getEmail();
+                    $mailData["name"] = $user->getFullname();
+                    $mailData["product_name"] = GeneralService::GENERAL_TRAINING_FREE;
 
                     $this->postmarkService->freeBusinessAnalysisMasterClassRegister($mailData);
 
