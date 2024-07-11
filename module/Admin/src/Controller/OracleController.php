@@ -130,7 +130,8 @@ class OracleController extends AbstractActionController
                 $eventDate = \DateTime::createFromFormat("Y-m-d\TH:i", $data["eventDate"]);
                 $zoom_data["date_time"] = $eventDate;
                 $zoom_data["user_email"] = $user->getEmail();
-                $zoom_data["agenda"] = "Oracle p6 {$data}";
+                $zoom_data["agenda"] = "Oracle P6 ";
+                $zoom_data["duration"] = $data["duration"];
 
            
             }

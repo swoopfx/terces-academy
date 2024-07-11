@@ -427,4 +427,28 @@ class ActiveUserProgram
 
         return $this;
     }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  ActiveBusinessMasterclassCohort
+     */ 
+    public function getMasterClassCohort()
+    {
+        return $this->masterClassCohort;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  ActiveBusinessMasterclassCohort  $masterClassCohort  Undocumented variable
+     *
+     * @return  self
+     */ 
+    public function setMasterClassCohort(ActiveBusinessMasterclassCohort $masterClassCohort)
+    {
+        $this->masterClassCohort = $masterClassCohort;
+
+        return $this;
+    }
 }

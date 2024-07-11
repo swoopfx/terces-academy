@@ -2,10 +2,28 @@
 
 namespace  Application\Service;
 
+use Application\Entity\ActiveBusinessMasterclassCohort;
+use Application\Entity\ActiveUserProgram;
+use Application\Entity\InternshipCohort;
+use Application\Entity\MasterClassCohort;
+use Application\Entity\P6FreeCohort;
+use Application\Entity\Programs;
+use Application\Entity\ZoomMeetingResponse;
+use Doctrine\ORM\EntityManager;
+use General\Service\PostMarkService;
 use Laminas\Http\Client;
+use Laminas\Http\Request;
+use Ramsey\Uuid\Uuid;
 
 class ZoomService
 {
+
+    /**
+     * Undocumented variable
+     * 
+     * @var EntityManager
+     */
+    private EntityManager $entityManager;
 
     /**
      * Zoom Token response
@@ -28,6 +46,13 @@ class ZoomService
      */
     private $config;
 
+    /**
+     * Undocumented variable
+     *
+     * @var PostMarkService
+     */
+    private PostMarkService $postmarkService;
+
 
 
     /**
@@ -39,36 +64,50 @@ class ZoomService
     public function createMeeting(array $data)
     {
         $token = $this->zoomTokenRes;
+        $em = $this->entityManager;
         $client = new Client();
-
+        $client->setMethod(Request::METHOD_POST);
         // $meetingDatime =  new \DateTime('2011-12-25 13:00:00');
         $meetingDatime =  $data["date_time"];
         $meetingDatime->setTimezone(new \DateTimeZone('UTC'));
         $meetingDatime->format('Y-m-d\TH:i:s\Z');
+        $startDate = date_format($meetingDatime, 'Y-m-d\TH:i:s\Z');
+
+        // var_dump($startDate);
 
         // Change the timezone to GMT.
+
+        $activeBusinessMasterClassCohort = $em->getRepository(ActiveUserProgram::class)
+            ->createQueryBuilder("a")
+            ->select("u.email")
+            ->innerJoin("a.user", "u")
+            ->where("a.program = :program")->setParameters([
+                "program" => $data["program"]
+            ])->getQuery()->getScalarResult();
+
+
 
         $client->setUri($this->zoomConfig["base_url"] . "/users/me/meetings");
         $client->setHeaders([
             "Authorization" => "Bearer {$token["access_token"]}",
-            "Content-Type" => "application/x-www-form-urlencoded",
+            "Content-Type" => "application/json"
         ]);
         $body = [
             "agenda" => $data["agenda"],
             "default_password" => false,
-            "duration" => $data["duration"],
+            "duration" => str_replace("min", "", $data["duration"]),
             "password" => "123456",
             "pre_schedule" => false,
-            "schedule_for" => $data["user_email"],
+            "schedule_for" => "Teeveyan@yahoo.com",
 
             "settings" => [
                 // "additional_data_center_regions" => [
                 //     "TY"
                 // ],
                 "allow_multiple_devices" => true,
-                "alternative_hosts" => "app@tercesjobs.com;Teeveyan@yahoo.com;" . $data["user_email"],
+                "alternative_hosts" => "Teeveyan@yahoo.com;app@tercesjobs.com",
                 "alternative_hosts_email_notification" => true,
-                "approval_type" => 0,
+                "approval_type" => 2,
                 // "approved_or_denied_countries_or_regions" => [
                 //     "approved_list" => [
                 //         "CX"
@@ -89,7 +128,7 @@ class ZoomService
                 //     ]
                 // ],
                 // "authentication_option" => "signIn_D8cJuqWVQ623CI4Q8yQK0Q",
-                // "auto_recording" => "cloud",
+                "auto_recording" => "none",
                 // "breakout_room" => [
                 //     "enable" => true,
                 //     "rooms" => [
@@ -165,7 +204,7 @@ class ZoomService
                 //     ]
                 // ]
             ],
-            "start_time" => $data["date_time"],
+            "start_time" => $startDate, //$data["date_time"],
             "timezone" => "UTC",
             "topic" => $data["agenda"],
             "tracking_fields" => [],
@@ -173,23 +212,100 @@ class ZoomService
 
 
         ];
-        // $client->setRawBody(json_encode($body));
-        $client->setParameterPost($body);
+        $client->setRawBody(json_encode($body));
+        // $client->setParameterPost($body);
         $response = $client->send();
         if ($response->isSuccess()) {
-            $body = json_decode($response->getBody());
-            return $body;
+            $zoomResponse = json_decode($response->getBody());
+            // hydrate into data base
+            // var_dump($bodi);
+            // $zoomResponse = $bodi;
+            try {
+                // var_dump($zoomResponse->title);
+                // print_r($zoomResponse);
+                // exit();
+                // $zoomResponse = $bodi->response;
+                // $zoomResponseSerialized = json_encode($zoomResponse);
+                $zoomEntity = new ZoomMeetingResponse();
+                $zoomEntity->setCreatedOn(new \Datetime())
+                    ->setUuid(Uuid::uuid4()->toString())
+                    // ->setZoomAssitantId($zoomResponse->assistant_id)
+                    ->setZoomTitle($zoomResponse->topic)
+                    ->setZoomStartTime($zoomResponse->start_time)
+                    ->setZoomDuration($zoomResponse->duration)
+                    ->setZoomTimeZone($zoomResponse->timezone)
+                    ->setProgram($em->find(Programs::class, $data["program"]))
+                    ->setZoomResponse(json_encode($zoomResponse))
+                    ->setZoomRegUrl($zoomResponse->start_url)
+                    ->setZoomJoinUrl($zoomResponse->join_url)
+                    ->setZoomEncryptPassword($zoomResponse->encrypted_password)
+                    ->setZoomPassword($zoomResponse->pstn_password)
+                    ->setZoomId($zoomResponse->id)
+                    ->setZoomhostId($zoomResponse->host_id)
+                    ->setZoomUuid($zoomResponse->uuid);
+
+                $registeredUsers = [];
+
+                if ($data["program"] == 4) {
+                    // Free master class
+                    $zoomEntity->setFreeBusinessMasterClassCohort($em->find(MasterClassCohort::class, $data["cohort"]));
+                    $activeBusinessMasterClassCohort = $em->getRepository(ActiveBusinessMasterclassCohort::class)->findBy([
+                        "cohort" => $data["cohort"],
+                    ]);
+                    if (count($activeBusinessMasterClassCohort) == 1) {
+                        $activeBusinessMasterClassCohort = $em->getRepository(ActiveUserProgram::class)
+                            ->createQueryBuilder("a")
+                            ->select("u.email")
+                            ->innerJoin("a.user", "u")
+                            ->where("a.program = :program")->setParameters([
+                                "program" => $data["program"]
+                            ])->getQuery()->getScalarResult();
+
+                        $emails = array_map('current',  $activeBusinessMasterClassCohort);
+                        $stringEmail = implode(', ', $emails);
+                    }
+                } elseif ($data["program"] == 10) {
+                    // Business Analysis Work Experience Program
+                    $zoomEntity->setBusinessAnalysisCohort($em->find(InternshipCohort::class, $data["cohort"]));
+                } elseif ($data["program"] ==  50) {
+                    // Free ORACLE Masterclass
+                    $zoomEntity->setFreeOracleCohort($em->find(P6FreeCohort::class, $data["cohort"]));
+                }
+
+                $zoomMailData["to"] = $data["user_email"];
+                $zoomMailData["bcc"] = $stringEmail;
+                $zoomMailData["join"] = $zoomResponse->join_url;
+                $zoomMailData["topic"] = $zoomResponse->topic;
+                $zoomMailData["start_time"] = date('F jS, Y h:i:s', strtotime($zoomResponse->start_time)) . " {$zoomResponse->timezone} timezone";
+                $zoomMailData["meeting_id"] = $zoomResponse->id;
+                $zoomMailData["password"] = $zoomResponse->pstn_password;
+
+                $this->postmarkService->manySendZoomMeetingNotification($zoomMailData);
+
+                $em->persist($zoomEntity);
+                $em->flush();
+
+
+                return $zoomEntity;
+            } catch (\Throwable $th) {
+                throw new \Exception($th->getMessage());
+            }
         } else {
-            throw new \Exception("could not create the meeting");
+            throw new \Exception($response->getReasonPhrase());
         }
     }
 
-    public function deleteMeeting(){
 
+    public function assignMeetingTouser()
+    {
     }
 
-    public function updateMeeting(){
-        
+    public function deleteMeeting()
+    {
+    }
+
+    public function updateMeeting()
+    {
     }
 
     /**
@@ -230,6 +346,44 @@ class ZoomService
     public function setZoomConfig(array $zoomConfig)
     {
         $this->zoomConfig = $zoomConfig;
+
+        return $this;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  EntityManager  $entityManager  Undocumented variable
+     *
+     * @return  self
+     */
+    public function setEntityManager(EntityManager $entityManager)
+    {
+        $this->entityManager = $entityManager;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  PostMarkService
+     */
+    public function getPostmarkService()
+    {
+        return $this->postmarkService;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  PostMarkService  $postmarkService  Undocumented variable
+     *
+     * @return  self
+     */
+    public function setPostmarkService(PostMarkService $postmarkService)
+    {
+        $this->postmarkService = $postmarkService;
 
         return $this;
     }

@@ -2,12 +2,16 @@
 
 namespace Internship\Controller;
 
+use Application\Entity\ActiveBusinessMasterclassCohort;
 use Application\Entity\ActiveP6Cohort;
 use Application\Entity\ActiveUserProgram;
+use Application\Entity\InternshipCohort;
 use Application\Entity\Programs;
+use Application\Entity\ZoomMeetingResponse;
 use Doctrine\ORM\EntityManager;
 use Internship\Service\CourseService;
 use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
 
 class CoursesController extends AbstractActionController
@@ -35,6 +39,7 @@ class CoursesController extends AbstractActionController
             ->select(["a", "p", "u"])
             ->leftJoin("a.program", "p")
             ->leftJoin("a.user", "u")
+
             ->where("u.id = :userId")
             ->andWhere("a.isActive = :active")
             ->setParameters([
@@ -43,6 +48,21 @@ class CoursesController extends AbstractActionController
             ])
             ->orderBy("a.id", "DESC")->getQuery()
             ->getResult();
+
+        // if ($data[0]["program"] == 4) {
+        //     $dataCohort = $this->entityManager
+        //         ->getRepository(ActiveBusinessMasterclassCohort::class)
+        //         ->createQueryBuilder("a")->select(["a", "c", "p"])
+        //         ->leftJoin("a.cohort", "c")
+        //         ->leftJoin("a.program", "p")
+        //         ->where("a.isAll = :isAll")
+        //         ->orWhere("a.activeUserProgram = :activeUser")
+        //         ->setParameters([
+        //             "isAll"=>TRUE,
+        //             "activeUser"=>$data[0]
+        //         ]);
+
+
 
         $viewModel->setVariables([
             "data" => $data
@@ -61,6 +81,7 @@ class CoursesController extends AbstractActionController
     {
         $viewModel = new ViewModel();
         $uuid = $this->params()->fromRoute("id", NULL);
+
         $em = $this->entityManager;
         try {
             if ($uuid == NULL) {
@@ -78,11 +99,20 @@ class CoursesController extends AbstractActionController
             if ($service->getId() == 40) {
                 // arange oracle  data 
                 // get 
-                $isAssignedToCohort = $em->getRepository(ActiveP6Cohort::class)->findOneBy([
-                    "user" => $identity->getId(),
-                ]);
+
+                // $isAssignedToCohort = $em->getRepository(ActiveP6Cohort::class)->createQueryBuilder("a")->select(["a"])->where("a = :user")->orWhere()
+
+
+                // findOneBy([
+                //     "user" => $identity->getId(),
+                // ]);
                 $data = $this->courseService->getP6RoomList($service->getId());
-            } else if ($service->getId() == 30) {
+            } else if ($service->getId() == 4) {
+                // Business Analysis Masterclass
+                $isAssignedToCohort = $em->getRepository(ActiveBusinessMasterclassCohort::class)->findOneBy([
+                    "program" => $service->getId(),
+                    //    "cohort" => $
+                ]);
             }
             $viewModel->setVariables([
                 "isAssigned" => $isAssignedToCohort ?? FALSE,
@@ -96,6 +126,31 @@ class CoursesController extends AbstractActionController
             return $this->redirect()->toUrl($url);
         }
         return $viewModel;
+    }
+
+
+
+    public function getZoomClasesAction()
+    {
+        $jsonModel = new JsonModel();
+        $em = $this->entityManager;
+        $program = $this->params()->fromQuery("program", NULL);
+        $user = $this->identity();
+        $qb = $em->createQueryBuilder();
+        $data = $qb->select(["a", "p", "bamc", "ba"])
+            ->from(ZoomMeetingResponse::class, "a")
+            ->leftJoin("a.program", "p")
+            ->leftJoin("a.freeBusinessMasterClassCohort", "bamc")
+            ->leftJoin("a.businessAnalysisCohort", "ba")
+            ->where("a.program = :program")->setParameters([
+                // "user" => $user->getId(),
+                // "isAll" => TRUE,
+                "program" => $program
+            ])->getQuery()->getArrayResult();
+        $jsonModel->setVariables([
+            "data" => $data
+        ]);
+        return $jsonModel;
     }
     /**
      * Set undocumented variable

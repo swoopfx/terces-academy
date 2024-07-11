@@ -77,6 +77,20 @@ class ActiveBusinessMasterclassCohort
     private ActiveUserProgram $activeUserProgram;
 
     /**
+     * Defines if all member of the active 
+     * @ORM\Column(type="boolean", nullable=false, options={"default":0})
+     * @var boolean
+     */
+    private bool $isAll;
+
+    /**
+     * Undocumented variable
+     * @ORM\ManyToOne(targetEntity="Programs")
+     * @var Programs
+     */
+    private Programs $program;
+
+    /**
      * Get @ORM\Column(name="id", type="integer", nullable=false, options={"unsigned"=true})
      *
      * @return  int
@@ -131,7 +145,7 @@ class ActiveBusinessMasterclassCohort
     public function setCreatedOn(\DateTime $createdOn)
     {
         $this->createdOn = $createdOn;
-
+        $this->updatedOn = $createdOn;
         return $this;
     }
 
@@ -259,7 +273,7 @@ class ActiveBusinessMasterclassCohort
      * Get undocumented variable
      *
      * @return  User
-     */ 
+     */
     public function getUser()
     {
         return $this->user;
@@ -271,10 +285,58 @@ class ActiveBusinessMasterclassCohort
      * @param  User  $user  Undocumented variable
      *
      * @return  self
-     */ 
+     */
     public function setUser(User $user)
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  boolean
+     */
+    public function getIsAll()
+    {
+        return $this->isAll;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  boolean  $isAll  Undocumented variable
+     *
+     * @return  self
+     */
+    public function setIsAll(bool $isAll)
+    {
+        $this->isAll = $isAll;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  Programs
+     */ 
+    public function getProgram()
+    {
+        return $this->program;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  Programs  $program  Undocumented variable
+     *
+     * @return  self
+     */ 
+    public function setProgram(Programs $program)
+    {
+        $this->program = $program;
 
         return $this;
     }

@@ -3,6 +3,7 @@
 namespace Admin\Controller\Factory;
 
 use Admin\Controller\ZoomController;
+use Application\Service\ZoomService;
 use General\Service\GeneralService;
 use General\Service\UploadService;
 use Laminas\ServiceManager\Factory\FactoryInterface;
@@ -19,7 +20,8 @@ class ZoomControllerFactory implements FactoryInterface
          * @var GeneralService
          */
         $generalService = $container->get(GeneralService::class);
-        $ctr->setEntityManager($generalService->getEntityManager());
+        $ctr->setEntityManager($generalService->getEntityManager())
+            ->setZoomService($container->get(ZoomService::class));
         return $ctr;
     }
 }

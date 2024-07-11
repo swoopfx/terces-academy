@@ -9,7 +9,9 @@ use General\Entity\Settings;
 class GeneralService
 {
 
-    const GENERAL_TRAINING_FREE = "Free Business Analysis Free Master Class";
+    const GENERAL_TRAINING_FREE = "Free Business Analysis Master Class";
+
+    const GENERAL_TRAINING_FREE_ORACLE_P6 = "Free ORACLE P6 Master Class";
 
     const GENERAL_TRAINING_WORK_EXPERIENCE = "Business Analysis- Self Study";
 

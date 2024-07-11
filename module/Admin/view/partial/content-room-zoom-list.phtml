@@ -24,8 +24,12 @@
 
                     <td class="valign-middle tx-center">
 
-                        <button @click="selectClassroomEvent(clas.id)" href="#modaldemo1" data-toggle="modal" data-effect="effect-scale" v-if="classroomState(clas.id)" class="modal-effect btn btn-success btn-block mg-b-10">Create Classroom</button>
-                        <button v-else class="btn btn-info btn-block mg-b-10">View Classroom</button>
+                        <button @click="selectClassroomEvent(clas.id)" href="#modaldemo1" data-toggle="modal" data-effect="effect-scale" v-if="!zoomClass.length" class="modal-effect btn btn-success btn-block mg-b-10">Create Classroom</button>
+                        <div v-else>
+                            <button class="btn btn-info btn-block mg-b-10">View Classroom</button>
+                            <button class="btn btn-primary btn-block mg-b-10">Send Invitation</button>
+                        </div>
+
                         <!--  <a href="" class="tx-gray-600 tx-24"><i class="icon ion-android-more-horizontal"></i></a> -->
 
 
@@ -67,7 +71,15 @@
                                              making it look like readable English. </p> -->
                                     </div>
                                     <div class="modal-footer">
-                                        <button @click="createEventMeeting()" type="button" class="btn btn-primary">Create Event</button>
+                                        <div v-if="isCreatingEvent" class="d-flex bg-gray-200 ht-20 pos-relative align-items-center">
+                                            <div class="sk-folding-cube">
+                                                <div class="sk-cube1 sk-cube"></div>
+                                                <div class="sk-cube2 sk-cube"></div>
+                                                <div class="sk-cube4 sk-cube"></div>
+                                                <div class="sk-cube3 sk-cube"></div>
+                                            </div>
+                                        </div><!-- d-flex -->
+                                        <button v-else @click="createEventMeeting()" type="button" class="btn btn-primary">Create Event</button>
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                     </div>
                                 </div>
