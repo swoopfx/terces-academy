@@ -362,6 +362,34 @@ class PostMarkService
         );
     }
 
+
+    public function manySendZoomMeetingReminder($data)
+    {
+        $sendResult = $this->postmarkClient->sendEmailWithTemplate(
+            "app@tercesjobs.com",
+            "Emuveyanoghenetejiri@gmail.com",
+            36589911,
+            [
+                "topic" => $data["topic"],
+                "join" => $data["join"],
+                "start_time" => $data["start_time"],
+                "meeting_id" => $data["meeting_id"],
+                "password" => $data["password"],
+                "company_name" => GeneralService::COMPANY_NAME,
+                "company_address" => GeneralService::COMPANY_ADDRESS,
+
+            ],
+            true,
+            null,
+            null,
+            null,
+            null,
+            $data["bcc"], //imploded array
+            null,
+
+        );
+    }
+
     // Begin Batch Processing
 
 

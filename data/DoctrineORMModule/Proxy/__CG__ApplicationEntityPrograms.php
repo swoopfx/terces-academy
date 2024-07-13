@@ -67,10 +67,10 @@ class Programs extends \Application\Entity\Programs implements \Doctrine\ORM\Pro
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'id', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'uuid', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'programId', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'cost', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'title', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'duration', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'description', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'createdOn', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'updatedon', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'isActive', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'banner', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'courses', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'instructors'];
+            return ['__isInitialized__', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'id', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'uuid', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'programId', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'cost', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'title', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'duration', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'description', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'createdOn', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'updatedon', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'isActive', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'banner', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'courses', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'instructor'];
         }
 
-        return ['__isInitialized__', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'id', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'uuid', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'programId', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'cost', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'title', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'duration', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'description', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'createdOn', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'updatedon', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'isActive', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'banner', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'courses', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'instructors'];
+        return ['__isInitialized__', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'id', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'uuid', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'programId', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'cost', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'title', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'duration', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'description', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'createdOn', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'updatedon', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'isActive', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'banner', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'courses', '' . "\0" . 'Application\\Entity\\Programs' . "\0" . 'instructor'];
     }
 
     /**
@@ -421,6 +421,28 @@ class Programs extends \Application\Entity\Programs implements \Doctrine\ORM\Pro
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getCourses', []);
 
         return parent::getCourses();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getInstructor()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getInstructor', []);
+
+        return parent::getInstructor();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setInstructor(string $instructor)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setInstructor', [$instructor]);
+
+        return parent::setInstructor($instructor);
     }
 
 }

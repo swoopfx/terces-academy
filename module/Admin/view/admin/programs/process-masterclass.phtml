@@ -20,6 +20,7 @@
             </div>
             <div class="summary-item">
                 <h1><?php
+
                     if (count($students) > 0) {
                         if ($students[0]["isAll"]) {
                             echo "All";
@@ -73,8 +74,19 @@
             <!-- <p class="mg-b-0"><i class="icon ion-calendar mg-r-3"></i> January 01, 2018 - January 31, 2018</p> -->
         </div>
         <div>
-            <button v-if="assignedStatus" @click class="btn btn-primary"><i class="icon ion-ios-clock-outline tx-22"></i> Assign To All</button>
-            <button class="btn btn-success"><i class="icon ion-ios-gear-outline tx-24"></i> Send Out Events</button>
+            <button v-if="assignedStatus" @click="assignAllStudent()" class="btn btn-primary"><i class="icon ion-ios-clock-outline tx-22"></i> Assign To All</button>
+            <div v-if="!assignedStatus">
+                <div v-if="isResendingMails" class="d-flex bg-gray-200 ht-20 pos-relative align-items-center">
+                    <div class="sk-folding-cube">
+                        <div class="sk-cube1 sk-cube"></div>
+                        <div class="sk-cube2 sk-cube"></div>
+                        <div class="sk-cube4 sk-cube"></div>
+                        <div class="sk-cube3 sk-cube"></div>
+                    </div>
+                </div>
+                <button v-else @click="sendInvitations()" class="btn btn-success"><i class="icon ion-ios-gear-outline tx-24"></i> Send Out Invitations</button>
+            </div>
+
         </div>
     </div>
 
@@ -109,7 +121,7 @@
                         <i class="icon ion-cube tx-gray-400"></i>
                         <i class="icon ion-cube tx-gray-400"></i>
                     </div>
-                    <label>Digital products (85%)</label>
+                    <!--  <label>Digital products (85%)</label>
                     <div class="progress mg-b-10">
                         <div class="progress-bar bg-success progress-bar-xs wd-85p" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
@@ -117,7 +129,7 @@
                     <label>Non-digital products (15%)</label>
                     <div class="progress">
                         <div class="progress-bar bg-warning progress-bar-xs wd-15p" role="progressbar" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
@@ -194,6 +206,7 @@
 
                 // Event meeting
                 isCreatingEventMeeting: false,
+                isResendingMails: false,
             }
         },
 
@@ -392,7 +405,37 @@
                 }).catch((err) => {
                     this.isAssigningStudent = false;
                 });
-               
+
+            },
+
+            sendInvitations() {
+                this.isResendingMails = true;
+                let formData = new FormData();
+                formData.append("program", this.programType);
+                formData.append("cohort", this.cohortId);
+                axios.post("/admins/programs/send-invitaions", formData).then((result) => {
+                    if (result.status == 202) {
+                        this.isResendingMails = false;
+                        Swal.fire({
+                            icon: "success",
+                            title: "Success",
+                            text: "Mails has been sent"
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.reload();
+                            }
+                        }).catch((err) => {
+
+                        });
+                    }
+                }).catch((err) => {
+                    Swal.fire({
+                        icon: "error",
+                        title: "An error occured",
+                        text: err.response.data.message,
+                    });
+                    this.isResendingMails = false;
+                });
             },
 
             // Create Event Meeting

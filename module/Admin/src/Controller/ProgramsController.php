@@ -109,13 +109,13 @@ class ProgramsController extends AbstractActionController
         $id = $this->params()->fromQuery("cohort", NULL);
         $jsonModel = new JsonModel();
         $data = $em->getRepository(ActiveBusinessMasterclassCohort::class)->createQueryBuilder("a")
-        ->select(["a"])->where("a.cohort = :cohort")->setParameters([
-            "cohort"=>$id
-        ])->getQuery()->getArrayResult();
+            ->select(["a"])->where("a.cohort = :cohort")->setParameters([
+                "cohort" => $id
+            ])->getQuery()->getArrayResult();
         // ->findBy([
         //     "cohort" => $id
         // ]);
-       
+
         $jsonModel->setVariables([
             "data" => $data
         ]);
@@ -376,13 +376,13 @@ class ProgramsController extends AbstractActionController
                     ->createQueryBuilder("a")
                     ->select(["a", "u", "s", "aup"])
                     ->leftJoin("a.user", "u")
-                    // ->leftJoin("a.p6Cohort", "p")
+                    ->leftJoin("a.cohort", "p")
                     ->leftJoin("a.status", "s")
                     ->leftJoin("a.activeUserProgram", "aup")
-                    // ->where("p.id = :p6")
-                    // ->setParameters([
-                    //     "p6" => $cohort[0]["id"]
-                    // ])
+                    ->where("p.id = :p6")
+                    ->setParameters([
+                        "p6" => $cohort[0]["id"]
+                    ])
                     ->getQuery()
                     ->getArrayResult();
             }
@@ -520,6 +520,29 @@ class ProgramsController extends AbstractActionController
                 ]);
             }
             // var_dump($eventDate);
+        }
+        return $jsonModel;
+    }
+
+    public function sendInvitaionsAction()
+    {
+        $jsonModel = new JsonModel();
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        if ($request->isPost()) {
+            $post = $request->getPost()->toArray();
+            $zoom_data["program"] = $post["program"];
+            $zoom_data["cohort"] = $post["cohort"];
+            try {
+                $this->zoomService->resendZoomEvent($zoom_data);
+
+                $response->setStatusCode(202);
+            } catch (\Throwable $th) {
+                $response->setStatusCode(400);
+                $jsonModel->setVariables([
+                    "message" => $th->getMessage()
+                ]);
+            }
         }
         return $jsonModel;
     }

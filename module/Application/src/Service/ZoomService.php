@@ -245,7 +245,7 @@ class ZoomService
                     ->setZoomUuid($zoomResponse->uuid);
 
                 $registeredUsers = [];
-
+                $arrayEmail = [];
                 if ($data["program"] == 4) {
                     // Free master class
                     $zoomEntity->setFreeBusinessMasterClassCohort($em->find(MasterClassCohort::class, $data["cohort"]));
@@ -262,7 +262,13 @@ class ZoomService
                             ])->getQuery()->getScalarResult();
 
                         $emails = array_map('current',  $activeBusinessMasterClassCohort);
-                        $stringEmail = implode(', ', $emails);
+
+                        if (count($emails) > 50) {
+                            $arrayEmail = array_chunk($emails, 49);
+                        } else {
+                            $arrayEmail = $emails;
+                        }
+                        // $stringEmail = implode(', ', $emails);
                     }
                 } elseif ($data["program"] == 10) {
                     // Business Analysis Work Experience Program
@@ -273,14 +279,24 @@ class ZoomService
                 }
 
                 $zoomMailData["to"] = $data["user_email"];
-                $zoomMailData["bcc"] = $stringEmail;
+
                 $zoomMailData["join"] = $zoomResponse->join_url;
                 $zoomMailData["topic"] = $zoomResponse->topic;
-                $zoomMailData["start_time"] = date('F jS, Y h:i:s', strtotime($zoomResponse->start_time)) . " {$zoomResponse->timezone} timezone";
+                $zoomMailData["start_time"] = date('F jS, Y h:i:s A', strtotime($zoomResponse->start_time)) . " {$zoomResponse->timezone} timezone";
                 $zoomMailData["meeting_id"] = $zoomResponse->id;
                 $zoomMailData["password"] = $zoomResponse->pstn_password;
 
-                $this->postmarkService->manySendZoomMeetingNotification($zoomMailData);
+                if (count($emails) > 50) {
+                    foreach ($arrayEmail as $mail) {
+                        $zoomMailData["bcc"] = implode(', ', $mail);
+                        $this->postmarkService->manySendZoomMeetingNotification($zoomMailData);
+                    }
+                } else {
+                    $zoomMailData["bcc"] = implode(', ', $arrayEmail);
+                    $this->postmarkService->manySendZoomMeetingNotification($zoomMailData);
+                }
+
+
 
                 $em->persist($zoomEntity);
                 $em->flush();
@@ -292,6 +308,68 @@ class ZoomService
             }
         } else {
             throw new \Exception($response->getReasonPhrase());
+        }
+    }
+
+
+    public function resendZoomEvent($data)
+    {
+        $em = $this->entityManager;
+        $activeCohort = '';
+        $arrayEmail = [];
+        if ($data["program"] == 4) {
+            $activeCohort = "freeBusinessMasterClassCohort";
+            $activeBusinessMasterClassCohort = $em->getRepository(ActiveBusinessMasterclassCohort::class)->findBy([
+                "cohort" => $data["cohort"],
+            ]);
+
+            if (count($activeBusinessMasterClassCohort) == 1) {
+                $activeBusinessMasterClassCohort = $em->getRepository(ActiveUserProgram::class)
+                    ->createQueryBuilder("a")
+                    ->select("u.email")
+                    ->innerJoin("a.user", "u")
+                    ->where("a.program = :program")->setParameters([
+                        "program" => $data["program"]
+                    ])->getQuery()->getScalarResult();
+
+                $emails = array_map('current',  $activeBusinessMasterClassCohort);
+
+                if (count($emails) > 50) {
+                    $arrayEmail = array_chunk($emails, 49);
+                } else {
+                    $arrayEmail = $emails;
+                }
+                // $stringEmail = implode(', ', $emails);
+            }
+        } elseif ($data["program"] == 10) {
+        }
+        /**
+         * @var []
+         */
+        $zoomResponse = $em->getRepository(ZoomMeetingResponse::class)->findBy([
+            "program" => $data["program"],
+            $activeCohort => $data["cohort"]
+        ]);
+        if (count($zoomResponse) == 0) {
+            throw new \Exception("No Zoom Meeting availaible");
+        }
+        $zoomResponse = $zoomResponse[0];
+        $zoomMailData["to"] = "app@tercesjobs.com";
+
+        $zoomMailData["join"] = $zoomResponse->getZoomJoinUrl();
+        $zoomMailData["topic"] = $zoomResponse->getZoomTitle();
+        $zoomMailData["start_time"] = date('F jS, Y h:i:s A', strtotime($zoomResponse->getZoomStartTime())) . " {$zoomResponse->getZoomTimezone()} timezone";
+        $zoomMailData["meeting_id"] = $zoomResponse->getZoomId();
+        $zoomMailData["password"] = $zoomResponse->getZoomPassword();
+
+        if (count($emails) > 50) {
+            foreach ($arrayEmail as $mail) {
+                $zoomMailData["bcc"] = implode(', ', $mail);
+                $this->postmarkService->manySendZoomMeetingReminder($zoomMailData);
+            }
+        } else {
+            $zoomMailData["bcc"] = implode(', ', $arrayEmail);
+            $this->postmarkService->manySendZoomMeetingReminder($zoomMailData);
         }
     }
 
