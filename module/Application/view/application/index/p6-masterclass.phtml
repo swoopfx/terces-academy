@@ -12,10 +12,10 @@ use General\Service\GeneralService;
                     <ul class="breadcrumb_nav unordered_list">
                         <li><a href="">Home</a></li>
                         <li><a href="">Course</a></li>
-                        <li><?= GeneralService::GENERAL_TRAINING_FREE_ORACLE_P6 ?></li>
+                        <li><?= GeneralService::GENERAL_TRAINING_FREE ?></li>
                     </ul>
                     <h1 class="page_title">
-                        Begin Your <?= GeneralService::GENERAL_TRAINING_FREE_ORACLE_P6 ?>
+                        Begin Your Business Analysis Journey
                     </h1>
                     <ul class="meta_info_list unordered_list">
                         <li>
@@ -40,7 +40,7 @@ use General\Service\GeneralService;
                         </li>
                         <li>
                             <a href="<?php if($this->identity()){ 
-                                echo $this->url('application', ["action" => "oracle-p6-masterclass-register"]);
+                                echo $this->url('application', ["action" => "business-analysis-masterclass-register"]);
                             }else{ echo $this->url("register") ;} ?>" class="btn btn_dark">
                                 <span>
                                     <small>Register Now</small>
@@ -52,7 +52,7 @@ use General\Service\GeneralService;
                 </div>
                 <div class="col col-lg-5">
                     <div class="image_widget page_banner_image">
-                        <img src="assets/images/9.png" alt="Terces – Online Learning Platform">
+                        <img src="assets/images/2.png" alt="Terces – Online Learning Platform">
                     </div>
                 </div>
             </div>
@@ -78,22 +78,22 @@ use General\Service\GeneralService;
                         <li>
                             <i class="fas fa-check"></i>
                             <span>
-                                Introduction to Oracle P6
+                                Introduction to Business analysis
                             </span>
                         </li>
                         <li>
                             <i class="fas fa-check"></i>
                             <span>
-                            Initiating or Concept Phase
+                                The business analyst
                             </span>
                         </li>
                         <li>
                             <i class="fas fa-check"></i>
                             <span>
-                            Planning Phase
+                                Business analyst responsibilities in a project
                             </span>
                         </li>
-                       <!-- <li>
+                        <li>
                             <i class="fas fa-check"></i>
                             <span>
                                 Qualifications of a business analyst
@@ -116,7 +116,7 @@ use General\Service\GeneralService;
                             <span>
                                 Core skills of a business analyst
                             </span>
-                        </li> -->
+                        </li>
                     </ul>
                 </div>
             </div>

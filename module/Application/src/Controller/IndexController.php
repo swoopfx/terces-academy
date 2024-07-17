@@ -202,7 +202,7 @@ class IndexController extends AbstractActionController
                 } else {
                     // hydrate to cebtral database
                     $hydrate = new ActiveUserProgram();
-                    $hydrate->setProgram($em->find(Programs::class, 40))
+                    $hydrate->setProgram($em->find(Programs::class, 50))
                         ->setUser($user)
                         ->setCreatedOn(new \Datetime())
                         ->setIsActive(TRUE)

@@ -10,6 +10,7 @@ use Application\Entity\ActiveUserProgram;
 use Application\Entity\ActiveUserProgramStatus;
 use Application\Entity\P6Cohort;
 use Application\Entity\P6FreeCohort;
+use Application\Entity\Programs;
 use Application\Service\ZoomService;
 use Doctrine\ORM\EntityManager;
 use General\Entity\RoomType;
@@ -411,6 +412,77 @@ class OracleController extends AbstractActionController
         $data = $em->getRepository(OracleClasses::class)->createQueryBuilder("o")
             ->select("o")->getQuery()->getArrayResult();
         $jsonModel->setVariables(["data" => $data]);
+        return $jsonModel;
+    }
+
+    public function getMasterclassAssignedStatusAction()
+    {
+        $em = $this->entityManager;
+        $id = $this->params()->fromQuery("cohort", NULL);
+        $jsonModel = new JsonModel();
+        $data = $em->getRepository(ActiveP6FreeMasterclassCohort::class)->createQueryBuilder("a")
+            ->select(["a"])->where("a.cohort = :cohort")->setParameters([
+                "cohort" => $id
+            ])->getQuery()->getArrayResult();
+        // ->findBy([
+        //     "cohort" => $id
+        // ]);
+
+        $jsonModel->setVariables([
+            "data" => $data
+        ]);
+        return $jsonModel;
+    }
+
+    /**
+     * Asssign cohort to students
+     *
+     * @return void
+     */
+    public function assignAllStudentToMasterClassAction()
+    {
+        $jsonModel = new JsonModel();
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        $cSeed = new Container("process_seed");
+        $em = $this->entityManager;
+
+        if ($request->isPost()) {
+            $post = $request->getPost()->toArray();
+            try {
+                if ($post["seed"] != $cSeed->seed) {
+                    throw new \Exception("Invalid Seed");
+                }
+
+                // $allActiveUserProgram = $em->getRepository(ActiveUserProgram::class)->findBy([
+                //     "program" => $post["program"]
+                // ]);
+
+
+
+                $activeCohortEntity = P6FreeCohort::class;
+                $activeBusinessMassterClassCohortEntity = new ActiveP6FreeMasterclassCohort(); // ActiveBusinessMasterclassCohort();
+                $activeBusinessMassterClassCohortEntity->setCreatedOn(new \Datetime())
+                    ->setCohort($em->find($activeCohortEntity, $post["cohort"]))->setIsActive(TRUE)
+                    ->setProgram($em->find(Programs::class, $post["program"]))
+                    ->setUuid(Uuid::uuid4()->toString())->setIsAll(TRUE);
+
+                $em->persist($activeBusinessMassterClassCohortEntity);
+                $em->flush();
+
+                // trigger notification to all registered user 
+
+                $response->setStatusCode(201);
+                $jsonModel->setVariables([
+                    "success" => TRUE
+                ]);
+            } catch (\Throwable $th) {
+                $response->setStatusCode(423);
+                $jsonModel->setVariables([
+                    "message" => $th->getMessage()
+                ]);
+            }
+        }
         return $jsonModel;
     }
 

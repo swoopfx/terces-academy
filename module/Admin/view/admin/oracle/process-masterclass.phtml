@@ -347,7 +347,7 @@
             },
 
             getAssignedStatus() {
-                axios.get("/admins/programs/get-assigned-status", {
+                axios.get("/admins/oracle/get-masterclass-assigned-status", {
                     params: {
                         cohort: this.cohortId
                     }
@@ -385,7 +385,7 @@
                         formData.append("cohort", this.cohortId);
 
                         formData.append("program", this.programType);
-                        axios.post("/admins/programs/assign-all-student-to-master-class", formData).then((result) => {
+                        axios.post("/admins/oracle/assign-all-student-to-master-class", formData).then((result) => {
                             if (result.status == 201) {
                                 Swal.fire({
                                     icon: "success",

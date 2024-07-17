@@ -3,6 +3,7 @@
 namespace  Application\Service;
 
 use Application\Entity\ActiveBusinessMasterclassCohort;
+use Application\Entity\ActiveP6FreeMasterclassCohort;
 use Application\Entity\ActiveUserProgram;
 use Application\Entity\InternshipCohort;
 use Application\Entity\MasterClassCohort;
@@ -276,6 +277,28 @@ class ZoomService
                 } elseif ($data["program"] ==  50) {
                     // Free ORACLE Masterclass
                     $zoomEntity->setFreeOracleCohort($em->find(P6FreeCohort::class, $data["cohort"]));
+
+                    $activeBusinessMasterClassCohort = $em->getRepository(ActiveP6FreeMasterclassCohort::class)->findBy([
+                        "cohort" => $data["cohort"],
+                    ]);
+                    if (count($activeBusinessMasterClassCohort) == 1) {
+                        $activeBusinessMasterClassCohort = $em->getRepository(ActiveUserProgram::class)
+                            ->createQueryBuilder("a")
+                            ->select("u.email")
+                            ->innerJoin("a.user", "u")
+                            ->where("a.program = :program")->setParameters([
+                                "program" => $data["program"]
+                            ])->getQuery()->getScalarResult();
+
+                        $emails = array_map('current',  $activeBusinessMasterClassCohort);
+
+                        if (count($emails) > 50) {
+                            $arrayEmail = array_chunk($emails, 49);
+                        } else {
+                            $arrayEmail = $emails;
+                        }
+                        // $stringEmail = implode(', ', $emails);
+                    }
                 }
 
                 $zoomMailData["to"] = $data["user_email"];
