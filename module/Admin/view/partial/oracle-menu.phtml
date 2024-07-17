@@ -1,6 +1,6 @@
 <ul class="nav">
-    <li class="nav-item ">
-        <a class="nav-link" href="<?= $this->url("admin-general", ["controller" => "oracle", "action" => "registered-users"]) ?>">
+    <!-- <li class="nav-item ">
+        <a class="nav-link" href="">
             <i class="icon ion-ios-home-outline"></i>
             <span>REGISTERED USERS</span>
         </a>
@@ -8,7 +8,7 @@
     </li>
 
     <li class="nav-item">
-        <a class="nav-link" href="<?= $this->url("admin-general", ["controller" => "oracle", "action" => "create-cohort"]) ?>">
+        <a class="nav-link" href="">
             <i class="icon ion-ios-filing-outline"></i>
             <span>CREATE COHORT</span>
         </a>
@@ -16,18 +16,53 @@
     </li>
 
     <li class="nav-item">
-        <a class="nav-link" href="<?= $this->url("admin-general", ["controller" => "oracle", "action" => "create-content"]) ?>">
+        <a class="nav-link" href="">
             <i class="icon ion-ios-filing-outline"></i>
             <span>CREATE CLASS CONTENT</span>
         </a>
 
+    </li> -->
+
+    <li class="nav-item with-sub">
+        <a class="nav-link" href="#" data-toggle="dropdown">
+            <i class="icon ion-ios-chatboxes-outline"></i>
+            <span>Oracle P6</span>
+
+        </a>
+        <div class="sub-item">
+            <ul>
+                <li><a href="<?= $this->url("admin-general", ["controller" => "oracle", "action" => "registered-users"]) ?>">REGISTERED USER</a></li>
+                <li><a href="<?= $this->url("admin-general", ["controller" => "oracle", "action" => "create-cohort"]) ?>">CREATE COHORT</a></li>
+                <li><a href="<?= $this->url("admin-general", ["controller" => "oracle", "action" => "create-content"]) ?>">PROCESS COHORT</a></li>
+
+                <!-- <li><a href="form-rangeslider.html">Range Slider</a></li>
+                <li><a href="form-datepicker.html">Datepicker</a></li> -->
+            </ul>
+        </div>
     </li>
 
-  
+    <li class="nav-item with-sub">
+        <a class="nav-link" href="#" data-toggle="dropdown">
+            <i class="icon ion-ios-chatboxes-outline"></i>
+            <span>Free Master Class</span>
 
-    
+        </a>
+        <div class="sub-item">
+            <ul>
+                <li><a href="<?= $this->url("admin-general", ["controller" => "oracle", "action" => "free-master-class-cohort"]) ?>">CREATE COHORT</a></li>
+                <li><a href="<?= $this->url("admin-general", ["controller" => "oracle", "action" => "process-free-masterclass"]) ?>">PROCESS COHORT</a></li>
 
-    
+                <!-- <li><a href="form-rangeslider.html">Range Slider</a></li>
+                <li><a href="form-datepicker.html">Datepicker</a></li> -->
+            </ul>
+        </div>
+    </li>
+
+
+
+
+
+
     <!-- <li class="nav-item">
                     <a class="nav-link" href="page-messages.html">
                         <i class="icon ion-ios-chatboxes-outline"></i>

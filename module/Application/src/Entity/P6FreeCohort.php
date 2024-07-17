@@ -13,7 +13,9 @@ class P6FreeCohort
 {
 
     /**
-     * @var int @ORM\Column(name="id", type="integer", nullable=false, options={"unsigned"=true})
+     *
+     * @var int 
+     * @ORM\Column(name="id", type="integer", nullable=false, options={"unsigned"=true})
      *      @ORM\Id
      *      @ORM\GeneratedValue(strategy="IDENTITY")
      */
@@ -21,38 +23,38 @@ class P6FreeCohort
 
     /**
      * Undocumented variable
-     * @ORM\Column(nullable=true)
+     * @ORM\Column(nullable=false)
      * @var string
      */
-    private string $cohort;
+    private string $cohortName;
 
     /**
      * Undocumented variable
-     * @ORM\Column(type="boolean", nullable=false, options={"default":1})
-     * @var boolean
-     */
-    private bool $isActive;
-
-    /**
-     * Undocumented variable
-     * @ORM\Column(unique=true, nullable=true, type="string")
-     * @var string
-     */
-    private string $uuid;
-
-    /**
-     * Undocumented variable
-     * @ORM\Column(type="date", nullable=false)
+     * @ORM\Column(type="datetime")
      * @var \DateTime
      */
     private \DateTime $startDate;
 
     /**
      * Undocumented variable
-     *
+     * @ORM\Column(unique=true, nullable=false)
+     * @var string
+     */
+    private  string $uuid;
+
+    /**
+     * Undocumented variable
+     * @ORM\Column(type="datetime", nullable=false)
      * @var \DateTime
      */
     private \DateTime $createdOn;
+
+    /**
+     * Undocumented variable
+     * @ORM\Column(type="boolean", options={"defauls":1})
+     * @var boolean
+     */
+    private bool $isActive;
 
 
     public function __construct()
@@ -85,29 +87,7 @@ class P6FreeCohort
         return $this;
     }
 
-    /**
-     * Get undocumented variable
-     *
-     * @return  string
-     */
-    public function getCohort()
-    {
-        return $this->cohort;
-    }
-
-    /**
-     * Set undocumented variable
-     *
-     * @param  string  $cohort  Undocumented variable
-     *
-     * @return  self
-     */
-    public function setCohort(string $cohort)
-    {
-        $this->cohort = $cohort;
-
-        return $this;
-    }
+   
 
     /**
      * Get undocumented variable
@@ -201,6 +181,30 @@ class P6FreeCohort
     public function setUuid(string $uuid)
     {
         $this->uuid = $uuid;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  string
+     */ 
+    public function getCohortName()
+    {
+        return $this->cohortName;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  string  $cohortName  Undocumented variable
+     *
+     * @return  self
+     */ 
+    public function setCohortName(string $cohortName)
+    {
+        $this->cohortName = $cohortName;
 
         return $this;
     }

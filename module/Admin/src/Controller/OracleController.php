@@ -5,9 +5,11 @@ namespace Admin\Controller;
 use Admin\Entity\OracleClasses;
 use Application\Entity\ActiveP6Cohort;
 use Application\Entity\ActiveP6CohortStatus;
+use Application\Entity\ActiveP6FreeMasterclassCohort;
 use Application\Entity\ActiveUserProgram;
 use Application\Entity\ActiveUserProgramStatus;
 use Application\Entity\P6Cohort;
+use Application\Entity\P6FreeCohort;
 use Application\Service\ZoomService;
 use Doctrine\ORM\EntityManager;
 use General\Entity\RoomType;
@@ -15,6 +17,7 @@ use Internship\Entity\P6Room;
 use Laminas\InputFilter\InputFilter;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\Mvc\MvcEvent;
+use Laminas\Session\Container;
 use Laminas\View\Model\JsonModel;
 use Laminas\View\Model\ViewModel;
 use Ramsey\Uuid\Uuid;
@@ -40,6 +43,212 @@ class OracleController extends AbstractActionController
     {
         $response = parent::onDispatch($e);
         $this->layout()->setTemplate("admin-layout");
+    }
+
+    public function freeMasterClassCohortAction()
+    {
+        $viewModel = new ViewModel();
+        return $viewModel;
+    }
+
+    public function createFreeMasterClassCohortAction()
+    {
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        $jsonModel = new JsonModel();
+        if ($request->isPost()) {
+            $post = $request->getPost()->toArray();
+
+            $inputFilter = new InputFilter();
+            $inputFilter->add([
+                'name' => 'cohort_name',
+                'required' => true,
+                'break_chain_on_failure' => true,
+                'filters' => [
+                    [
+                        'name' => 'StripTags'
+                    ],
+                    [
+                        'name' => 'StringTrim'
+                    ]
+                ],
+                'validators' => [
+                    [
+                        'name' => 'NotEmpty',
+                        'options' => [
+                            'messages' => [
+                                'isEmpty' => 'Cohort name is required'
+                            ]
+                        ]
+                    ]
+                ]
+            ]);
+
+            $inputFilter->add([
+                'name' => 'stDate',
+                'required' => true,
+                'break_chain_on_failure' => true,
+                'filters' => [
+                    [
+                        'name' => 'StripTags'
+                    ],
+                    [
+                        'name' => 'StringTrim'
+                    ]
+                ],
+                'validators' => [
+                    [
+                        'name' => 'NotEmpty',
+                        'options' => [
+                            'messages' => [
+                                'isEmpty' => 'Cohort name is required'
+                            ]
+                        ]
+                    ]
+                ]
+            ]);
+
+            $inputFilter->add([
+                'name' => 'active',
+                'required' => true,
+                'break_chain_on_failure' => true,
+                'filters' => [
+                    [
+                        'name' => 'StripTags'
+                    ],
+                    [
+                        'name' => 'StringTrim'
+                    ]
+                ],
+                'validators' => [
+                    [
+                        'name' => 'NotEmpty',
+                        'options' => [
+                            'messages' => [
+                                'isEmpty' => 'Cohort name is required'
+                            ]
+                        ]
+                    ]
+                ]
+            ]);
+            $inputFilter->setData($post);
+            if ($inputFilter->isValid()) {
+
+                try {
+                    $em = $this->entityManager;
+                    $data = $inputFilter->getValues();
+                    $cohortEntity = new P6FreeCohort();
+                    $startDate = \DateTime::createFromFormat("Y-m-d", $data["stDate"]);
+                    $cohortEntity->setCreatedOn(new \DateTime())
+                        ->setCohortName($data["cohort_name"])
+                        ->setUuid(Uuid::uuid4()->toString())
+                        ->setIsActive(filter_var($data["active"], FILTER_VALIDATE_BOOL))
+                        ->setStartDate($startDate);
+
+                    $em->persist($cohortEntity);
+                    $em->flush();
+
+                    $response->setStatusCode(201);
+
+                    $jsonModel->setVariables([
+                        "success" => true
+                    ]);
+                    return $jsonModel;
+                } catch (\Throwable $th) {
+                    //throw $th;
+                    $response->setStatusCode(500);
+                    $jsonModel->setVariables([
+                        "message" => $th->getMessage()
+                    ]);
+                    return $jsonModel;
+                }
+            } else {
+                $response->setStatusCode(500);
+                $jsonModel->setVariables([
+                    "success" => false
+                ]);
+                return $jsonModel;
+            }
+        }
+        $response->setStatusCode(500);
+        return $jsonModel;
+    }
+
+    public function getFreeMasterClassCohortAction()
+    {
+        $viewModel = new JsonModel();
+        $em = $this->entityManager;
+        $data = $em->getRepository(P6FreeCohort::class)->createQueryBuilder("c")
+            ->select(["c"])
+            ->where("c.isActive = :active")
+            ->setParameters([
+                "active" => TRUE
+            ])->setMaxResults(10)->orderBy("c.id", "DESC")->getQuery()->getArrayResult();
+        $viewModel->setVariables([
+            "data" => $data
+        ]);
+        return $viewModel;
+    }
+
+    public function processFreeMasterclassAction()
+    {
+        $viewModel = new ViewModel();
+        return $viewModel;
+    }
+
+    /**
+     * Master Class page for processing cohort which includes creating zoom meetings for 
+     * Cohort 
+     *
+     * @return void
+     */
+    public function processMasterclassAction()
+    {
+        $viewModel = new ViewModel();
+        $uuid = $this->params()->fromRoute("id", NULL);
+        $cSeed = new Container("process_seed");
+        $cSeed->seed = Uuid::uuid4()->toString();
+        $em = $this->entityManager;
+        try {
+            if ($uuid == NULL) {
+                throw new \Exception("Absent identifier");
+            }
+
+            $cohort = $em->getRepository(P6FreeCohort::class)->createQueryBuilder("c")
+                ->select(["c"])
+                ->where("c.uuid = :uuid")
+                ->setParameters([
+                    "uuid" => $uuid
+                ])->setMaxResults(10)->orderBy("c.id", "DESC")->getQuery()->getArrayResult();
+
+            if ($cohort != NULL) {
+                $activeMembers = $em->getRepository(ActiveP6FreeMasterclassCohort::class)
+                    ->createQueryBuilder("a")
+                    ->select(["a", "u", "s", "aup"])
+                    ->leftJoin("a.user", "u")
+                    ->leftJoin("a.cohort", "p")
+                    ->leftJoin("a.status", "s")
+                    ->leftJoin("a.activeUserProgram", "aup")
+                    ->where("p.id = :p6")
+                    ->setParameters([
+                        "p6" => $cohort[0]["id"]
+                    ])
+                    ->getQuery()
+                    ->getArrayResult();
+            }
+
+
+            $viewModel->setVariables([
+                "cohort" => $cohort[0],
+                "students" => $activeMembers,
+                "seed" => $cSeed->seed
+            ]);
+            // get all Zoom resources 
+        } catch (\Throwable $th) {
+            //throw $th;
+            var_dump($th->getMessage());
+        }
+        return $viewModel;
     }
 
     public function createZoomEventAction()
@@ -121,7 +330,7 @@ class OracleController extends AbstractActionController
                     ]
                 ]
             ]);
-            
+
 
             $inputFilter->setData($post);
             if ($inputFilter->isValid()) {
@@ -132,8 +341,6 @@ class OracleController extends AbstractActionController
                 $zoom_data["user_email"] = $user->getEmail();
                 $zoom_data["agenda"] = "Oracle P6 ";
                 $zoom_data["duration"] = $data["duration"];
-
-           
             }
             // var_dump($eventDate);
         }
@@ -613,7 +820,7 @@ class OracleController extends AbstractActionController
      * @param  ZoomService  $zoomService  zoom service
      *
      * @return  self
-     */ 
+     */
     public function setZoomService(ZoomService $zoomService)
     {
         $this->zoomService = $zoomService;

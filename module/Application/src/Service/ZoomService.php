@@ -171,13 +171,13 @@ class ZoomService
                 //         ]
                 //     ]
                 // ],
-                "meeting_authentication" => true,
+                "meeting_authentication" => false,
                 "meeting_invitees" => [
                     [
                         "email" => $data["user_email"],
                     ]
                 ],
-                "mute_upon_entry" => false,
+                "mute_upon_entry" => true,
                 "participant_video" => false,
                 "private_meeting" => true,
                 "registrants_confirmation_email" => true,
