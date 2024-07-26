@@ -194,6 +194,13 @@ class ZoomMeetingResponse
     private P6Cohort $oracleP6Cohort;
 
     /**
+     * This is the specific weekly activity room being created for 
+     *
+     * @var 
+     */
+    private $classRoomId;
+
+    /**
      * Get @ORM\Column(name="id", type="integer")
      *
      * @return  integer
@@ -755,7 +762,7 @@ class ZoomMeetingResponse
      * Get undocumented variable
      *
      * @return  string
-     */ 
+     */
     public function getZoomTimeZone()
     {
         return $this->zoomTimeZone;
@@ -767,7 +774,7 @@ class ZoomMeetingResponse
      * @param  string  $zoomTimeZone  Undocumented variable
      *
      * @return  self
-     */ 
+     */
     public function setZoomTimeZone(string $zoomTimeZone)
     {
         $this->zoomTimeZone = $zoomTimeZone;

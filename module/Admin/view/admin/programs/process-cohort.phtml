@@ -3,12 +3,26 @@
 <div id="rooom">
     <div class="dash-headline-two">
         <div>
-            <h4 class="tx-inverse mg-b-5"><?= $cohort["cohort"] ?></h4>
+            <h4 class="tx-inverse mg-b-5"><?= $cohort["cohortName"] ?></h4>
             <p class="mg-b-0">Active On: <?= $this->dateformat($cohort["startDate"], IntlDateFormatter::MEDIUM, IntlDateFormatter::NONE) ?></p>
         </div>
         <div class="d-h-t-right">
             <div class="summary-item">
-                <h1><?= count($students ?? []) ?></h1>
+                <h1>
+
+                    <h1><?php
+
+                        if (count($students) > 0) {
+                            if ($students[0]["isAll"]) {
+                                echo "All";
+                            } else {
+                                echo count($students ?? []);
+                            }
+                        } else {
+                            echo 0;
+                        } ?></h1>
+
+                </h1>
                 <span>Students</span>
             </div>
 
@@ -46,47 +60,39 @@
     </div><!-- row -->
 
     <hr>
-    <!-- 
+
+
     <div class="report-summary-header">
         <div>
-            <h4 class="tx-inverse mg-b-3">Overall Report Summary</h4>
-            <p class="mg-b-0"><i class="icon ion-calendar mg-r-3"></i> January 01, 2018 - January 31, 2018</p>
+            <h4 class="tx-inverse mg-b-3">Zoom Events Summary</h4>
+            <!-- <p class="mg-b-0"><i class="icon ion-calendar mg-r-3"></i> January 01, 2018 - January 31, 2018</p> -->
         </div>
         <div>
-            <a href="" class="btn btn-secondary"><i class="icon ion-ios-clock-outline tx-22"></i> Activity Logs</a>
-            <a href="" class="btn btn-secondary"><i class="icon ion-ios-gear-outline tx-24"></i> Edit Settings</a>
+            <button v-if="assignedStatus" @click="assignAllStudent()" class="btn btn-primary"><i class="icon ion-ios-clock-outline tx-22"></i> Assign To All</button>
+            <div v-if="!assignedStatus">
+                <div v-if="isResendingMails" class="d-flex bg-gray-200 ht-20 pos-relative align-items-center">
+                    <div class="sk-folding-cube">
+                        <div class="sk-cube1 sk-cube"></div>
+                        <div class="sk-cube2 sk-cube"></div>
+                        <div class="sk-cube4 sk-cube"></div>
+                        <div class="sk-cube3 sk-cube"></div>
+                    </div>
+                </div>
+                <button v-else @click="sendInvitations()" class="btn btn-success"><i class="icon ion-ios-gear-outline tx-24"></i> Send Out Invitations</button>
+            </div>
+
         </div>
     </div>
-  
+
     <div class="row no-gutters dashboard-chart-one">
         <div class="col-md-4 col-lg">
             <div class="card card-total">
                 <div>
-                    <h1>420</h1>
-                    <p>Total Employee</p>
+                    <h1>0</h1>
+                    <p>Total Events</p>
                 </div>
                 <div>
-                    <div class="tx-24 mg-b-10 tx-center op-5">
-                        <i class="icon ion-man tx-gray-600"></i>
-                        <i class="icon ion-man tx-gray-600"></i>
-                        <i class="icon ion-man tx-gray-600"></i>
-                        <i class="icon ion-man tx-gray-600"></i>
-                        <i class="icon ion-man tx-gray-600"></i>
-                        <i class="icon ion-man tx-gray-600"></i>
-                        <i class="icon ion-man tx-gray-400"></i>
-                        <i class="icon ion-man tx-gray-400"></i>
-                        <i class="icon ion-man tx-gray-400"></i>
-                        <i class="icon ion-man tx-gray-400"></i>
-                    </div>
-                    <label>Female (66%)</label>
-                    <div class="progress mg-b-10">
-                        <div class="progress-bar bg-primary progress-bar-xs wd-65p" role="progressbar" aria-valuenow="66" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div> 
 
-                    <label>Male (34%)</label>
-                    <div class="progress">
-                        <div class="progress-bar bg-danger progress-bar-xs wd-35p" role="progressbar" aria-valuenow="34" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div> 
                 </div>
             </div>
         </div>
@@ -109,7 +115,7 @@
                         <i class="icon ion-cube tx-gray-400"></i>
                         <i class="icon ion-cube tx-gray-400"></i>
                     </div>
-                    <label>Digital products (85%)</label>
+                    <!--  <label>Digital products (85%)</label>
                     <div class="progress mg-b-10">
                         <div class="progress-bar bg-success progress-bar-xs wd-85p" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
@@ -117,11 +123,11 @@
                     <label>Non-digital products (15%)</label>
                     <div class="progress">
                         <div class="progress-bar bg-warning progress-bar-xs wd-15p" role="progressbar" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
-        <div class="col-md-4 col-lg">
+        <!-- <div class="col-md-4 col-lg">
             <div class="card card-total">
                 <div>
                     <h1>30</h1>
@@ -160,8 +166,8 @@
                 <div id="rs3" class="ht-50 ht-sm-70 mg-r--1"></div>
                 <label>Last month: <span>$79,554</span></label>
             </div>
-        </div>
-    </div>-->
+        </div> -->
+    </div>
 
 </div>
 
@@ -171,6 +177,7 @@
             return {
                 roomType: [],
                 activeRoomtype: 0,
+                programType: 10,
                 oraclep6Classes: [],
                 cohortId: '<?= $cohort["id"] ?>',
                 classRoomDetails: [],
@@ -185,6 +192,8 @@
 
         mounted() {
             this.getRoomType();
+            this.getAssignedStatus();
+            this.getZoomClass();
         },
 
         methods: {
@@ -246,6 +255,26 @@
                 });
             },
 
+            getAssignedStatus() {
+                axios.get("/admins/programs/get-assigned-status", {
+                    params: {
+                        cohort: this.cohortId
+                    }
+                }).then((result) => {
+                    if (result.status == 200) {
+                        let data = result.data.data;
+                        if (data.length) {
+                            this.assignedStatus = false;
+                        } else {
+                            this.assignedStatus = true;
+                        }
+                        // this.assignedStatus = "";
+                    }
+                }).catch((err) => {
+
+                });
+            },
+
             getZoomRoomType() {
                 if (this.activeRoomtype != 0) {
                     axios.get("admins/oracle/").then((result) => {
@@ -256,6 +285,22 @@
 
                     });
                 }
+            },
+
+            getZoomClass() {
+                axios.get("/admins/programs/get-zoom-class", {
+                    params: {
+                        cohort: this.cohortId,
+                        program: this.programType
+
+                    }
+                }).then((result) => {
+                    if (result.status == 200) {
+                        this.zoomClass = result.data.data;
+                    }
+                }).catch((err) => {
+
+                });
             },
 
             getOracleClasess() {

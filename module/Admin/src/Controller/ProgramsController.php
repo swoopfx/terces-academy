@@ -58,6 +58,8 @@ class ProgramsController extends AbstractActionController
                 ->select(["a"])->where("a.program = :program");
             if ($program == 4) {
                 $zoomClassQuery->andWhere("a.freeBusinessMasterClassCohort = :cohort");
+            } elseif ($program == 10) {
+                $zoomClassQuery->andWhere("a.businessAnalysisCohort = :cohort");
             }
 
             $data = $zoomClassQuery->setParameters([
@@ -582,7 +584,7 @@ class ProgramsController extends AbstractActionController
 
         $data = $query->setParameters($parameters)
             ->orderBy("a.id", "DESC")
-            ->setMaxResults($max ?? 500)
+            ->setMaxResults($max ?? 40)
             ->getQuery()
             ->getArrayResult();
 
@@ -625,6 +627,49 @@ class ProgramsController extends AbstractActionController
     public function processCohortAction()
     {
         $viewModel = new ViewModel();
+        $uuid = $this->params()->fromRoute("id", NULL);
+        $cSeed = new Container("process_seed");
+        $cSeed->seed = Uuid::uuid4()->toString();
+        $em = $this->entityManager;
+        try {
+            if ($uuid == NULL) {
+                throw new \Exception("Absent identifier");
+            }
+
+            $cohort = $em->getRepository(InternshipCohort::class)->createQueryBuilder("c")
+                ->select(["c"])
+                ->where("c.id = :uuid")
+                ->setParameters([
+                    "uuid" => $uuid
+                ])->setMaxResults(10)->orderBy("c.id", "DESC")->getQuery()->getArrayResult();
+
+            if ($cohort != NULL) {
+                $activeMembers = $em->getRepository(ActiveBusinessMasterclassCohort::class)
+                    ->createQueryBuilder("a")
+                    ->select(["a", "u", "s", "aup"])
+                    ->leftJoin("a.user", "u")
+                    ->leftJoin("a.cohort", "p")
+                    ->leftJoin("a.status", "s")
+                    ->leftJoin("a.activeUserProgram", "aup")
+                    ->where("p.id = :p6")
+                    ->setParameters([
+                        "p6" => $cohort[0]["id"]
+                    ])
+                    ->getQuery()
+                    ->getArrayResult();
+            }
+
+
+            $viewModel->setVariables([
+                "cohort" => $cohort[0],
+                "students" => $activeMembers,
+                "seed" => $cSeed->seed
+            ]);
+            // get all Zoom resources 
+        } catch (\Throwable $th) {
+            //throw $th;
+            var_dump($th->getMessage());
+        }
         return $viewModel;
     }
 

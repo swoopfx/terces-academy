@@ -15,6 +15,27 @@ class PostMarkService
      */
     private $postmarkClient;
 
+    public function newOnTheJobTrainingRegister($data)
+    {
+        $sendResult = $this->postmarkClient->sendEmailWithTemplate(
+            "app@tercesjobs.com",
+            $data["to"],
+            36321447,
+            [
+
+                "product_name" => $data["product_name"],
+                "organization_name" => GeneralService::COMPANY_NAME,
+                "company_name" => GeneralService::COMPANY_NAME,
+                "company_address" => GeneralService::COMPANY_ADDRESS,
+                "name" => $data["name"],
+                "link1" => $data["link1"],
+                "link2" => $data["link2"],
+                "link3" => $data["link3"],
+                "link4" => $data["link4"]
+            ]
+        );
+    }
+
     public function freeBusinessAnalysisMasterClassRegister($data)
     {
         // Send an email:

@@ -67,10 +67,10 @@ class InternshipCohort extends \Application\Entity\InternshipCohort implements \
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'id', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'cohortName', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'startDate', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'isActive', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'presentlyActive', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'createdOn'];
+            return ['__isInitialized__', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'id', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'cohortName', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'startDate', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'isActive', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'presentlyActive', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'createdOn', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'uuid'];
         }
 
-        return ['__isInitialized__', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'id', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'cohortName', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'startDate', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'isActive', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'presentlyActive', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'createdOn'];
+        return ['__isInitialized__', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'id', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'cohortName', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'startDate', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'isActive', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'presentlyActive', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'createdOn', '' . "\0" . 'Application\\Entity\\InternshipCohort' . "\0" . 'uuid'];
     }
 
     /**
@@ -322,6 +322,28 @@ class InternshipCohort extends \Application\Entity\InternshipCohort implements \
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'setCohortName', [$cohortName]);
 
         return parent::setCohortName($cohortName);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getUuid()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getUuid', []);
+
+        return parent::getUuid();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setUuid(string $uuid)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setUuid', [$uuid]);
+
+        return parent::setUuid($uuid);
     }
 
 }

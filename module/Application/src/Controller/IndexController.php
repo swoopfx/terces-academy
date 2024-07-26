@@ -802,6 +802,56 @@ class IndexController extends AbstractActionController
         return $viewModel;
     }
 
+    public function internshipPaymentMiddleware2Action()
+    {
+        $viewModel = new ViewModel();
+        $jsonModel = new JsonModel();
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        $auth = $this->identity();
+        $em = $this->entityManager;
+       
+        $data = [];
+        // if ($request->isPost()) {
+        //     $post = $request->getPost();
+        try {
+            if (!$this->identity()) {
+                throw new \Exception("You need to be logged in");
+            }
+
+            // if ($post["cohort"] == NULL) {
+            //     throw new \Exception("please select a cohort");
+            // }
+
+            // /**
+            //  * @var InternshipCohort
+            //  */
+            // $cohortEntity = $em->find(InternshipCohort::class, $post["cohort"]);
+            // $nowDate = new \DateTime();
+            // if ($cohortEntity->getStartDate() < $nowDate) {
+
+            //     throw new \Exception("You cannot register to this cohort please select another date");
+            // }
+            // $sess = new Container("internship_payment");
+            // $sess->cohort = $cohortEntity->getId();
+            // $response->setStatusCode(202);
+            // return $jsonModel;
+        } catch (\Throwable $th) {
+            $viewModel->setVariables([
+                "message" => $th->getMessage()
+            ]);
+            $response->setStatusCode(400);
+            return $viewModel;
+        }
+        // }
+        $viewModel->setVariables([
+            "usdExchaageRate" => $this->config["naira_per_usd"],
+            "paystackPublicKey" => $this->config["paystack"]["dev"]["public_key"],
+            "email" => $auth->getEmail(),
+        ]);
+        return $viewModel;
+    }
+
     public function internshipInstallmentAction()
     {
         $viewModel = new ViewModel();
@@ -862,6 +912,66 @@ class IndexController extends AbstractActionController
         // }
         $viewModel->setVariables([
             "data" => $cohortEntity,
+            "user" => $this->identity(),
+            "public_key" => $this->config["stripe"]["publishable_key"],
+            'url' => $this->config["uurl"]
+        ]);
+        return $viewModel;
+    }
+
+    public function internshipPayment2Action()
+    {
+        $viewModel = new ViewModel();
+        $jsonModel = new JsonModel();
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        $em = $this->entityManager;
+        $data = [];
+        // if ($request->isPost()) {
+        // $post = $request->getPost();
+        try {
+            $sess = new Container("internship_payment");
+            $params = $this->params()->fromQuery("pmeth", NULL);
+            if ($params == "part") {
+                $sess->isPartPayment = TRUE;
+            } else {
+                $sess->isPartPayment = FALSE;
+            }
+
+
+            if (!$this->identity()) {
+                throw new \Exception("You need to be logged in");
+            }
+
+            // if ($sess->cohort  == NULL) {
+            //     throw new \Exception("please select a cohort");
+            // }
+
+            // /**
+            //  * @var InternshipCohort
+            //  */
+            // $cohortEntity = $em->find(InternshipCohort::class, $sess->cohort);
+            // $nowDate = new \DateTime();
+            // if ($cohortEntity->getStartDate() < $nowDate) {
+
+            //     throw new \Exception("You cannot register to this cohort please select another");
+            // }
+
+            $response->setStatusCode(202);
+            // return $jsonModel;
+        } catch (\Throwable $th) {
+            $jsonModel->setVariables([
+                "message" => $th->getMessage()
+            ]);
+            $response->setStatusCode(400);
+            return $jsonModel;
+        }
+        // } else {
+        //     $sess = new Container("internship_payment");
+        //     $cohortEntity = $em->find(InternshipCohort::class, $sess->cohort);
+        // }
+        $viewModel->setVariables([
+            // "data" => $cohortEntity,
             "user" => $this->identity(),
             "public_key" => $this->config["stripe"]["publishable_key"],
             'url' => $this->config["uurl"]
