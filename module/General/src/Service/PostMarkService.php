@@ -27,7 +27,7 @@ class PostMarkService
                 "organization_name" => GeneralService::COMPANY_NAME,
                 "company_name" => GeneralService::COMPANY_NAME,
                 "company_address" => GeneralService::COMPANY_ADDRESS,
-                "name" => $data["name"],
+                "name" => $data["customer_name"],
                 "link1" => $data["link1"],
                 "link2" => $data["link2"],
                 "link3" => $data["link3"],
