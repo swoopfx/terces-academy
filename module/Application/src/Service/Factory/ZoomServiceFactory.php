@@ -3,6 +3,8 @@
 namespace Application\Service\Factory;
 
 use Application\Service\ZoomService;
+use General\Service\GeneralService;
+use General\Service\PostMarkService;
 use Laminas\Http\Client;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Psr\Container\ContainerInterface;
@@ -36,7 +38,14 @@ class ZoomServiceFactory  implements FactoryInterface
         // var_dump()
         if ($response->isSuccess()) {
             //    var_dump(json_decode($response->getBody(), true));
-            $xserv->setZoomTokenRes(json_decode($response->getBody(), true));
+            /**
+             * @var GeneralService
+             */
+            $generalService = $container->get(GeneralService::class);
+            $xserv->setEntityManager($generalService->getEntityManager());
+            $xserv->setZoomTokenRes(json_decode($response->getBody(), true))
+                ->setZoomConfig($zoomConfig)
+                ->setPostmarkService($container->get(PostMarkService::class));
         } else {
             // printf($response);
             // throw new \Exception($response->getReasonPhrase());

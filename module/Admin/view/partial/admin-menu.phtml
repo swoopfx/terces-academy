@@ -77,6 +77,9 @@
             <ul>
                 <li><a href="<?= $this->url("admin-general", ["controller" => "oracle", "action" => "create-cohort"]) ?>">Create Cohort</a></li>
                 <li><a href="<?= $this->url("admin-general", ["controller" => "oracle", "action" => "create-content"]) ?>">Create Class Content</a></li>
+                <li><a href="<?= $this->url("admin-general", ["controller" => "programs", "action" => "user"], ['query' => ['ext' => 50]]) ?>">REGISTERED USER</a></li>
+                <li><a href="<?= $this->url("admin-general", ["controller" => "oracle", "action" => "free-master-class-cohort"]) ?>">CREATE MASTERCLASS COHORT</a></li>
+                <li><a href="<?= $this->url("admin-general", ["controller" => "oracle", "action" => "process-free-masterclass"]) ?>">PROCESS MASTERCLASS COHORT</a></li>
             </ul>
         </div><!-- dropdown-menu -->
 

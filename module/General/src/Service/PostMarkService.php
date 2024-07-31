@@ -15,18 +15,41 @@ class PostMarkService
      */
     private $postmarkClient;
 
+    public function newOnTheJobTrainingRegister($data)
+    {
+        $sendResult = $this->postmarkClient->sendEmailWithTemplate(
+            "app@tercesjobs.com",
+            $data["to"],
+            36321447,
+            [
+
+                "product_name" => $data["product_name"],
+                "organization_name" => GeneralService::COMPANY_NAME,
+                "company_name" => GeneralService::COMPANY_NAME,
+                "company_address" => GeneralService::COMPANY_ADDRESS,
+                "name" => $data["customer_name"],
+                "link1" => $data["link1"],
+                "link2" => $data["link2"],
+                "link3" => $data["link3"],
+                "link4" => $data["link4"]
+            ]
+        );
+    }
+
     public function freeBusinessAnalysisMasterClassRegister($data)
     {
         // Send an email:
         $sendResult = $this->postmarkClient->sendEmailWithTemplate(
             "app@tercesjobs.com",
             $data["to"],
-            32356487,
+            36465788,
             [
-                "action_url" => $data["link"],
+
+                "product_name" => $data["product_name"],
+                "organization_name" => GeneralService::COMPANY_NAME,
                 "company_name" => GeneralService::COMPANY_NAME,
                 "company_address" => GeneralService::COMPANY_ADDRESS,
-                "name_value" => $data["name"],
+                "name" => $data["name"],
 
             ]
         );
@@ -331,6 +354,65 @@ class PostMarkService
             ]
         );
     }
+
+    //
+    public function manySendZoomMeetingNotification($data)
+    {
+        $sendResult = $this->postmarkClient->sendEmailWithTemplate(
+            "app@tercesjobs.com",
+            "Emuveyanoghenetejiri@gmail.com",
+            36543184,
+            [
+                "topic" => $data["topic"],
+                "join" => $data["join"],
+                "start_time" => $data["start_time"],
+                "meeting_id" => $data["meeting_id"],
+                "password" => $data["password"],
+                "company_name" => GeneralService::COMPANY_NAME,
+                "company_address" => GeneralService::COMPANY_ADDRESS,
+
+            ],
+            true,
+            null,
+            null,
+            null,
+            null,
+            $data["bcc"], //imploded array
+            null,
+
+        );
+    }
+
+
+    public function manySendZoomMeetingReminder($data)
+    {
+        $sendResult = $this->postmarkClient->sendEmailWithTemplate(
+            "app@tercesjobs.com",
+            "Emuveyanoghenetejiri@gmail.com",
+            36589911,
+            [
+                "topic" => $data["topic"],
+                "join" => $data["join"],
+                "start_time" => $data["start_time"],
+                "meeting_id" => $data["meeting_id"],
+                "password" => $data["password"],
+                "company_name" => GeneralService::COMPANY_NAME,
+                "company_address" => GeneralService::COMPANY_ADDRESS,
+
+            ],
+            true,
+            null,
+            null,
+            null,
+            null,
+            $data["bcc"], //imploded array
+            null,
+
+        );
+    }
+
+    // Begin Batch Processing
+
 
     /**
      * Get undocumented variable

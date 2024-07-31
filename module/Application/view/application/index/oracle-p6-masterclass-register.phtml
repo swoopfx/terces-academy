@@ -1,0 +1,141 @@
+<?php
+
+use General\Service\GeneralService;
+?>
+<section id="freeApp" class="calltoaction_section section_space_lg bg_dark decoration_wrap">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col col-lg-6">
+
+
+                <!--    <h2 class="heading_text text-white">
+                    Select Payment Methods
+                </h2> -->
+                <br>
+                <div class="widget course_list_wrap">
+
+                    <!-- <ul class="course_list unordered_list_block">
+
+                        <li v-for="dat in paymentMethod">
+
+                            <div class="comment_item">
+                                <div class="comment_author">
+                                    <div class="author_thumbnail">
+                                        <img :src="dat.image" alt="Terces – Online Learning Platform">
+                                    </div>
+                                    <div class="author_content">
+                                        <a href="#" @click="selectMethod(dat.method, dat.id)">
+                                            <h4 class="author_name"></h4>
+                                        </a>
+
+                                    </div>
+                                </div>
+                                <p></p>
+
+                            </div>
+
+                            <br>
+                        </li>
+
+                    </ul> -->
+
+
+
+
+
+                </div>
+            </div>
+            <div class="col col-lg-6">
+
+                <div class="col col-lg-12">
+                    <div class="pricing_card text-center tilt">
+                        <h3 class="card_heading">Amount Payable</h3>
+                        <div class="pricing_wrap">
+
+
+                            <span class="price_value"><sup><?= $this->currencyFormat(0, "USD") ?></span>
+                            <small class="d-block"></small><?= GeneralService::GENERAL_TRAINING_FREE_ORACLE_P6 ?></small>
+
+
+
+
+                        </div>
+                        <hr>
+
+                        <div class="btn_wrap pb-0">
+                            <?php if ($this->identity()) : ?>
+
+                                <button v-if="isRegister" class="btn border_dark">
+                                    <span>
+                                        <small>...Registering</small>
+                                    </span>
+                                </button>
+                                <button v-else @click="registerForMasterClass()" class="btn border_dark">
+                                    <span>
+                                        <small>Click To Register</small>
+                                        <small>Register Now</small>
+                                    </span>
+                                </button>
+
+
+
+
+                            <?php else : ?>
+                                <a class="btn border_dark" href="<?= $this->url("app", ["action" => "refer"]) ?>">
+                                    <span>
+                                        <small>Click To Register</small>
+
+                                    </span>
+                                </a>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div>
+
+    </div>
+
+</section>
+
+<script>
+    const freeApp = Vue.createApp({
+        data() {
+            return {
+                uuid: '<?= $uuid ?>',
+                isRegister: false,
+            }
+        },
+
+        methods: {
+            registerForMasterClass() {
+                this.isRegister = true;
+                let formData = new FormData();
+                formData.append("uuid", this.uuid);
+                axios.post("/oracle-p6-masterclass-register", formData).then((result) => {
+                    if (result.status == 201) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Success",
+                            text: "You have successfully registered for the free masterclass"
+                        }).then((result) => {
+                            window.location.href = "/internships"
+                        }).catch((err) => {
+
+                        });;
+                    }
+                    // alert("hey");
+                    this.isRegister = false;
+                }).catch((err) => {
+                    this.isRegister = false;
+                });
+                // this.isRegister = false;
+            }
+        },
+    });
+    freeApp.mount("#freeApp");
+</script>

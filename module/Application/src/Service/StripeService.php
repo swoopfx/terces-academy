@@ -19,6 +19,7 @@ use Laminas\Session\Container;
 use General\Service\GeneralService;
 use Ramsey\Uuid\Uuid;
 use Application\Service\ZoomService;
+use General\Service\PostMarkService;
 
 class StripeService
 {
@@ -45,6 +46,11 @@ class StripeService
     private $entityManager;
 
 
+    /**
+     * Undocumented variable
+     *
+     * @var PostMarkService
+     */
     private $postmarkService;
 
     /**
@@ -283,8 +289,14 @@ class StripeService
         $mail["tx_ref"] = $transactionEntity->getUuid();
         $mail["date"] = $date->format('Y-m-d');
         $mail["amount"] = $transactionEntity->getAmount();
+        $mail["link1"] = "https://youtu.be/GvOUocNkRBo?list=PLFjKjgEPogLWhQGv2nDbYE5YzwUp-p_tg";
+        $mail["link2"] = "https://youtu.be/iUVWTfQ_KmM?list=PLFjKjgEPogLWhQGv2nDbYE5YzwUp-p_tg";
+        $mail["link3"] = "https://youtu.be/Fx4KJlkW7VE?list=PLFjKjgEPogLWhQGv2nDbYE5YzwUp-p_tg";
+        $mail["link4"] = "https://youtu.be/q-b3HgpSCqo?list=PLFjKjgEPogLWhQGv2nDbYE5YzwUp-p_tg";
+
 
         $this->postmarkService->acquisitionSuccessEmail($mail);
+        $this->postmarkService->newOnTheJobTrainingRegister($mail);
 
         $em->persist($activeUserProgramEntity);
         $em->persist($transactionEntity);

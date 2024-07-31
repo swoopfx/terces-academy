@@ -7,22 +7,29 @@
             <p class="mg-b-0">Active On: <?= $this->dateformat($cohort["startDate"], IntlDateFormatter::MEDIUM, IntlDateFormatter::NONE) ?></p>
         </div>
         <div class="d-h-t-right">
+            <div v-if="isAssigningStudent" class="d-flex bg-gray-200 ht-20 pos-relative align-items-center">
+                <div class="sk-folding-cube">
+                    <div class="sk-cube1 sk-cube"></div>
+                    <div class="sk-cube2 sk-cube"></div>
+                    <div class="sk-cube4 sk-cube"></div>
+                    <div class="sk-cube3 sk-cube"></div>
+                </div>
+            </div><!-- d-flex -->
+            <div v-else>
+                <button @click="assignAllStudent()" v-if="assignedStatus" class="btn btn-primary"><i class="icon ion-ios-clock-outline tx-22"></i> Assign To All</button>
+            </div>
             <div class="summary-item">
-                <h1>
+                <h1><?php
 
-                    <h1><?php
-
-                        if (count($students) > 0) {
-                            if ($students[0]["isAll"]) {
-                                echo "All";
-                            } else {
-                                echo count($students ?? []);
-                            }
+                    if (count($students) > 0) {
+                        if ($students[0]["isAll"]) {
+                            echo "All";
                         } else {
-                            echo 0;
-                        } ?></h1>
-
-                </h1>
+                            echo count($students ?? []);
+                        }
+                    } else {
+                        echo 0;
+                    } ?></h1>
                 <span>Students</span>
             </div>
 
@@ -49,7 +56,7 @@
                 <?= $this->partial("partial/content-room-zoom-list"); ?>
             </div>
             <div v-else-if="activeRoomtype == 200">
-
+                <?= $this->partial("partial/content-room-resos-list"); ?>
             </div>
 
 
@@ -60,7 +67,6 @@
     </div><!-- row -->
 
     <hr>
-
 
     <div class="report-summary-header">
         <div>
@@ -177,16 +183,30 @@
             return {
                 roomType: [],
                 activeRoomtype: 0,
-                programType: 10,
                 oraclep6Classes: [],
+                programType: 4,
                 cohortId: '<?= $cohort["id"] ?>',
                 classRoomDetails: [],
                 isCreatingEvent: false,
                 selectedClassroom: "",
+                allCohort: false,
+                zoomClass: [],
 
 
                 formSelectedEventDatetime: "",
                 formSelectedDUration: "",
+                availaibleResos: [],
+
+                //formData 
+                seed: '<?= $seed ?>',
+
+                assignedStatus: false,
+                isSubmittingResos: false,
+                isAssigningStudent: false,
+
+                // Event meeting
+                isCreatingEventMeeting: false,
+                isResendingMails: false,
             }
         },
 
@@ -197,7 +217,9 @@
         },
 
         methods: {
+
             getRoomType() {
+
                 axios.get("/admins/oracle/get-room-types").then((result) => {
                     if (result.status == 200) {
                         // console.log(result.data.data);
@@ -212,6 +234,10 @@
                 this.activeRoomtype = id;
                 if (id == 100) {
                     this.getOracleClasess()
+                } else if (id == 200) {
+                    this.getResos();
+                } else if (id == 300) {
+
                 }
             },
 
@@ -255,26 +281,6 @@
                 });
             },
 
-            getAssignedStatus() {
-                axios.get("/admins/programs/get-assigned-status", {
-                    params: {
-                        cohort: this.cohortId
-                    }
-                }).then((result) => {
-                    if (result.status == 200) {
-                        let data = result.data.data;
-                        if (data.length) {
-                            this.assignedStatus = false;
-                        } else {
-                            this.assignedStatus = true;
-                        }
-                        // this.assignedStatus = "";
-                    }
-                }).catch((err) => {
-
-                });
-            },
-
             getZoomRoomType() {
                 if (this.activeRoomtype != 0) {
                     axios.get("admins/oracle/").then((result) => {
@@ -304,7 +310,7 @@
             },
 
             getOracleClasess() {
-                axios.get("/admins/oracle/get-oracle-classes").then((result) => {
+                axios.get("/admins/programs/get-masterclass-classes").then((result) => {
                     if (result.status == 200) {
                         this.oraclep6Classes = result.data.data;
                     }
@@ -313,8 +319,123 @@
                 });
             },
 
+            getResos() {
+                axios.get("/admins/programs/get-resos", {
+                    params: {
+                        roomtype: this.activeRoomtype,
+                        cohortid: this.cohortId
+                    }
+                }).then((result) => {
+                    if (result.status == 200) {
+                        this.availaibleResos = result.data.data;
+                    }
+                }).catch((err) => {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error",
+                        text: "Something went wrong"
+                    });
+                });
+            },
+
+            getVideos() {
+
+            },
+
             selectClassroomEvent(id) {
                 this.selectedClassroom = id;
+            },
+
+            getAssignedStatus() {
+                axios.get("/admins/programs/get-assigned-status", {
+                    params: {
+                        cohort: this.cohortId
+                    }
+                }).then((result) => {
+                    if (result.status == 200) {
+                        let data = result.data.data;
+                        if (data.length) {
+                            this.assignedStatus = false;
+                        } else {
+                            this.assignedStatus = true;
+                        }
+                        // this.assignedStatus = "";
+                    }
+                }).catch((err) => {
+
+                });
+            },
+
+            assignAllStudent() {
+                this.isAssigningStudent = true;
+                Swal.fire({
+                    icon: "warning",
+                    title: "Assigning Students",
+                    showDenyButton: true,
+                    showCancelButton: true,
+                    confirmButtonText: "Confirm",
+                    denyButtonText: `Deny`,
+                    text: "Are you sure you want to assign all student to this cohort"
+                }).then((result) => {
+
+                    if (result.isConfirmed) {
+
+                        let formData = new FormData();
+                        formData.append("seed", this.seed);
+                        formData.append("cohort", this.cohortId);
+
+                        formData.append("program", this.programType);
+                        axios.post("/admins/programs/assign-all-student-to-master-class", formData).then((result) => {
+                            if (result.status == 201) {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Success",
+                                    text: "Successfully  assigned all students to this cohort"
+                                });
+                                this.isAssigningStudent = false;
+                                window.location.reload();
+                            }
+                        }).catch((err) => {
+                            this.isAssigningStudent = false;
+                        });
+                    } else if (result.isDenied) {
+                        Swal.fire("Changes are not processed", "", "info");
+                        this.isAssigningStudent = false;
+                    }
+                }).catch((err) => {
+                    this.isAssigningStudent = false;
+                });
+
+            },
+
+            sendInvitations() {
+                this.isResendingMails = true;
+                let formData = new FormData();
+                formData.append("program", this.programType);
+                formData.append("cohort", this.cohortId);
+                axios.post("/admins/programs/send-invitaions", formData).then((result) => {
+                    if (result.status == 202) {
+                        this.isResendingMails = false;
+                        Swal.fire({
+                            icon: "success",
+                            title: "Success",
+                            text: "Mails has been sent"
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.reload();
+                            }
+                        }).catch((err) => {
+
+                        });
+                    }
+                }).catch((err) => {
+                    Swal.fire({
+                        icon: "error",
+                        title: "An error occured",
+                        text: err.response.data.message,
+                    });
+                    this.isResendingMails = false;
+                });
             },
 
             // Create Event Meeting
@@ -326,19 +447,32 @@
                         title: "Required Field",
                         text: "A Required Field is empty",
                     });
-
+                    this.isCreatingEvent = false;
                 } else {
                     let formData = new FormData();
                     formData.append("classRoomId", this.selectedClassroom);
                     formData.append("duration", this.formSelectedDUration);
                     formData.append("eventDate", this.formSelectedEventDatetime);
-                    axios.post("/admins/oracle/create-zoom-event", formData).then((result) => {
-
+                    formData.append("program", this.programType);
+                    formData.append("cohort", this.cohortId);
+                    axios.post("/admins/programs/create-master-class-event", formData).then((result) => {
+                        if (result.status == 201) {
+                            window.location.reload();
+                            this.isCreatingEvent = false;
+                        }
                     }).catch((err) => {
-
+                        Swal.fire({
+                            icon: "error",
+                            title: "An error occured",
+                            text: err.response.data.message,
+                        });
+                        this.isCreatingEvent = false;
                     });
 
                 }
+            },
+            createResos() {
+
             }
         },
 

@@ -3,6 +3,7 @@
 namespace Application\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\Uuid;
 
 /**
  * Undocumented class
@@ -57,10 +58,20 @@ class InternshipCohort
      */
     private \DateTime $createdOn;
 
+    /**
+     * Undocumented variable
+     * @ORM\Column(nullable=false)
+     * @var string
+     */
+    private  string $uuid;
+
+
+
 
     public function __construct()
     {
         $this->presentlyActive = false;
+        $this->uuid = Uuid::uuid4();
     }
 
     /**
@@ -213,6 +224,30 @@ class InternshipCohort
     public function setCohortName(string $cohortName)
     {
         $this->cohortName = $cohortName;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  string
+     */
+    public function getUuid()
+    {
+        return $this->uuid;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  string  $uuid  Undocumented variable
+     *
+     * @return  self
+     */
+    public function setUuid(string $uuid)
+    {
+        $this->uuid = $uuid;
 
         return $this;
     }

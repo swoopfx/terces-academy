@@ -7,10 +7,10 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="active_business_class_cohort")
+ * @ORM\Table(name="active_business_analysis_cohort")
  */
 
-class ActiveBusinessMasterclassCohort
+class ActiveBusinessAnalysisCohort
 {
 
     /**

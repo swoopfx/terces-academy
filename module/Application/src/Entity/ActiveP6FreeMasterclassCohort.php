@@ -7,10 +7,10 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="active_business_class_cohort")
+ * @ORM\Table(name="active_p6_master_class_cohort")
  */
 
-class ActiveBusinessMasterclassCohort
+class ActiveP6FreeMasterclassCohort
 {
 
     /**
@@ -27,19 +27,31 @@ class ActiveBusinessMasterclassCohort
      */
     private User $user;
 
+    // /**
+    //  * Undocumented variable
+    //  * @ORM\ManyToOne(targetEntity="MasterClassCohort")
+    //  * @var P6
+    //  */
     /**
      * Undocumented variable
-     * @ORM\ManyToOne(targetEntity="MasterClassCohort")
-     * @var MasterClassCohort
+     * @ORM\ManyToOne(targetEntity="P6FreeCohort")
+     * @var P6FreeCohort
      */
-    private MasterClassCohort $cohort;
+    private P6FreeCohort $cohort;
+
+    // /**
+    //  * Undocumented variable
+    //  * @ORM\ManyToOne(targetEntity="ActiveBusinessMasterclassCohortStatus")
+    //  * @var ActiveBusinessMasterclassCohortStatus
+    //  */
+
 
     /**
      * Undocumented variable
-     * @ORM\ManyToOne(targetEntity="ActiveBusinessMasterclassCohortStatus")
-     * @var ActiveBusinessMasterclassCohortStatus
+     *  @ORM\ManyToOne(targetEntity="ActiveP6FreeCohortStatus")
+     * @var ActiveP6FreeCohortStatus
      */
-    private ActiveBusinessMasterclassCohortStatus $status;
+    private ActiveP6FreeCohortStatus $status;
 
     /**
      * Undocumented variable
@@ -234,40 +246,40 @@ class ActiveBusinessMasterclassCohort
     /**
      * Set undocumented variable
      *
-     * @param  MasterClassCohort  $cohort  Undocumented variable
+     * @param  $cohort  Undocumented variable
      *
      * @return  self
      */
-    public function setCohort(MasterClassCohort $cohort)
+    public function setCohort($cohort)
     {
         $this->cohort = $cohort;
 
         return $this;
     }
 
-    /**
-     * Get undocumented variable
-     *
-     * @return  ActiveBusinessMasterclassCohortStatus
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
+    // /**
+    //  * Get undocumented variable
+    //  *
+    //  * @return  ActiveBusinessMasterclassCohortStatus
+    //  */
+    // public function getStatus()
+    // {
+    //     return $this->status;
+    // }
 
-    /**
-     * Set undocumented variable
-     *
-     * @param  ActiveBusinessMasterclassCohortStatus  $status  Undocumented variable
-     *
-     * @return  self
-     */
-    public function setStatus(ActiveBusinessMasterclassCohortStatus $status)
-    {
-        $this->status = $status;
+    // /**
+    //  * Set undocumented variable
+    //  *
+    //  * @param  ActiveBusinessMasterclassCohortStatus  $status  Undocumented variable
+    //  *
+    //  * @return  self
+    //  */
+    // public function setStatus(ActiveBusinessMasterclassCohortStatus $status)
+    // {
+    //     $this->status = $status;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     /**
      * Get undocumented variable
@@ -321,7 +333,7 @@ class ActiveBusinessMasterclassCohort
      * Get undocumented variable
      *
      * @return  Programs
-     */ 
+     */
     public function getProgram()
     {
         return $this->program;
@@ -333,10 +345,34 @@ class ActiveBusinessMasterclassCohort
      * @param  Programs  $program  Undocumented variable
      *
      * @return  self
-     */ 
+     */
     public function setProgram(Programs $program)
     {
         $this->program = $program;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  ActiveP6FreeCohortStatus
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  ActiveP6FreeCohortStatus  $status  Undocumented variable
+     *
+     * @return  self
+     */
+    public function setStatus(ActiveP6FreeCohortStatus $status)
+    {
+        $this->status = $status;
 
         return $this;
     }

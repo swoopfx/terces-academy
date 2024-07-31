@@ -19,7 +19,7 @@
                                             <img src="<?= $dat->getProgram()->getBanner(); ?>" class="img-circle width-100">
                                         </span>
                                     </span>
-                                    <a href="website-course.html" class="overlay overlay-full overlay-hover overlay-bg-white">
+                                    <a href="" class="overlay overlay-full overlay-hover overlay-bg-white">
                                         <span class="v-center">
                                             <span class="btn btn-circle btn-white btn-lg"><i class="fa fa-graduation-cap"></i></span>
                                         </span>
@@ -27,6 +27,7 @@
                                 </div>
                             </div>
                             <div class="media-body">
+                                
                                 <h4 class="text-headline margin-v-5-0"><a href="<?= $this->url("internship", ["controller" => "courses", "action" => "info", "id" => $dat->getProgram()->getUuid()]) ?>"><?= $dat->getProgram()->getTitle() ?></h4>
 
 
@@ -64,7 +65,9 @@
                 }).catch((err) => {
 
                 });
-            }
+            },
+
+
         },
     });
     courseApp.mount("#course");

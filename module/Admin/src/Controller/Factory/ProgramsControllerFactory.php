@@ -3,6 +3,7 @@
 namespace Admin\Controller\Factory;
 
 use Admin\Controller\ProgramsController;
+use Application\Service\ZoomService;
 use General\Service\GeneralService;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Psr\Container\ContainerInterface;
@@ -17,7 +18,8 @@ class ProgramsControllerFactory implements FactoryInterface
          * @var GeneralService
          */
         $generalService = $container->get(GeneralService::class);
-        $ctr->setEntityManager($generalService->getEntityManager());
+        $ctr->setEntityManager($generalService->getEntityManager())
+            ->setZoomService($container->get(ZoomService::class));
         return $ctr;
     }
 }

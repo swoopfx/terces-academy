@@ -151,6 +151,80 @@ class IndexController extends AbstractActionController
 
                     // send email
                     $mailData["to"] = $user->getEmail();
+                    $mailData["name"] = $user->getFullname();
+                    $mailData["product_name"] = GeneralService::GENERAL_TRAINING_FREE;
+
+                    $this->postmarkService->freeBusinessAnalysisMasterClassRegister($mailData);
+
+                    $response->setStatusCode(201);
+                    $jsonModel->setVariables([
+                        "success" => true
+                    ]);
+
+                    return $jsonModel;
+                }
+            } catch (\Throwable $th) {
+                //throw $th;
+                $jsonModel->setVariables([
+                    "message" => $th->getMessage(),
+                ]);
+                return $jsonModel;
+            }
+        }
+        $session->uuid = $uuid;
+        $viewModel->setVariables([
+            "uuid" => $uuid
+        ]);
+        return $viewModel;
+    }
+
+    public function oracleP6MasterclassAction()
+    {
+        $viewModel = new ViewModel();
+        return $viewModel;
+    }
+
+    public function oracleP6MasterclassRegisterAction()
+    {
+        $viewModel = new ViewModel();
+        $session = new Container("free_oracle_p6");
+        $uuid = Uuid::uuid4()->toString();
+        $em = $this->entityManager;
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        $jsonModel = new JsonModel();
+        $user = $this->identity();
+        if ($request->isPost()) {
+            $post = $request->getPost()->toArray();
+            try {
+                if ($session->uuid != $post["uuid"]) {
+                    throw new \Exception("invalid Seed");
+                } else {
+                    // hydrate to cebtral database
+                    $hydrate = new ActiveUserProgram();
+                    $hydrate->setProgram($em->find(Programs::class, 50))
+                        ->setUser($user)
+                        ->setCreatedOn(new \Datetime())
+                        ->setIsActive(TRUE)
+                        ->setIsInstallement(FALSE)
+                        ->setStatus($em->find(ActiveUserProgramStatus::class, GeneralService::ACTIVE_USER_PROGRAM_STATUS_ACQUIRED))
+                        ->setUuid(Uuid::uuid4()->toString());
+
+                    $internshipRegister = new InternshipRegister();
+                    $internshipRegister
+                        ->setCreatedOn(new \Datetime())->setUser($user)
+                        ->setIsPayment(true)
+                        ->setIsPartialpayment(false)
+                        ->setIsFullpayment(true);
+
+                    $em->persist($hydrate);
+                    $em->persist($internshipRegister);
+                    $em->flush();
+
+                    // send email
+                    $mailData["to"] = $user->getEmail();
+                    $mailData["name"] = $user->getFullname();
+                    $mailData["product_name"] = GeneralService::GENERAL_TRAINING_FREE_ORACLE_P6;
 
                     $this->postmarkService->freeBusinessAnalysisMasterClassRegister($mailData);
 
@@ -728,6 +802,56 @@ class IndexController extends AbstractActionController
         return $viewModel;
     }
 
+    public function internshipPaymentMiddleware2Action()
+    {
+        $viewModel = new ViewModel();
+        $jsonModel = new JsonModel();
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        $auth = $this->identity();
+        $em = $this->entityManager;
+       
+        $data = [];
+        // if ($request->isPost()) {
+        //     $post = $request->getPost();
+        try {
+            if (!$this->identity()) {
+                throw new \Exception("You need to be logged in");
+            }
+
+            // if ($post["cohort"] == NULL) {
+            //     throw new \Exception("please select a cohort");
+            // }
+
+            // /**
+            //  * @var InternshipCohort
+            //  */
+            // $cohortEntity = $em->find(InternshipCohort::class, $post["cohort"]);
+            // $nowDate = new \DateTime();
+            // if ($cohortEntity->getStartDate() < $nowDate) {
+
+            //     throw new \Exception("You cannot register to this cohort please select another date");
+            // }
+            // $sess = new Container("internship_payment");
+            // $sess->cohort = $cohortEntity->getId();
+            // $response->setStatusCode(202);
+            // return $jsonModel;
+        } catch (\Throwable $th) {
+            $viewModel->setVariables([
+                "message" => $th->getMessage()
+            ]);
+            $response->setStatusCode(400);
+            return $viewModel;
+        }
+        // }
+        $viewModel->setVariables([
+            "usdExchaageRate" => $this->config["naira_per_usd"],
+            "paystackPublicKey" => $this->config["paystack"]["dev"]["public_key"],
+            "email" => $auth->getEmail(),
+        ]);
+        return $viewModel;
+    }
+
     public function internshipInstallmentAction()
     {
         $viewModel = new ViewModel();
@@ -788,6 +912,66 @@ class IndexController extends AbstractActionController
         // }
         $viewModel->setVariables([
             "data" => $cohortEntity,
+            "user" => $this->identity(),
+            "public_key" => $this->config["stripe"]["publishable_key"],
+            'url' => $this->config["uurl"]
+        ]);
+        return $viewModel;
+    }
+
+    public function internshipPayment2Action()
+    {
+        $viewModel = new ViewModel();
+        $jsonModel = new JsonModel();
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        $em = $this->entityManager;
+        $data = [];
+        // if ($request->isPost()) {
+        // $post = $request->getPost();
+        try {
+            $sess = new Container("internship_payment");
+            $params = $this->params()->fromQuery("pmeth", NULL);
+            if ($params == "part") {
+                $sess->isPartPayment = TRUE;
+            } else {
+                $sess->isPartPayment = FALSE;
+            }
+
+
+            if (!$this->identity()) {
+                throw new \Exception("You need to be logged in");
+            }
+
+            // if ($sess->cohort  == NULL) {
+            //     throw new \Exception("please select a cohort");
+            // }
+
+            // /**
+            //  * @var InternshipCohort
+            //  */
+            // $cohortEntity = $em->find(InternshipCohort::class, $sess->cohort);
+            // $nowDate = new \DateTime();
+            // if ($cohortEntity->getStartDate() < $nowDate) {
+
+            //     throw new \Exception("You cannot register to this cohort please select another");
+            // }
+
+            $response->setStatusCode(202);
+            // return $jsonModel;
+        } catch (\Throwable $th) {
+            $jsonModel->setVariables([
+                "message" => $th->getMessage()
+            ]);
+            $response->setStatusCode(400);
+            return $jsonModel;
+        }
+        // } else {
+        //     $sess = new Container("internship_payment");
+        //     $cohortEntity = $em->find(InternshipCohort::class, $sess->cohort);
+        // }
+        $viewModel->setVariables([
+            // "data" => $cohortEntity,
             "user" => $this->identity(),
             "public_key" => $this->config["stripe"]["publishable_key"],
             'url' => $this->config["uurl"]

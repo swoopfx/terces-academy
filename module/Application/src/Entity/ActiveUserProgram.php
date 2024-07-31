@@ -114,6 +114,13 @@ class ActiveUserProgram
      */
     private ActiveCertificationCohort  $certificationCohort;
 
+    /**
+     * Undocumented variable
+     * @ORM\OneToOne(targetEntity="ActiveBusinessMasterclassCohort", mappedBy="activeUserProgram")
+     * @var ActiveBusinessMasterclassCohort
+     */
+    private ActiveBusinessMasterclassCohort $masterClassCohort;
+
 
     public function __construct()
     {
@@ -417,6 +424,30 @@ class ActiveUserProgram
     public function setCertificationCohort(ActiveCertificationCohort $certificationCohort)
     {
         $this->certificationCohort = $certificationCohort;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  ActiveBusinessMasterclassCohort
+     */ 
+    public function getMasterClassCohort()
+    {
+        return $this->masterClassCohort;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  ActiveBusinessMasterclassCohort  $masterClassCohort  Undocumented variable
+     *
+     * @return  self
+     */ 
+    public function setMasterClassCohort(ActiveBusinessMasterclassCohort $masterClassCohort)
+    {
+        $this->masterClassCohort = $masterClassCohort;
 
         return $this;
     }

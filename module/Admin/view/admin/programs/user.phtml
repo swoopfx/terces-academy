@@ -1,0 +1,146 @@
+<?php echo $this->headtitle("Users"); ?>
+<div id="user" class="row row-sm mg-t-20">
+    <div class="col-lg-12">
+        <div class="card card-table">
+            <div class="card-header">
+                <h6 class="slim-card-title">Registered User</h6>
+            </div><!-- card-header -->
+            <div class="table-responsive">
+                <table class="table mg-b-0 tx-13">
+                    <thead>
+                        <tr class="tx-10">
+                            <th></th>
+                            <th class="pd-y-5">User Details</th>
+                            <th class="pd-y-5 tx-right">Program</th>
+                            <th class="pd-y-5 tx-right">Status</th>
+                            <th class="pd-y-5 tx-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-if="registeredUser.length" v-for="(user, key) in registeredUser">
+                            <td>{{key+1}}</td>
+                            <td>
+                                <a href="" class="tx-inverse tx-14 tx-medium d-block">{{user.user.fullname}}</a>
+                                <span class="tx-15 d-block"></span> {{user.user.email}}</span>
+                            </td>
+                            <td class="valign-middle tx-right">{{user.program.title}}</td>
+                            <td class="valign-middle tx-right">{{user.status.status}}</td>
+                            <td class="valign-middle tx-center">
+                                <a v-if="user.status.id == 100" href="#" title="Assign to Cohort" data-toggle="modal" data-target="#assgnCertification" class="tx-gray-600 tx-24"><i class="fa fa-share"></i></a>
+
+                                <div id="assgnCertification" class="modal fade">
+                                    <div class="modal-dialog modal-lg" role="document">
+                                        <div class="modal-content tx-size-sm">
+                                            <div class="modal-header pd-x-20">
+                                                <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">Assign To Cohort</h6>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body pd-20">
+                                                <label>Select Cohort</label>
+                                                <select v-if="cohort.length" v-model="activeChort" class="form-control" @change="activeChort=$event.target.value">
+                                                    <option v-for="co in cohort" :value="co.id">{{co.cohortName}} ({{formatPHPDate(co.startDate.date).toDateString()}})</option>
+                                                </select>
+                                            </div><!-- modal-body -->
+                                            <div class="modal-footer">
+                                                <button @click="assign()" type="button" class="btn btn-primary">Assign</button>
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div><!-- modal-dialog -->
+                                </div><!-- modal -->
+
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div><!-- table-responsive -->
+            <div class="card-footer tx-12 pd-y-15 bg-transparent">
+                <a href="<?= $this->url("admin", ["action" => "user-list"]) ?>"><i class="fa fa-angle-down mg-r-5"></i>View All Users</a>
+            </div><!-- card-footer -->
+        </div><!-- card -->
+
+    </div>
+</div>
+<script>
+    const userApp = Vue.createApp({
+        data() {
+            return {
+                registeredUser: [],
+                ext: '<?= $ext ?>',
+                cohort: [],
+                activeChort: "",
+
+                //
+                processingCohort: "",
+            }
+        },
+        mounted() {
+            this.getUsers();
+            this.getCohort();
+        },
+        methods: {
+
+
+            getUsers() {
+                // let formData = new FormData();
+                axios.get("/admins/programs/get-registered-user", {
+                    params: {
+                        ext: this.ext
+                    }
+                }).then((result) => {
+                    if (result.status == 200) {
+                        this.registeredUser = result.data.data;
+                    }
+                }).catch((err) => {
+
+                });
+            },
+
+            getFreeMasterClassCohort() {
+                axios.get("/admins/programs/get-free-master-class-cohort").then((result) => {
+                    if (result.status == 200) {
+                        // console.log(result.data.data);
+                        this.cohort = result.data.data;
+                    }
+                }).catch((err) => {
+
+                });
+            },
+
+            getCertificateCohort() {
+                axios.get("/admins/programs/get-certification-cohort").then((result) => {
+                    if (result.status == 200) {
+                        // console.log(result.data.data);
+                        this.cohort = result.data.data;
+                    }
+                }).catch((err) => {
+
+                });
+            },
+
+            getOnJobCohort() {
+                axios.get("/admins/programs/get-onjob-cohort").then((result) => {
+                    if (result.status == 200) {
+                        // console.log(result.data.data);
+                        this.cohort = result.data.data;
+                    }
+                }).catch((err) => {
+
+                });
+            },
+
+            getCohort() {
+
+            },
+            formatPHPDate(date) {
+                // myDate = date.replace(/-/g, "/");
+                return new Date(date);
+
+            },
+        },
+    });
+    userApp.mount("#user")
+</script>

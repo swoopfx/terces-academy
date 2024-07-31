@@ -57,7 +57,7 @@ class Module
                 // $e->stopPropagation();
             } else {
                 $userEntity = $authService->getIdentity();
-                if ($userEntity->getRole()->getId() < UserService::USER_ROLE_ADMIN) {
+                if ($userEntity->getRole()->getId() < UserService::USER_ROLE_ORACLE_P6) {
                     $uri = $request->getUri();
                     $fullLink = sprintf('%s://%s', $uri->getScheme(), $uri->getHost());
                     // var_dump("JJJJ");
@@ -71,7 +71,7 @@ class Module
                     exit;
                 } else if ($userEntity->getRole()->getId() == UserService::USER_ROLE_ORACLE_P6) {
                     $adminMenu->isMenu = "p6";
-                }else{
+                } else {
                     $adminMenu->isMenu = "admin";
                 }
             }
