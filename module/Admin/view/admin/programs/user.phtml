@@ -9,7 +9,7 @@
                 <table class="table mg-b-0 tx-13">
                     <thead>
                         <tr class="tx-10">
-
+                            <th></th>
                             <th class="pd-y-5">User Details</th>
                             <th class="pd-y-5 tx-right">Program</th>
                             <th class="pd-y-5 tx-right">Status</th>
@@ -17,8 +17,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-if="registeredUser.length" v-for="user in registeredUser">
-
+                        <tr v-if="registeredUser.length" v-for="(user, key) in registeredUser">
+                            <td>{{key+1}}</td>
                             <td>
                                 <a href="" class="tx-inverse tx-14 tx-medium d-block">{{user.user.fullname}}</a>
                                 <span class="tx-15 d-block"></span> {{user.user.email}}</span>

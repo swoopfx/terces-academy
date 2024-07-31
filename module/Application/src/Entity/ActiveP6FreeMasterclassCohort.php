@@ -246,11 +246,11 @@ class ActiveP6FreeMasterclassCohort
     /**
      * Set undocumented variable
      *
-     * @param  MasterClassCohort  $cohort  Undocumented variable
+     * @param  $cohort  Undocumented variable
      *
      * @return  self
      */
-    public function setCohort(MasterClassCohort $cohort)
+    public function setCohort($cohort)
     {
         $this->cohort = $cohort;
 

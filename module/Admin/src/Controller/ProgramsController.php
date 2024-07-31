@@ -409,6 +409,7 @@ class ProgramsController extends AbstractActionController
         $request = $this->getRequest();
         $response = $this->getResponse();
         $post = $request->getPost()->toArray();
+        $em = $this->entityManager;
         // var_dump($post);
         if ($request->isPost()) {
             $post = $request->getPost()->toArray();
@@ -490,11 +491,13 @@ class ProgramsController extends AbstractActionController
             if ($inputFilter->isValid()) {
                 $user = $this->identity();
                 try {
+                   
                     $data = $inputFilter->getValues();
+                    $programEntity = $em->find(Programs::class, $post["program"]);
                     $eventDate = \DateTime::createFromFormat("Y-m-d\TH:i", $data["eventDate"]);
                     $zoom_data["date_time"] = $eventDate;
                     $zoom_data["user_email"] = $user->getEmail();
-                    $zoom_data["agenda"] = GeneralService::GENERAL_TRAINING_FREE;
+                    $zoom_data["agenda"] = $programEntity->getTitle();
                     $zoom_data["duration"] = $data["duration"];
                     $zoom_data["user_name"] = $user->getFullname();
                     $zoom_data["program"] = $post["program"];

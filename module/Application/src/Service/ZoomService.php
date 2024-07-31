@@ -65,6 +65,7 @@ class ZoomService
     public function createMeeting(array $data)
     {
         $token = $this->zoomTokenRes;
+        $utcTimezone = new \DateTimeZone('UTC');
         $em = $this->entityManager;
         $client = new Client();
         $client->setMethod(Request::METHOD_POST);
@@ -305,7 +306,14 @@ class ZoomService
 
                 $zoomMailData["join"] = $zoomResponse->join_url;
                 $zoomMailData["topic"] = $zoomResponse->topic;
-                $zoomMailData["start_time"] = date('F jS, Y h:i:s A', strtotime($zoomResponse->start_time)) . " {$zoomResponse->timezone} timezone";
+                // $zoomMailData["start_time"] = date('F jS, Y h:i:s A', strtotime($zoomResponse->start_time)) . " {$zoomResponse->timezone} timezone";
+                $time = new \DateTime($zoomResponse->start_time, $utcTimezone);
+                // $time2 = $time;
+
+                // $laTimezone = new \DateTimeZone('America/Los_Angeles');
+                // $est = new \DateTimeZone('America/Los_Angeles');
+                // $time2->setTimeZone( $est );
+                $zoomMailData["start_time"] = $time->format('F jS, Y h:i A') . " {$zoomResponse->timezone} timezone, " . $time->setTimezone(new \DateTimeZone("EST"))->format("h:i") . " EST timezone, " . $time->setTimezone(new \DateTimeZone("GMT"))->format("h:i") . " GMT timezone ";
                 $zoomMailData["meeting_id"] = $zoomResponse->id;
                 $zoomMailData["password"] = $zoomResponse->pstn_password;
 
@@ -338,6 +346,7 @@ class ZoomService
     public function resendZoomEvent($data)
     {
         $em = $this->entityManager;
+        $utcTimezone = new \DateTimeZone('UTC');
         $activeCohort = '';
         $arrayEmail = [];
         if ($data["program"] == 4) {
@@ -381,7 +390,15 @@ class ZoomService
 
         $zoomMailData["join"] = $zoomResponse->getZoomJoinUrl();
         $zoomMailData["topic"] = $zoomResponse->getZoomTitle();
-        $zoomMailData["start_time"] = date('F jS, Y h:i:s A', strtotime($zoomResponse->getZoomStartTime())) . " {$zoomResponse->getZoomTimezone()} timezone";
+        // $zoomMailData["start_time"] = date('F jS, Y h:i:s A', strtotime($zoomResponse->getZoomStartTime())) . " {$zoomResponse->getZoomTimezone()} timezone";
+        $time = new \DateTime($zoomResponse->start_time, $utcTimezone);
+        // $time2 = $time;
+
+        // $laTimezone = new \DateTimeZone('America/Los_Angeles');
+        // $est = new \DateTimeZone('America/Los_Angeles');
+        // $time2->setTimeZone( $est );
+        $zoomMailData["start_time"] = $time->format('F jS, Y h:i A') . " {$zoomResponse->timezone} timezone, " . $time->setTimezone(new \DateTimeZone("EST"))->format("h:i") . " EST timezone, " . $time->setTimezone(new \DateTimeZone("GMT"))->format("h:i") . " GMT timezone ";
+        
         $zoomMailData["meeting_id"] = $zoomResponse->getZoomId();
         $zoomMailData["password"] = $zoomResponse->getZoomPassword();
 

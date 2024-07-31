@@ -3,6 +3,7 @@
 namespace Admin\Controller;
 
 use Admin\Entity\OracleClasses;
+use Application\Entity\P6MasterClassClasses;
 use Application\Entity\ActiveP6Cohort;
 use Application\Entity\ActiveP6CohortStatus;
 use Application\Entity\ActiveP6FreeMasterclassCohort;
@@ -431,6 +432,16 @@ class OracleController extends AbstractActionController
         $jsonModel->setVariables([
             "data" => $data
         ]);
+        return $jsonModel;
+    }
+
+    public function getMasterclassClassesAction()
+    {
+        $jsonModel = new JsonModel();
+        $em = $this->entityManager;
+        $data = $em->getRepository(P6MasterClassClasses::class)->createQueryBuilder("o")
+            ->select("o")->getQuery()->getArrayResult();
+        $jsonModel->setVariables(["data" => $data]);
         return $jsonModel;
     }
 
