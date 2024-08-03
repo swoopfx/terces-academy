@@ -1,0 +1,595 @@
+  <?php
+
+    use function PHPUnit\Framework\isNull;
+
+    echo $this->headtitle("P6 Oracle Rebate");
+
+    ?>
+  <script src="https://js.stripe.com/v3/"></script>
+
+  <style>
+      form {
+          width: 30vw;
+          min-width: 500px;
+          align-self: center;
+          box-shadow: 0px 0px 0px 0.5px rgba(50, 50, 93, 0.1),
+              0px 2px 5px 0px rgba(50, 50, 93, 0.1), 0px 1px 1.5px 0px rgba(0, 0, 0, 0.07);
+          border-radius: 7px;
+          padding: 40px;
+      }
+
+      .hidden {
+          display: none;
+      }
+
+      #payment-message {
+          color: rgb(105, 115, 134);
+          font-size: 16px;
+          line-height: 20px;
+          padding-top: 12px;
+          text-align: center;
+      }
+
+      #payment-element {
+          margin-bottom: 24px;
+      }
+
+      /* Buttons and links */
+      button {
+          background: #5469d4;
+          font-family: Arial, sans-serif;
+          color: #ffffff;
+          border-radius: 4px;
+          border: 0;
+          padding: 12px 16px;
+          font-size: 16px;
+          font-weight: 600;
+          cursor: pointer;
+          display: block;
+          transition: all 0.2s ease;
+          box-shadow: 0px 4px 5.5px 0px rgba(0, 0, 0, 0.07);
+          width: 100%;
+      }
+
+      button:hover {
+          filter: contrast(115%);
+      }
+
+      button:disabled {
+          opacity: 0.5;
+          cursor: default;
+      }
+
+      /* spinner/processing state, errors */
+      .spinner,
+      .spinner:before,
+      .spinner:after {
+          border-radius: 50%;
+      }
+
+      .spinner {
+          color: #ffffff;
+          font-size: 22px;
+          text-indent: -99999px;
+          margin: 0px auto;
+          position: relative;
+          width: 20px;
+          height: 20px;
+          box-shadow: inset 0 0 0 2px;
+          -webkit-transform: translateZ(0);
+          -ms-transform: translateZ(0);
+          transform: translateZ(0);
+      }
+
+      .spinner:before,
+      .spinner:after {
+          position: absolute;
+          content: "";
+      }
+
+      .spinner:before {
+          width: 10.4px;
+          height: 20.4px;
+          background: #5469d4;
+          border-radius: 20.4px 0 0 20.4px;
+          top: -0.2px;
+          left: -0.2px;
+          -webkit-transform-origin: 10.4px 10.2px;
+          transform-origin: 10.4px 10.2px;
+          -webkit-animation: loading 2s infinite ease 1.5s;
+          animation: loading 2s infinite ease 1.5s;
+      }
+
+      .spinner:after {
+          width: 10.4px;
+          height: 10.2px;
+          background: #5469d4;
+          border-radius: 0 10.2px 10.2px 0;
+          top: -0.1px;
+          left: 10.2px;
+          -webkit-transform-origin: 0px 10.2px;
+          transform-origin: 0px 10.2px;
+          -webkit-animation: loading 2s infinite ease;
+          animation: loading 2s infinite ease;
+      }
+
+      @-webkit-keyframes loading {
+          0% {
+              -webkit-transform: rotate(0deg);
+              transform: rotate(0deg);
+          }
+
+          100% {
+              -webkit-transform: rotate(360deg);
+              transform: rotate(360deg);
+          }
+      }
+
+      @keyframes loading {
+          0% {
+              -webkit-transform: rotate(0deg);
+              transform: rotate(0deg);
+          }
+
+          100% {
+              -webkit-transform: rotate(360deg);
+              transform: rotate(360deg);
+          }
+      }
+
+      @media only screen and (max-width: 600px) {
+          form {
+              width: 80vw;
+              min-width: initial;
+          }
+      }
+  </style>
+  <!-- Call To Action Section - Start
+        ================================================== -->
+
+
+  <section class="calltoaction_section section_space_lg bg_dark decoration_wrap">
+      <div class="container">
+          <div class="row align-items-center">
+              <div class="col col-lg-6">
+
+
+                  <!--    <h2 class="heading_text text-white">
+                      Select Payment Methods
+                  </h2> -->
+                  <br>
+                  <div class="widget course_list_wrap">
+
+                      <!-- <ul class="course_list unordered_list_block">
+
+                          <li v-for="dat in paymentMethod">
+
+                              <div class="comment_item">
+                                  <div class="comment_author">
+                                      <div class="author_thumbnail">
+                                          <img :src="dat.image" alt="Terces – Online Learning Platform">
+                                      </div>
+                                      <div class="author_content">
+                                          <a href="#" @click="selectMethod(dat.method, dat.id)">
+                                              <h4 class="author_name"></h4>
+                                          </a>
+
+                                      </div>
+                                  </div>
+                                  <p></p>
+
+                              </div>
+
+                              <br>
+                          </li>
+
+                      </ul> -->
+
+
+
+
+
+                  </div>
+              </div>
+              <div class="col col-lg-6">
+                  <div class="col col-lg-12">
+                      <div class="pricing_card text-center tilt">
+                          <h3 class="card_heading">Amount Payable</h3>
+                          <div class="pricing_wrap">
+
+
+                              <span class="price_value"><sup><?php  //$this->currencyFormat($data->getCost(), "USD") ?></span>
+                              <small class="d-block"></small> <?php  // $data->getTitle(); ?></small>
+                              <?php 
+                            //   $cost = $data->getCost();
+                            //     $cou = "";
+                                ?>
+
+
+
+                          </div>
+                          <hr>
+
+                          <div class="btn_wrap pb-0">
+                              <?php if ($this->identity()) : ?>
+
+                                  <!-- <div id="paypal-button-container"></div> 
+
+                                  <button class="btn border_dark" @click=" payWithPaystack()">
+                                      <span>
+                                          <small>Pay Now</small>
+                                     <small>Pay Now</small>
+                                      </span>
+                                  </button> -->
+                                  <div></div>
+
+                                  <div class="form_item">
+                                      <input v-model="coupon" type="text" placeholder="Coupon">
+                                  </div>
+                                  <!--   <h3 class="widget_title">Get More Benefits with Our Plans</h3> -->
+                                  <a class="btn border_dark w-100" :href="generateBuyNowUrl()">
+                                      <span>
+                                          <small>Pay Once (USD)</small>
+                                          <small>Pay Once (USD)</small>
+                                      </span>
+                                  </a>
+                                  <a class="btn btn_dark w-100" href="<?= ($this->identity() == NULL ? $this->url("login") : $this->url("application", ["action" => "generate-installments", "id" => $this->identity()->getUuid()], [
+                                                                            'query' => [
+                                                                                'cuuid' => ""//$data->getUuid(),
+                                                                            ],
+                                                                        ])) ?>">
+                                      <span>
+                                          <small>Pay 4 installments (USD)</small>
+                                          <small>Pay 4 installments (USD)</small>
+                                      </span>
+                                  </a>
+                                  <button class="btn btn_dark w-100" @click="toggleinterac()">
+                                      <span>
+                                          <small>Pay with Interac (USD)</small>
+                                          <small>Pay with Interac (USD)</small>
+                                      </span>
+                                  </button>
+                                  <a class="btn border_dark w-100" href="<?= $this->url("application", ["action" => "buy-course-naira", "id" => ""])  //$data->getUuid()?>">
+                                      <span>
+                                          <small>Pay in Naira</small>
+                                          <small>Pay in Naira</small>
+                                      </span>
+                                  </a>
+
+                              <?php else : ?>
+                                  <a class="btn border_dark" href="<?= $this->url("app", ["action" => "refer"]) ?>">
+                                      <span>
+                                          <small>Pay Now</small>
+
+                                      </span>
+                                  </a>
+                              <?php endif; ?>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+      <div>
+
+      </div>
+
+  </section>
+  <!-- Call To Action Section - End
+        ================================================== -->
+  <script src="https://js.paystack.co/v2/inline.js"></script>
+
+  <?php if ($user != null) : ?>
+      <script>
+          let emailAddress = '<?php // $user->getEmail() ?>';
+          //   console.log(emailAddress);
+      </script>
+  <?php endif; ?>
+  <script>
+      // This is your test publishable API key.
+      const stripe = Stripe('<?= $public_key ?>');
+
+      // The items the customer wants to buy
+      const items = [{
+          id: <?php // $data->getId() ?>,
+          amount: '<?= $cost ?>',
+          coupon: '<?= $cou ?>'
+      }];
+
+      let elements;
+
+      initialize();
+      checkStatus();
+
+      document
+          .querySelector("#payment-form")
+          .addEventListener("submit", handleSubmit);
+
+
+
+      // Fetches a payment intent and captures the client secret
+      async function initialize() {
+          const {
+              clientSecret
+          } = await fetch("/app/initiate-stripe-payment", {
+              method: "POST",
+              headers: {
+                  "Content-Type": "application/json"
+              },
+              body: JSON.stringify({
+                  items
+              }),
+          }).then((r) => r.json());
+
+          elements = stripe.elements({
+              clientSecret
+          });
+
+          const linkAuthenticationElement = elements.create("linkAuthentication");
+          linkAuthenticationElement.mount("#link-authentication-element");
+
+          const paymentElementOptions = {
+              layout: "tabs",
+          };
+
+          const paymentElement = elements.create("payment", paymentElementOptions);
+          paymentElement.mount("#payment-element");
+      }
+
+      async function handleSubmit(e) {
+          e.preventDefault();
+          setLoading(true);
+
+          const {
+              error
+          } = await stripe.confirmPayment({
+              elements,
+              confirmParams: {
+                  // Make sure to change this to your payment completion page
+                  //   return_url: "https://academy.tercesjobs.com/app/finalize-stripe-payment",
+                  return_url: "<?= $url ?>/app/finalize-stripe-payment",
+                  receipt_email: emailAddress,
+
+              },
+          });
+
+          // This point will only be reached if there is an immediate error when
+          // confirming the payment. Otherwise, your customer will be redirected to
+          // your `return_url`. For some payment methods like iDEAL, your customer will
+          // be redirected to an intermediate site first to authorize the payment, then
+          // redirected to the `return_url`.
+          if (error.type === "card_error" || error.type === "validation_error") {
+              showMessage(error.message);
+          } else {
+              showMessage("An unexpected error occurred.");
+          }
+
+          setLoading(false);
+      }
+
+      // Fetches the payment intent status after payment submission
+      async function checkStatus() {
+          const clientSecret = new URLSearchParams(window.location.search).get(
+              "payment_intent_client_secret"
+          );
+
+          if (!clientSecret) {
+              return;
+          }
+
+          const {
+              paymentIntent
+          } = await stripe.retrievePaymentIntent(clientSecret);
+
+          switch (paymentIntent.status) {
+              case "succeeded":
+                  showMessage("Payment succeeded!");
+                  break;
+              case "processing":
+                  showMessage("Your payment is processing.");
+                  break;
+              case "requires_payment_method":
+                  showMessage("Your payment was not successful, please try again.");
+                  break;
+              default:
+                  showMessage("Something went wrong.");
+                  break;
+          }
+      }
+
+      // ------- UI helpers -------
+
+      function showMessage(messageText) {
+          const messageContainer = document.querySelector("#payment-message");
+
+          messageContainer.classList.remove("hidden");
+          messageContainer.textContent = messageText;
+
+          setTimeout(function() {
+              messageContainer.classList.add("hidden");
+              messageContainer.textContent = "";
+          }, 4000);
+      }
+
+      // Show a spinner on payment submission
+      function setLoading(isLoading) {
+          if (isLoading) {
+              // Disable the button and show a spinner
+              document.querySelector("#submit").disabled = true;
+              document.querySelector("#spinner").classList.remove("hidden");
+              document.querySelector("#button-text").classList.add("hidden");
+          } else {
+              document.querySelector("#submit").disabled = false;
+              document.querySelector("#spinner").classList.add("hidden");
+              document.querySelector("#button-text").classList.remove("hidden");
+          }
+      }
+
+      //   const buycourse = Vue.createApp({
+      //       data() {
+      //           return {
+      //               paymentMethod: [],
+      //               activePaymentMethod: "",
+      //               activeMethodId: 0,
+      //               courseUuid: "",
+      //               isPaying: false,
+      //               paystack_public_key: "",
+      //               paystack_amount: "",
+      //               paystack_ref: "",
+      //               paystack_email: "",
+      //           }
+      //       },
+
+      //       mounted() {
+      //           this.getPaymentMethod();
+      //           this.getPaystackPublicKey();
+      //       },
+
+      //       methods: {
+      //           getPaymentMethod() {
+      //               axios.get("/app/get-payment-methods").then(res => {
+      //                   if (res.status == 200) {
+      //                       this.paymentMethod = res.data.data;
+      //                       this.activePaymentMethod = res.data.data[0].method;
+      //                       this.activeMethodId = res.data.data[0].id;
+      //                   }
+      //               }).catch(err => {
+
+      //               });
+      //           },
+
+      //           getPaystackPublicKey() {
+      //               axios.get("/app/get-paystack-public-key").then((result) => {
+      //                   if (result.status == 200) {
+      //                       this.paystack_public_key = result.data.public_key;
+
+
+      //                   }
+      //               }).catch((err) => {
+
+      //               });
+      //           },
+
+      //           selectMethod(e, r) {
+      //               this.activePaymentMethod = e;
+      //               this.activeMethodId = r;
+      //               console.log(this.actieMethodId);
+      //           },
+
+      //           payWithFlutterwave() {
+      //               this.isPaying = true;
+      //               axios.get("/app/pre-transaction").then(res => {
+
+      //                   if (res.status == 201) {
+      //                       resData = res.data.data;
+      //                       FlutterwaveCheckout({
+      //                           public_key: resData.public_key,
+      //                           tx_ref: resData.tx_ref,
+      //                           amount: resData.amount,
+      //                           currency: "USD",
+      //                           payment_options: "card",
+      //                           //   redirect_url: "https://glaciers.titanic.com/handle-flutterwave-payment",
+      //                           meta: {
+      //                               consumer_id: 23,
+      //                               consumer_mac: resData.customer.uuid,
+      //                           },
+      //                           customer: {
+      //                               email: resData.customer.email,
+      //                               //   phone_number: "08102909304",
+      //                               name: resData.customer.fullname,
+      //                           },
+      //                           callback: function(response) { // specified callback function
+      //                               if (response.status == "successful") {
+      //                                   cutomerboard.tx_ref = response.tx_ref;
+      //                                   cutomerboard.amountPayed = response.amount;
+      //                                   cutomerboard.concludeNewPayment();
+      //                               } else {
+      //                                   // set error
+      //                               }
+      //                           },
+      //                           customizations: {
+      //                               title: "Terces Academy",
+      //                               description: resData.description,
+      //                               logo: "https://academy.tercesjobs.com/assets/images/oie_3QNUOMetbJh7.png",
+      //                           },
+      //                       });
+      //                   }
+      //               }).catch()
+
+
+
+      //           },
+
+      //           payWithPaystack() {
+      //               this.isPaying = true;
+      //               axios.get("/app/init-paystack").then((result) => {
+      //                   if (result.status == 201) {
+      //                       this.paystack_ref = result.data.ref;
+      //                       this.paystack_email = result.data.email;
+      //                       this.paystack_amount = result.data.amount;
+      //                       this.paystack_public_key = result.data.public_key;
+      //                       const paystack = new PaystackPop();
+      //                       paystack.newTransaction({
+      //                           // other params
+      //                           //   key: this.paystack_public_key,
+      //                           //   ref: this.paystack_ref,
+      //                           //   email: this.paystack_email,
+      //                           //   amount: paystack_amount,
+
+      //                           key: this.paystack_public_key,
+      //                           email: this.paystack_email,
+      //                           amount: this.paystack_amount * 100,
+      //                           currency: "USD",
+      //                           ref: this.paystack_ref,
+
+      //                           onSuccess: (transaction) => {
+      //                               // Payment complete! Reference: transaction.reference 
+      //                               let formData = new FormData();
+      //                               formData.append("reference", transaction.reference);
+      //                               formData.append("currency", "USD");
+      //                               axios.post("/app/verify-paystack", formData).then((result) => {
+
+      //                                   if (result.status == 201) {
+      //                                       Swal.fire({
+      //                                           icon: "success",
+      //                                           title: "Success",
+      //                                           text: "You have successfully subscribed to a course"
+      //                                       }).then(res => {
+      //                                           window.location.href = "/";
+      //                                       })
+      //                                   }
+      //                               }).catch((err) => {
+
+      //                               });
+      //                           },
+      //                           onCancel: () => {
+      //                               // user closed popup
+      //                               window.location.reload();
+      //                           }
+      //                       });
+      //                   }
+
+      //               }).catch((err) => {
+
+      //               });
+
+      //           },
+
+      //           payWithPaypal() {
+
+      //           },
+
+      //           pay() {
+
+      //               if (this.activeMethodId == 10) {
+
+      //                   this.payWithFlutterwave()
+      //               } else if (this.activeMethodId == 20) {
+      //                   this.payWithPaypal()
+      //               }
+      //           }
+      //       },
+      //   });
+      //   buycourse.mount("#buyc")
+  </script>

@@ -310,7 +310,7 @@
             },
 
             getOracleClasess() {
-                axios.get("/admins/programs/get-masterclass-classes").then((result) => {
+                axios.get("/admins/oracle/get-masterclass-classes").then((result) => {
                     if (result.status == 200) {
                         this.oraclep6Classes = result.data.data;
                     }

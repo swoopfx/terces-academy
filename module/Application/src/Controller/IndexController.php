@@ -810,7 +810,7 @@ class IndexController extends AbstractActionController
         $response = $this->getResponse();
         $auth = $this->identity();
         $em = $this->entityManager;
-       
+
         $data = [];
         // if ($request->isPost()) {
         //     $post = $request->getPost();
@@ -989,6 +989,12 @@ class IndexController extends AbstractActionController
             "data" => $data
         ]);
         return $jsonModel;
+    }
+
+    public function p6OracleRebateAction()
+    {
+        $viewModel = new ViewModel();
+        return $viewModel;
     }
 
 
