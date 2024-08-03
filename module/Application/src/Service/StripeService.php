@@ -8,6 +8,7 @@ use Application\Entity\Coupon;
 use Application\Entity\Installement;
 use Application\Entity\InternshipCohort;
 use Application\Entity\InternshipRegister;
+use Application\Entity\P6PaymentTracker;
 use Application\Entity\Programs;
 use Application\Entity\ScheduleCareerTalk;
 use Application\Entity\Transaction;
@@ -297,6 +298,95 @@ class StripeService
 
         $this->postmarkService->acquisitionSuccessEmail($mail);
         $this->postmarkService->newOnTheJobTrainingRegister($mail);
+
+        $em->persist($activeUserProgramEntity);
+        $em->persist($transactionEntity);
+        $em->flush();
+
+
+        // send EMailto customer
+
+        // $transactionEntity->setUpdatedOn(new \Datetime())->setStatus($em->find(TransactionStatus::class, TransactionService::TRANSACTION_STATUS_FAILED));
+        // $em->persist($transactionEntity);
+        // $em->flush();
+        // throw new \Exception("Payment was not completed");
+
+
+    }
+
+    public function finalP6Rebate()
+    {
+
+        // send transaction email here
+        // update transaction statusand 
+        // $decodedData = Json::decode($response->getBody());
+        $auth = $this->generalService->getAuth()->getIdentity();
+
+        $transactionRef = TransactionService::transactionUid();
+        $em = $this->generalService->getEntityManager();
+        $buyCourseSession = new Container("buy_course_uuid");
+        $data = $buyCourseSession->sripeData;
+        // var_dump($data);
+        /**
+         * @var Transaction
+         */
+        $transactionEntity = $em->getRepository(Transaction::class)->findOneBy([
+            "transactionId" => $data["ref"]
+        ]);
+
+        if ($data["coupon"] != "") {
+            /**
+             * @var Coupon
+             */
+            $couponEntity = $em->getRepository(Coupon::class)->findOneBy([
+                "coupon" => $data["coupon"]
+            ]);
+            $couponEntity->setIsUsed(TRUE)->setUpdatedOn(new \DateTime());
+            $em->persist($couponEntity);
+        }
+
+        $transactionEntity->setUpdatedOn(new \Datetime())->setStatus($em->find(TransactionStatus::class, TransactionService::TRANSACTION_STATUS_COMPLETED));
+
+
+        // create Active user Training f
+
+        $auth = $this->generalService->getAuth()->getIdentity();
+
+        /**
+         * @var Programs
+         */
+        $programEntity = $em->getRepository(Programs::class)->findOneBy([
+            "id" => 40
+        ]);
+        $activeUserProgramEntity = new ActiveUserProgram();
+        $activeUserProgramEntity->setProgram($programEntity)->setUser($auth)
+            ->setCreatedOn(new \Datetime())
+            ->setIsActive(TRUE)
+            ->setIsInstallement(FALSE)
+            ->setStatus($em->find(ActiveUserProgramStatus::class, GeneralService::ACTIVE_USER_PROGRAM_STATUS_ACQUIRED))
+            ->setUuid(Uuid::uuid4());
+
+        $p6PaymentTracker = new P6PaymentTracker();
+        $p6PaymentTracker->setCreatedOn(new \Datetime())
+            ->setAmount($transactionEntity->getAmount())
+            ->setTransaction($transactionEntity)
+            ->setUserProgram($activeUserProgramEntity)
+            ->setUser($auth);
+
+        $em->persist($p6PaymentTracker);
+
+        $date = new \Datetime();
+
+        $mail["to"] = $auth->getEmail();
+        $mail["product_name"] = $programEntity->getTitle();
+        $mail["customer_name"] = $auth->getFullname();
+        $mail["tx_ref"] = $transactionEntity->getUuid();
+        $mail["date"] = $date->format('Y-m-d');
+        $mail["amount"] = $transactionEntity->getAmount();
+
+
+        $this->postmarkService->acquisitionSuccessEmail($mail);
+        // $this->postmarkService->newOnTheJobTrainingRegister($mail);
 
         $em->persist($activeUserProgramEntity);
         $em->persist($transactionEntity);
