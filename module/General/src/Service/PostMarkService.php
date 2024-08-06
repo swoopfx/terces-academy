@@ -370,6 +370,8 @@ class PostMarkService
                 "password" => $data["password"],
                 "company_name" => GeneralService::COMPANY_NAME,
                 "company_address" => GeneralService::COMPANY_ADDRESS,
+                "est" => $data["est"],
+                "gmt" => $data["gmt"],
 
             ],
             true,
@@ -388,12 +390,14 @@ class PostMarkService
     {
         $sendResult = $this->postmarkClient->sendEmailWithTemplate(
             "app@tercesjobs.com",
-            "Emuveyanoghenetejiri@gmail.com",
+           "Emuveyanoghenetejiri@gmail.com",
             36589911,
             [
                 "topic" => $data["topic"],
                 "join" => $data["join"],
                 "start_time" => $data["start_time"],
+                "est" => $data["est"],
+                "gmt" => $data["gmt"],
                 "meeting_id" => $data["meeting_id"],
                 "password" => $data["password"],
                 "company_name" => GeneralService::COMPANY_NAME,

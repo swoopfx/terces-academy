@@ -64,6 +64,13 @@ class Coupon
     private $updatedOn;
 
     /**
+     * Undocumented variable
+     * @ORM\ManyToOne(targetEntity="Programs")
+     * @var Programs
+     */
+    private Programs $beingFor;
+
+    /**
      * Get the value of id
      *
      * @return  int
@@ -213,6 +220,30 @@ class Coupon
     public function setPercentage(string $percentage)
     {
         $this->percentage = $percentage;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     * @ORM
+     * @return  Programs
+     */ 
+    public function getBeingFor()
+    {
+        return $this->beingFor;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  Programs  $beingFor  Undocumented variable
+     *
+     * @return  self
+     */ 
+    public function setBeingFor(Programs $beingFor)
+    {
+        $this->beingFor = $beingFor;
 
         return $this;
     }

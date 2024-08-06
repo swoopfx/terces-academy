@@ -810,7 +810,7 @@ class IndexController extends AbstractActionController
         $response = $this->getResponse();
         $auth = $this->identity();
         $em = $this->entityManager;
-       
+
         $data = [];
         // if ($request->isPost()) {
         //     $post = $request->getPost();
@@ -989,6 +989,68 @@ class IndexController extends AbstractActionController
             "data" => $data
         ]);
         return $jsonModel;
+    }
+
+    public function p6OracleRebateAction()
+    {
+        $viewModel = new ViewModel();
+        return $viewModel;
+    }
+
+
+    public function buyP6RebateCourseAction()
+    {
+        $viewModel =  new ViewModel();
+        $em = $this->entityManager;
+        $request = $this->getRequest();
+        // $uuid = $this->params()->fromRoute("id", NULL);
+        $amount = $this->params()->fromQuery("pp", NULL);
+        // $coupon = "";
+
+        // $post = $request->getPost()->toArray();
+        // $amount = $post["amount"];
+        if ($amount == NULL) {
+            return $this->redirect()->toRoute("app", ["action" => "empty-amount"]);
+        }
+        $coupon = $em->getRepository(Coupon::class)
+            ->createQueryBuilder("c")
+            ->select("c")
+            ->leftJoin("c.beingFor", "p")
+           
+            ->where("c.isUsed = :uus")
+            ->andWhere("p.id = :pid")
+            ->setParameters([
+                "uus" => FALSE,
+                "pid" => 40
+            ])->getQuery()->getArrayResult();
+        if ($coupon  == NULL) {
+            return $this->redirect()->toRoute("app", ["action" => "expired-p6-rebate"]);
+        }
+
+        // if ($uuid == NULL) {
+        //     return $this->redirect()->toRoute("home");
+        // }
+        $buyCourseSession = new Container("buy_course_uuid");
+        // $buyCourseSession->uuid = $uuid;
+        $em = $this->entityManager;
+        $data =  $em->getRepository(Programs::class)->findOneBy([
+            "id" => 40
+        ]);
+        // $paymentMethod = $em->getRepository(PaymentMethod::class)->findAll();
+
+        $viewModel->setVariables([
+            "data" => $data,
+            "user" => $this->identity(),
+            "amount" => $amount,
+            // "coupon" => $coupon,
+            // "method" => $paymentMethod,
+            "public_key" => $this->config["stripe"]["publishable_key"],
+            'url' => $this->config["uurl"]
+        ]);
+
+
+
+        return $viewModel;
     }
 
 

@@ -313,7 +313,10 @@ class ZoomService
                 // $laTimezone = new \DateTimeZone('America/Los_Angeles');
                 // $est = new \DateTimeZone('America/Los_Angeles');
                 // $time2->setTimeZone( $est );
-                $zoomMailData["start_time"] = $time->format('F jS, Y h:i A') . " {$zoomResponse->timezone} timezone, " . $time->setTimezone(new \DateTimeZone("EST"))->format("h:i") . " EST timezone, " . $time->setTimezone(new \DateTimeZone("GMT"))->format("h:i") . " GMT timezone ";
+                // $zoomMailData["start_time"] = $time->format('F jS, Y h:i A') . " {$zoomResponse->timezone} timezone, " . $time->setTimezone(new \DateTimeZone("EST"))->format("h:i A") . " EST timezone, " . $time->setTimezone(new \DateTimeZone("GMT"))->format("h:i A") . " GMT timezone ";
+                $zoomMailData["start_time"] = $time->format('F jS, Y h:i A') . " {$zoomResponse->timezone} timezone, ";
+                $zoomMailData["gmt"] = $time->setTimezone(new \DateTimeZone("GMT"))->format("F jS, Y h:i A") . " GMT timezone ";
+                $zoomMailData["est"] = $time->setTimezone(new \DateTimeZone("EST"))->format("F jS, Y h:i A") . " EST timezone ";
                 $zoomMailData["meeting_id"] = $zoomResponse->id;
                 $zoomMailData["password"] = $zoomResponse->pstn_password;
 
@@ -349,31 +352,37 @@ class ZoomService
         $utcTimezone = new \DateTimeZone('UTC');
         $activeCohort = '';
         $arrayEmail = [];
+        $activeBusinessMasterClassCohort = NULL;
         if ($data["program"] == 4) {
             $activeCohort = "freeBusinessMasterClassCohort";
             $activeBusinessMasterClassCohort = $em->getRepository(ActiveBusinessMasterclassCohort::class)->findBy([
                 "cohort" => $data["cohort"],
             ]);
-
-            if (count($activeBusinessMasterClassCohort) == 1) {
-                $activeBusinessMasterClassCohort = $em->getRepository(ActiveUserProgram::class)
-                    ->createQueryBuilder("a")
-                    ->select("u.email")
-                    ->innerJoin("a.user", "u")
-                    ->where("a.program = :program")->setParameters([
-                        "program" => $data["program"]
-                    ])->getQuery()->getScalarResult();
-
-                $emails = array_map('current',  $activeBusinessMasterClassCohort);
-
-                if (count($emails) > 50) {
-                    $arrayEmail = array_chunk($emails, 49);
-                } else {
-                    $arrayEmail = $emails;
-                }
-                // $stringEmail = implode(', ', $emails);
-            }
         } elseif ($data["program"] == 10) {
+        } else if ($data["program"] == 50) {
+            $activeCohort = "freeOracleCohort";
+            $activeBusinessMasterClassCohort = $em->getRepository(ActiveP6FreeMasterclassCohort::class)->findBy([
+                "cohort" => $data["cohort"],
+            ]);
+        }
+
+        if (count($activeBusinessMasterClassCohort) == 1) {
+            $activeBusinessMasterClassCohort = $em->getRepository(ActiveUserProgram::class)
+                ->createQueryBuilder("a")
+                ->select("u.email")
+                ->innerJoin("a.user", "u")
+                ->where("a.program = :program")->setParameters([
+                    "program" => $data["program"]
+                ])->getQuery()->getScalarResult();
+
+            $emails = array_map('current',  $activeBusinessMasterClassCohort);
+
+            if (count($emails) > 50) {
+                $arrayEmail = array_chunk($emails, 49);
+            } else {
+                $arrayEmail = $emails;
+            }
+            // $stringEmail = implode(', ', $emails);
         }
         /**
          * @var []
@@ -385,23 +394,26 @@ class ZoomService
         if (count($zoomResponse) == 0) {
             throw new \Exception("No Zoom Meeting availaible");
         }
+        // var_dump($zoomResponse);
         $zoomResponse = $zoomResponse[0];
+
         $zoomMailData["to"] = "app@tercesjobs.com";
 
         $zoomMailData["join"] = $zoomResponse->getZoomJoinUrl();
         $zoomMailData["topic"] = $zoomResponse->getZoomTitle();
         // $zoomMailData["start_time"] = date('F jS, Y h:i:s A', strtotime($zoomResponse->getZoomStartTime())) . " {$zoomResponse->getZoomTimezone()} timezone";
-        $time = new \DateTime($zoomResponse->start_time, $utcTimezone);
+        $time = new \DateTime($zoomResponse->getZoomStartTime(), $utcTimezone);
         // $time2 = $time;
 
         // $laTimezone = new \DateTimeZone('America/Los_Angeles');
         // $est = new \DateTimeZone('America/Los_Angeles');
         // $time2->setTimeZone( $est );
-        $zoomMailData["start_time"] = $time->format('F jS, Y h:i A') . " {$zoomResponse->timezone} timezone, " . $time->setTimezone(new \DateTimeZone("EST"))->format("h:i") . " EST timezone, " . $time->setTimezone(new \DateTimeZone("GMT"))->format("h:i") . " GMT timezone ";
-        
+        $zoomMailData["start_time"] = $time->format('F jS, Y h:i A') . " {$zoomResponse->getZoomStartTime()} timezone, ";
+        $zoomMailData["gmt"] = $time->setTimezone(new \DateTimeZone("GMT"))->format("F jS, Y h:i A") . " GMT timezone ";
+        $zoomMailData["est"] = $time->setTimezone(new \DateTimeZone("EST"))->format("F jS, Y h:i A") . " EST timezone ";
         $zoomMailData["meeting_id"] = $zoomResponse->getZoomId();
         $zoomMailData["password"] = $zoomResponse->getZoomPassword();
-
+       
         if (count($emails) > 50) {
             foreach ($arrayEmail as $mail) {
                 $zoomMailData["bcc"] = implode(', ', $mail);
@@ -411,6 +423,7 @@ class ZoomService
             $zoomMailData["bcc"] = implode(', ', $arrayEmail);
             $this->postmarkService->manySendZoomMeetingReminder($zoomMailData);
         }
+       
     }
 
 

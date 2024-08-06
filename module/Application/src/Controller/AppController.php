@@ -568,6 +568,35 @@ class AppController extends  AbstractActionController
         return $this->redirect()->toRoute("app", ["action" => "stripe-error"]);
     }
 
+    public function finalizeStripep6RebateAction()
+    {
+        $viewModel = new ViewModel();
+
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        $query = $this->params()->fromQuery();
+        $intentSession = new Container("intent_session");
+        if ($intentSession->intent == $query["payment_intent_client_secret"]) {
+            try {
+                // $data = $this->paystackService->intiatializeTransaction();\
+                // var_dump("HHHHHH");
+                $data = $this->stripeService->finalP6Rebate();
+                // var_dump("FRESSSSS");
+                return $this->redirect()->toRoute("app", ["action" => "stripe-success"]);
+            } catch (\Throwable $th) {
+                $response->setStatusCode(400);
+                $viewModel->setVariables([
+                    "trace" => $th->getTrace(),
+                    "message" => $th->getMessage()
+                ]);
+                return $this->redirect()->toRoute("app", ["action" => "stripe-error"]);
+            }
+        } else {
+            return $this->redirect()->toRoute("app", ["action" => "stripe-error"]);
+        }
+        return $this->redirect()->toRoute("app", ["action" => "stripe-error"]);
+    }
+
 
     public function finalizeCareerServicePaymentAction()
     {
@@ -713,6 +742,18 @@ class AppController extends  AbstractActionController
     }
 
     public function stripeErrorAction()
+    {
+        $viewModel = new ViewModel();
+        return $viewModel;
+    }
+
+    public function expiredP6RebateAction()
+    {
+        $viewModel = new ViewModel();
+        return $viewModel;
+    }
+
+    public function emptyAmountActoin()
     {
         $viewModel = new ViewModel();
         return $viewModel;
@@ -1050,4 +1091,3 @@ class AppController extends  AbstractActionController
         return $this;
     }
 }
-
