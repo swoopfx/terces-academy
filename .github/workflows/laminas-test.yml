@@ -43,6 +43,8 @@ jobs:
     - name: Create Database
       run: |
         mkdir -p data
+         cd bin
+        ./migrate_db.sh
         touch data/database.sqlite
     - name: Execute tests (Unit and Feature tests) via PHPUnit
       env:
