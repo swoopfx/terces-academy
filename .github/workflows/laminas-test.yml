@@ -8,11 +8,13 @@ name: Laminas
 on:
   push:
     branches: [ "main" ]
+    paths-ignore: '.github/workflow/*'
   pull_request:
     types: 
        - opened
        - edited
     branches: [ "main" ]
+    paths-ignore: '.github/workflow/*'
   workflow_dispatch:
     
 permissions:
