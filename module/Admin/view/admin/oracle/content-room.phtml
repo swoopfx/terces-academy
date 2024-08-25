@@ -3,7 +3,7 @@
 <div id="rooom">
     <div class="dash-headline-two">
         <div>
-            <h4 class="tx-inverse mg-b-5"><?= $cohort["cohort"] ?></h4>
+            <h4 class="tx-inverse mg-b-5"><?= $cohort["cohortName"] ?></h4>
             <p class="mg-b-0">Active On: <?= $this->dateformat($cohort["startDate"], IntlDateFormatter::MEDIUM, IntlDateFormatter::NONE) ?></p>
         </div>
         <div class="d-h-t-right">
@@ -47,49 +47,20 @@
 
     <hr>
 
-    <div class="report-summary-header">
-        <div>
-            <h4 class="tx-inverse mg-b-3">Overall Report Summary</h4>
-            <p class="mg-b-0"><i class="icon ion-calendar mg-r-3"></i> January 01, 2018 - January 31, 2018</p>
-        </div>
-        <div>
-            <a href="" class="btn btn-secondary"><i class="icon ion-ios-clock-outline tx-22"></i> Activity Logs</a>
-            <a href="" class="btn btn-secondary"><i class="icon ion-ios-gear-outline tx-24"></i> Edit Settings</a>
-        </div>
-    </div><!-- d-flex -->
+
 
     <div class="row no-gutters dashboard-chart-one">
         <div class="col-md-4 col-lg">
             <div class="card card-total">
                 <div>
-                    <h1>420</h1>
-                    <p>Total Employee</p>
+                    <h1>0</h1>
+                    <p>Total Events</p>
                 </div>
                 <div>
-                    <div class="tx-24 mg-b-10 tx-center op-5">
-                        <i class="icon ion-man tx-gray-600"></i>
-                        <i class="icon ion-man tx-gray-600"></i>
-                        <i class="icon ion-man tx-gray-600"></i>
-                        <i class="icon ion-man tx-gray-600"></i>
-                        <i class="icon ion-man tx-gray-600"></i>
-                        <i class="icon ion-man tx-gray-600"></i>
-                        <i class="icon ion-man tx-gray-400"></i>
-                        <i class="icon ion-man tx-gray-400"></i>
-                        <i class="icon ion-man tx-gray-400"></i>
-                        <i class="icon ion-man tx-gray-400"></i>
-                    </div>
-                    <label>Female (66%)</label>
-                    <div class="progress mg-b-10">
-                        <div class="progress-bar bg-primary progress-bar-xs wd-65p" role="progressbar" aria-valuenow="66" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div><!-- progress -->
 
-                    <label>Male (34%)</label>
-                    <div class="progress">
-                        <div class="progress-bar bg-danger progress-bar-xs wd-35p" role="progressbar" aria-valuenow="34" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div><!-- progress -->
                 </div>
-            </div><!-- card -->
-        </div><!-- col -->
+            </div>
+        </div>
         <div class="col-md-4 col-lg">
             <div class="card card-total">
                 <div>
@@ -109,19 +80,19 @@
                         <i class="icon ion-cube tx-gray-400"></i>
                         <i class="icon ion-cube tx-gray-400"></i>
                     </div>
-                    <label>Digital products (85%)</label>
+                    <!--  <label>Digital products (85%)</label>
                     <div class="progress mg-b-10">
                         <div class="progress-bar bg-success progress-bar-xs wd-85p" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div><!-- progress -->
+                    </div>
 
                     <label>Non-digital products (15%)</label>
                     <div class="progress">
                         <div class="progress-bar bg-warning progress-bar-xs wd-15p" role="progressbar" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div><!-- progress -->
+                    </div> -->
                 </div>
-            </div><!-- card -->
-        </div><!-- col -->
-        <div class="col-md-4 col-lg">
+            </div>
+        </div>
+        <!-- <div class="col-md-4 col-lg">
             <div class="card card-total">
                 <div>
                     <h1>30</h1>
@@ -143,15 +114,15 @@
                     <label>Local (75%)</label>
                     <div class="progress mg-b-10">
                         <div class="progress-bar bg-purple progress-bar-xs wd-75p" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div><!-- progress -->
+                    </div>
 
                     <label>International (25%)</label>
                     <div class="progress">
                         <div class="progress-bar bg-pink progress-bar-xs wd-25p" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div><!-- progress -->
+                    </div>
                 </div>
-            </div><!-- card -->
-        </div><!-- col -->
+            </div>
+        </div>
         <div class="col-md col-lg-4">
             <div class="card card-revenue">
                 <h6>Monthly Revenue</h6>
@@ -159,97 +130,102 @@
                 <h1>$32,500 <span class="tx-success">1.4% up</span></h1>
                 <div id="rs3" class="ht-50 ht-sm-70 mg-r--1"></div>
                 <label>Last month: <span>$79,554</span></label>
-            </div><!-- card -->
-        </div><!-- col-4 -->
-    </div><!-- row -->
+            </div>
+        </div> -->
+    </div>
 
     <hr>
 
     <div class="report-summary-header">
         <div>
-            <h4 class="tx-inverse mg-b-3">Most Popular Products</h4>
-            <p class="mg-b-0"><i class="icon ion-calendar mg-r-3"></i> January 01, 2018 - January 31, 2018</p>
+            <h4 class="tx-inverse mg-b-3">USERS TABLE</h4>
+
         </div>
         <div>
-            <a href="" class="btn btn-secondary">Top Rated Products</a>
-            <a href="" class="btn btn-secondary">View All Products</a>
+            <!--  <a href="" class="btn btn-secondary">Top Rated Products</a>
+            <a href="" class="btn btn-secondary">View All Products</a> -->
         </div>
     </div><!-- d-flex -->
 
-    <div class="row row-sm">
-        <div class="col-md-6 col-lg-4">
-            <div class="card card-popular-product">
-                <label class="prod-id">Product ID: #PD-1754</label>
-                <h5 class="prod-name"><a href="">US 360 Home Security IP Camera Night</a></h5>
-                <p class="prod-by">By: <a href="">ThmPxls Security</a></p>
-                <div class="row">
-                    <div class="col-5">
-                        <h1>1885</h1>
-                        <p>Total Sales</p>
-                    </div><!-- col -->
-                    <div class="col-7">
-                        <h1>$12,056</h1>
-                        <p>Earnings</p>
-                    </div><!-- col -->
-                </div><!-- row -->
+    <div class="row row-sm mg-t-20">
+        <div class="col-lg-6">
+            <div class="card card-table">
+                <div class="card-header">
+                    <h6 class="slim-card-title">Assigned Users</h6>
+                </div><!-- card-header -->
+                <div class="table-responsive">
+                    <table class="table mg-b-0 tx-13">
+                        <thead>
+                           <!-- <tr class="tx-10">
+                                <th class="wd-10p pd-y-5">&nbsp;</th>
+                                <th class="pd-y-5">Item Details</th>
+                                <th class="pd-y-5 tx-right">Sold</th>
+                                <th class="pd-y-5">Gain</th>
+                                <th class="pd-y-5 tx-center">Actions</th>
+                            </tr> -->
+                        </thead>
+                        <tbody v-if="assignedUsers.length">
+                            <tr v-for="ass in assignedUsers">
+                               
+                                <td>
+                                    <a href="" class="tx-inverse tx-14 tx-medium d-block"></a>
+                                    <span class="tx-11 d-block"><span class="square-8 bg-danger mg-r-5 rounded-circle"></span> {{ass.user.fullname}}<br>
+                                {{ass.user.email}}</span>
+                                </td>
+                                <td class="valign-middle tx-right">{{ass.p6Cohort.cohortName}}</td>
+                                <td class="valign-middle"><span class="tx-success"></span> from last week</td>
+                                <td class="valign-middle tx-center">
+                                    <a href="" class="tx-gray-600 tx-24"><i class="icon ion-android-more-horizontal"></i></a>
+                                </td>
+                            </tr>
+                            
+                        </tbody>
+                    </table>
+                </div><!-- table-responsive -->
+                <div class="card-footer tx-12 pd-y-15 bg-transparent">
+                    
+                </div><!-- card-footer -->
             </div><!-- card -->
-        </div><!-- col-4 -->
-        <div class="col-md-6 col-lg-4 mg-t-20 mg-md-t-0">
-            <div class="card card-popular-product">
-                <label class="prod-id">Product ID: #PD-1753</label>
-                <h5 class="prod-name"><a href="">US KS-5 Junior Lite DVD Karaoke 9500</a></h5>
-                <p class="prod-by">By: <a href="">ThmPxls Security</a></p>
-                <div class="row">
-                    <div class="col-5">
-                        <h1>1862</h1>
-                        <p>Total Sales</p>
-                    </div><!-- col -->
-                    <div class="col-7">
-                        <h1>$13,113</h1>
-                        <p>Earnings</p>
-                    </div><!-- col -->
-                </div><!-- row -->
-            </div><!-- card -->
-        </div><!-- col-4 -->
-        <div class="col-md-6 col-lg-4 mg-t-20 mg-lg-t-0">
-            <div class="card card-popular-product">
-                <label class="prod-id">Product ID: #PD-1754</label>
-                <h5 class="prod-name"><a href="">US 360 Home Security IP Camera Night</a></h5>
-                <p class="prod-by">By: <a href="">ThmPxls Digital</a></p>
-                <div class="row">
-                    <div class="col-5">
-                        <h1>1799</h1>
-                        <p>Total Sales</p>
-                    </div><!-- col -->
-                    <div class="col-7">
-                        <h1>$11,091</h1>
-                        <p>Earnings</p>
-                    </div><!-- col -->
-                </div><!-- row -->
-            </div><!-- card -->
-        </div><!-- col-4 -->
+        </div><!-- col-6 -->
+        <div class="col-lg-6 mg-t-20 mg-lg-t-0">
+            <?= $this->partial("programs/partial/registered-user-no-cohort-partial"); ?>
+        </div><!-- col-6 -->
     </div><!-- row -->
+
 </div>
 <script>
     const roomApp = Vue.createApp({
         data() {
             return {
                 roomType: [],
+                registeredUser: [],
                 activeRoomtype: 0,
+                programId: 40,
                 oraclep6Classes: [],
                 cohortId: '<?= $cohort["id"] ?>',
                 classRoomDetails: [],
                 isCreatingEvent: false,
                 selectedClassroom: "",
+                zoomClass: [],
+                programType:"",
 
-
+              
                 formSelectedEventDatetime: "",
                 formSelectedDUration: "",
+
+                isAssigning: false,
+                assignedUsers: [],
+
+                isCreatingEvent:false,
             }
         },
 
         mounted() {
             this.getRoomType();
+            this.getAssignedStatus();
+            this.getZoomClass();
+            this.getUsers();
+            this.getAssignedUsers();
         },
 
         methods: {
@@ -327,6 +303,44 @@
                 axios.get("/admins/oracle/get-oracle-classes").then((result) => {
                     if (result.status == 200) {
                         this.oraclep6Classes = result.data.data;
+
+                        // console.log(this.oraclep6Classes);
+                    }
+                }).catch((err) => {
+
+                });
+            },
+
+            getZoomClass() {
+                axios.get("/admins/programs/get-zoom-class", {
+                    params: {
+                        cohort: this.cohortId,
+                        program: this.programId
+
+                    }
+                }).then((result) => {
+                    if (result.status == 200) {
+                        this.zoomClass = result.data.data;
+                    }
+                }).catch((err) => {
+
+                });
+            },
+
+            getAssignedStatus() {
+                axios.get("/admins/oracle/get-masterclass-assigned-status", {
+                    params: {
+                        cohort: this.cohortId
+                    }
+                }).then((result) => {
+                    if (result.status == 200) {
+                        let data = result.data.data;
+                        if (data.length) {
+                            this.assignedStatus = false;
+                        } else {
+                            this.assignedStatus = true;
+                        }
+                        // this.assignedStatus = "";
                     }
                 }).catch((err) => {
 
@@ -352,13 +366,116 @@
                     formData.append("classRoomId", this.selectedClassroom);
                     formData.append("duration", this.formSelectedDUration);
                     formData.append("eventDate", this.formSelectedEventDatetime);
-                    axios.post("/admins/oracle/create-zoom-event", formData).then((result) => {
-
+                    formData.append("program", this.programId);
+                    formData.append("cohort", this.cohortId);
+                    axios.post("/admins/programs/create-master-class-event", formData).then((result) => {
+                        if (result.status == 201) {
+                            window.location.reload();
+                            this.isCreatingEvent = false;
+                        }
                     }).catch((err) => {
-
+                        Swal.fire({
+                            icon: "error",
+                            title: "An error occured",
+                            text: err.response.data.message,
+                        });
+                        this.isCreatingEvent = false;
                     });
 
                 }
+            },
+
+            assign(selectedUserProgram) {
+                // alert(this.activeChort);
+                this.isAssigning = true;
+                Swal.fire({
+                    icon: "warning",
+                    title: "Assign User",
+                    text: "You are about to assig this user to a cohort",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yes, Assign!"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        if (this.activeChort == "") {
+                            Swal.fire({
+                                icon: "error",
+                                title: "Required Field",
+                                text: "A Required Field is empty "
+                            });
+                        } else {
+
+                            let formData = new FormData();
+                            formData.append("cohort", this.cohortId);
+                            formData.append("activeUserProgram", selectedUserProgram);
+                            // formData.append("program", this.programId);
+                            axios.post("/admins/oracle/assign-to-cohort", formData).then((result) => {
+                                if (result.status == 201) {
+
+                                    Swal.fire({
+                                        icon: "success",
+                                        title: "Assigned",
+                                        text: "Assigned a Candidate "
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            window.location.reload();
+                                        }
+                                    }).catch((err) => {
+                                        this.$toast.open({
+                                            message: err.response.data.messages,
+                                            type: "error",
+                                            duration: 20000,
+                                            dismissible: true
+                                        })
+                                    });
+                                    window.location.reload();
+                                }
+
+                            }).catch((err) => {
+
+                            });
+
+                        }
+                    }
+                }).catch((err) => {
+
+                });;
+
+            },
+
+            getUsers() {
+                // let formData = new FormData();
+                axios.get("/admins/programs/get-registered-user", {
+                    params: {
+                        ext: this.programId
+                    }
+                }).then((result) => {
+                    if (result.status == 200) {
+                        this.registeredUser = result.data.data;
+                    }
+                }).catch((err) => {
+
+                });
+            },
+
+            getAssignedUsers() {
+                axios.get("/admins/oracle/get-assigned-cohort", {
+                    params: {
+                        ch: this.cohortId
+                    }
+                }).then((result) => {
+                    if (result.status == 200) {
+                        this.assignedUsers = result.data.data;
+                    }
+                }).catch((err) => {
+                    this.$toast.open({
+                        message: err.response.data.messages,
+                        type: "error",
+                        duration: 20000,
+                        dismissible: true
+                    })
+                });
             }
         },
 

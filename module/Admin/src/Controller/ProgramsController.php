@@ -60,6 +60,8 @@ class ProgramsController extends AbstractActionController
                 $zoomClassQuery->andWhere("a.freeBusinessMasterClassCohort = :cohort");
             } elseif ($program == 10) {
                 $zoomClassQuery->andWhere("a.businessAnalysisCohort = :cohort");
+            }elseif($program == 40 ){
+                $zoomClassQuery->andWhere("a.oracleP6Cohort = :cohort");
             }
 
             $data = $zoomClassQuery->setParameters([
@@ -491,7 +493,7 @@ class ProgramsController extends AbstractActionController
             if ($inputFilter->isValid()) {
                 $user = $this->identity();
                 try {
-                   
+
                     $data = $inputFilter->getValues();
                     $programEntity = $em->find(Programs::class, $post["program"]);
                     $eventDate = \DateTime::createFromFormat("Y-m-d\TH:i", $data["eventDate"]);
@@ -571,8 +573,9 @@ class ProgramsController extends AbstractActionController
         $ext = $this->params()->fromQuery("ext", NULL);
         $max = $this->params()->fromQuery("max", NULL);
         $query = $em->getRepository(ActiveUserProgram::class)
-            ->createQueryBuilder("a")->select(["a", "u", "p", "s", "p6", "cc", "mc"])
+            ->createQueryBuilder("a")->select(["a", "u", "p", "s", "p6", "cc", "mc", "us"])
             ->leftJoin("a.user", "u")
+            ->leftJoin("u.state", "us")
             ->leftJoin("a.program", "p")
             ->leftJoin("a.status", "s")
             ->leftJoin("a.oracleCohort", "p6")

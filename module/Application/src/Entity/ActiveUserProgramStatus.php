@@ -9,6 +9,8 @@ use Doctrine\ORM\Mapping as ORM;
  * Started
  * Completed
  * Canceled
+ *  Assigned
+ * 
  * @ORM\Entity
  * @ORM\Table(name="active_user_program_status")
  */

@@ -3,10 +3,12 @@
 namespace  Application\Service;
 
 use Application\Entity\ActiveBusinessMasterclassCohort;
+use Application\Entity\ActiveP6Cohort;
 use Application\Entity\ActiveP6FreeMasterclassCohort;
 use Application\Entity\ActiveUserProgram;
 use Application\Entity\InternshipCohort;
 use Application\Entity\MasterClassCohort;
+use Application\Entity\P6Cohort;
 use Application\Entity\P6FreeCohort;
 use Application\Entity\Programs;
 use Application\Entity\ZoomMeetingResponse;
@@ -275,6 +277,24 @@ class ZoomService
                 } elseif ($data["program"] == 10) {
                     // Business Analysis Work Experience Program
                     $zoomEntity->setBusinessAnalysisCohort($em->find(InternshipCohort::class, $data["cohort"]));
+                } elseif ($data["program"] ==  40) {
+                    $zoomEntity->setOracleP6Cohort($em->find(P6Cohort::class, $data["cohort"]));
+                    $activeP6Cohort = $em->getRepository(ActiveP6Cohort::class)->createQueryBuilder("a")
+                        ->select("u.email")
+                        ->innerJoin("a.user", "u")
+                        ->where("a.p6Cohort = :cohort")->setParameters([
+                            "cohort" => $data["cohort"]
+                        ])->getQuery()->getScalarResult();
+
+                    if (count($activeP6Cohort) > 0) {
+                        $emails = array_map('current',  $activeP6Cohort);
+
+                        if (count($emails) > 50) {
+                            $arrayEmail = array_chunk($emails, 49);
+                        } else {
+                            $arrayEmail = $emails;
+                        }
+                    }
                 } elseif ($data["program"] ==  50) {
                     // Free ORACLE Masterclass
                     $zoomEntity->setFreeOracleCohort($em->find(P6FreeCohort::class, $data["cohort"]));
@@ -413,7 +433,7 @@ class ZoomService
         $zoomMailData["est"] = $time->setTimezone(new \DateTimeZone("EST"))->format("F jS, Y h:i A") . " EST timezone ";
         $zoomMailData["meeting_id"] = $zoomResponse->getZoomId();
         $zoomMailData["password"] = $zoomResponse->getZoomPassword();
-       
+
         if (count($emails) > 50) {
             foreach ($arrayEmail as $mail) {
                 $zoomMailData["bcc"] = implode(', ', $mail);
@@ -423,21 +443,14 @@ class ZoomService
             $zoomMailData["bcc"] = implode(', ', $arrayEmail);
             $this->postmarkService->manySendZoomMeetingReminder($zoomMailData);
         }
-       
     }
 
 
-    public function assignMeetingTouser()
-    {
-    }
+    public function assignMeetingTouser() {}
 
-    public function deleteMeeting()
-    {
-    }
+    public function deleteMeeting() {}
 
-    public function updateMeeting()
-    {
-    }
+    public function updateMeeting() {}
 
     /**
      * Set undocumented variable

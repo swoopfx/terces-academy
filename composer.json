@@ -98,10 +98,12 @@
     },
     "require-dev": {
         "laminas/laminas-developer-tools": "^2.9",
+        "laminas/laminas-test": "^4.10",
         "laminas/laminas-coding-standard": "^2.5",
         "phpunit/phpunit": "^10.5",
-        "laminas/laminas-test": "^4.10",
         "codeception/module-laminas": "^3.0",
-        "codeception/module-asserts": "^3.0"
+        "codeception/module-asserts": "^3.0",
+        "laminas/laminas-development-mode": "^3.12",
+        "codeception/module-webdriver": "^4.0"
     }
 }

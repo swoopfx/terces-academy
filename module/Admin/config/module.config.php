@@ -26,6 +26,7 @@ return [
             'admin/oraclep6/menu'           => __DIR__ . '/../view/partial/oracle-menu.phtml',
             'partial/content-room-zoom-list'           => __DIR__ . '/../view/partial/content-room-zoom-list.phtml',
             'programs/partial/registered-user-partial'           => __DIR__ . '/../view/admin/programs/partial/registered-user-partial.phtml',
+            "programs/partial/registered-user-no-cohort-partial"=> __DIR__ . '/../view/admin/programs/partial/registered-user-no-cohort-partial.phtml',
             'partial/content-room-resos-list'=>__DIR__ . '/../view/partial/content-room-resos-list.phtml',
         ]
     ],

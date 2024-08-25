@@ -220,7 +220,7 @@ class PostMarkService
         // Send an email:
         $sendResult = $this->postmarkClient->sendEmailWithTemplate(
             "app@tercesjobs.com",
-            "Emuveyanoghenetejiri@gmail.com",
+            $data["to"],
             33551173,
             [
 
@@ -244,7 +244,7 @@ class PostMarkService
     {
         $sendResult = $this->postmarkClient->sendEmailWithTemplate(
             "app@tercesjobs.com",
-            "Emuveyanoghenetejiri@gmail.com",
+            $data["to"],
             33551173,
             [
 
@@ -267,7 +267,7 @@ class PostMarkService
     {
         $sendResult = $this->postmarkClient->sendEmailWithTemplate(
             "app@tercesjobs.com",
-            "Emuveyanoghenetejiri@gmail.com",
+            $data["to"],
             33551173,
             [
 
@@ -290,7 +290,7 @@ class PostMarkService
     {
         $sendResult = $this->postmarkClient->sendEmailWithTemplate(
             "app@tercesjobs.com",
-            "Emuveyanoghenetejiri@gmail.com",
+            $data["to"],
             33551173,
             [
 
@@ -313,7 +313,7 @@ class PostMarkService
     {
         $sendResult = $this->postmarkClient->sendEmailWithTemplate(
             "app@tercesjobs.com",
-            "Emuveyanoghenetejiri@gmail.com",
+            $data["to"],
             33551173,
             [
 
@@ -336,7 +336,7 @@ class PostMarkService
     {
         $sendResult = $this->postmarkClient->sendEmailWithTemplate(
             "app@tercesjobs.com",
-            "Emuveyanoghenetejiri@gmail.com",
+            $data["to"],
             33551173,
             [
 
@@ -390,7 +390,7 @@ class PostMarkService
     {
         $sendResult = $this->postmarkClient->sendEmailWithTemplate(
             "app@tercesjobs.com",
-           "Emuveyanoghenetejiri@gmail.com",
+            "Emuveyanoghenetejiri@gmail.com",
             36589911,
             [
                 "topic" => $data["topic"],
@@ -412,6 +412,27 @@ class PostMarkService
             $data["bcc"], //imploded array
             null,
 
+        );
+    }
+
+    public function assignedUserToCohort($data) {
+        $sendResult = $this->postmarkClient->sendEmailWithTemplate(
+            "app@tercesjobs.com",
+            $data["to"],
+            37033176,
+            [
+
+
+                "product_name" => "Terces Academy",
+                "customer" => $data["name"],
+                "program" => $data["program"],
+                "cohort" => $data["cohort"],
+                "company_name" => GeneralService::COMPANY_NAME,
+                "company_address" => GeneralService::COMPANY_ADDRESS,
+
+
+
+            ]
         );
     }
 
