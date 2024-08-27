@@ -6,6 +6,7 @@ use Application\Entity\ActiveBusinessMasterclassCohort;
 use Application\Entity\ActiveP6Cohort;
 use Application\Entity\ActiveP6FreeMasterclassCohort;
 use Application\Entity\ActiveUserProgram;
+use Application\Entity\ActiveZoomClassId;
 use Application\Entity\InternshipCohort;
 use Application\Entity\MasterClassCohort;
 use Application\Entity\P6Cohort;
@@ -278,6 +279,7 @@ class ZoomService
                     // Business Analysis Work Experience Program
                     $zoomEntity->setBusinessAnalysisCohort($em->find(InternshipCohort::class, $data["cohort"]));
                 } elseif ($data["program"] ==  40) {
+                    // ORACLE P6 class 
                     $zoomEntity->setOracleP6Cohort($em->find(P6Cohort::class, $data["cohort"]));
                     $activeP6Cohort = $em->getRepository(ActiveP6Cohort::class)->createQueryBuilder("a")
                         ->select("u.email")
@@ -285,6 +287,15 @@ class ZoomService
                         ->where("a.p6Cohort = :cohort")->setParameters([
                             "cohort" => $data["cohort"]
                         ])->getQuery()->getScalarResult();
+
+                    $activeZoomClassEntity = new ActiveZoomClassId();
+                    $activeZoomClassEntity->setCreatedOn(new \Datetime())
+                        ->setCohort($data["cohort"])
+                        ->setProgram($em->find(Programs::class, $data["program"]))
+                        ->setZoomResponse($zoomEntity)
+                        ->setClassRoomid($data["classRoomId"]);
+
+                    $em->persist($activeZoomClassEntity);
 
                     if (count($activeP6Cohort) > 0) {
                         $emails = array_map('current',  $activeP6Cohort);

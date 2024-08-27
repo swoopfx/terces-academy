@@ -156,7 +156,7 @@
                 <div class="table-responsive">
                     <table class="table mg-b-0 tx-13">
                         <thead>
-                           <!-- <tr class="tx-10">
+                            <!-- <tr class="tx-10">
                                 <th class="wd-10p pd-y-5">&nbsp;</th>
                                 <th class="pd-y-5">Item Details</th>
                                 <th class="pd-y-5 tx-right">Sold</th>
@@ -166,11 +166,11 @@
                         </thead>
                         <tbody v-if="assignedUsers.length">
                             <tr v-for="ass in assignedUsers">
-                               
+
                                 <td>
                                     <a href="" class="tx-inverse tx-14 tx-medium d-block"></a>
                                     <span class="tx-11 d-block"><span class="square-8 bg-danger mg-r-5 rounded-circle"></span> {{ass.user.fullname}}<br>
-                                {{ass.user.email}}</span>
+                                        {{ass.user.email}}</span>
                                 </td>
                                 <td class="valign-middle tx-right">{{ass.p6Cohort.cohortName}}</td>
                                 <td class="valign-middle"><span class="tx-success"></span> from last week</td>
@@ -178,12 +178,12 @@
                                     <a href="" class="tx-gray-600 tx-24"><i class="icon ion-android-more-horizontal"></i></a>
                                 </td>
                             </tr>
-                            
+
                         </tbody>
                     </table>
                 </div><!-- table-responsive -->
                 <div class="card-footer tx-12 pd-y-15 bg-transparent">
-                    
+
                 </div><!-- card-footer -->
             </div><!-- card -->
         </div><!-- col-6 -->
@@ -207,16 +207,17 @@
                 isCreatingEvent: false,
                 selectedClassroom: "",
                 zoomClass: [],
-                programType:"",
+                programType: "",
+                activeZoomClass: [],
 
-              
+
                 formSelectedEventDatetime: "",
                 formSelectedDUration: "",
 
                 isAssigning: false,
                 assignedUsers: [],
 
-                isCreatingEvent:false,
+                isCreatingEvent: false,
             }
         },
 
@@ -226,6 +227,7 @@
             this.getZoomClass();
             this.getUsers();
             this.getAssignedUsers();
+            this.getActiveZoomClass();
         },
 
         methods: {
@@ -327,6 +329,32 @@
                 });
             },
 
+            isSomeZoomClass(classList) {
+                if (this.activeZoomClass.some(cou => cou.classRoomId == classList.id)) {
+                	return true;
+                } else {
+                	return false;
+                }
+                // return true;
+            },
+
+            getActiveZoomClass() {
+                axios.get("/admins/programs/get-active-zoom-class", {
+                    params: {
+                        cohort: this.cohortId,
+                        program: this.programId
+
+
+                    }
+                }).then((result) => {
+                    if (result.status == 200) {
+                        this.activeZoomClass = result.data.data;
+                    }
+
+                }).catch((err) => {
+
+                });
+            },
             getAssignedStatus() {
                 axios.get("/admins/oracle/get-masterclass-assigned-status", {
                     params: {
