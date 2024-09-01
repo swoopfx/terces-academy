@@ -23,7 +23,7 @@
                     <td class="valign-middle tx-right">{{user.program.title}}</td>
                     <td class="valign-middle tx-right">{{user.status.status}}</td>
                     <td class="valign-middle tx-center">
-                        <a v-if="user.status.id == 100" href="#" @click="selectRegisteredUser(user.id)" title="Assign to Cohort" data-toggle="modal" data-target="#assgnCertification" class="tx-gray-600 tx-24"><i class="fa fa-xs fa-wrench"></i></a>
+                        <a v-if="user.user.state.id != 2"  @click="selectRegisteredUser(user.id)" title="Assign to Cohort" data-toggle="modal" data-target="#assgnCertification" class="tx-gray-600 tx-24"><i class="fa fa-xs fa-wrench"></i></a>
 
                         <div id="assgnCertification" class="modal fade">
                             <div class="modal-dialog modal-lg" role="document">

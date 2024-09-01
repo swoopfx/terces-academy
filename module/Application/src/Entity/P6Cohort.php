@@ -21,10 +21,10 @@ class P6Cohort
 
     /**
      * Undocumented variable
-     * @ORM\Column(nullable=true)
+     * @ORM\Column(nullable=true, name="cohort")
      * @var string
      */
-    private string $cohort;
+    private string $cohortName;
 
     /**
      * Undocumented variable
@@ -85,29 +85,7 @@ class P6Cohort
         return $this;
     }
 
-    /**
-     * Get undocumented variable
-     *
-     * @return  string
-     */
-    public function getCohort()
-    {
-        return $this->cohort;
-    }
 
-    /**
-     * Set undocumented variable
-     *
-     * @param  string  $cohort  Undocumented variable
-     *
-     * @return  self
-     */
-    public function setCohort(string $cohort)
-    {
-        $this->cohort = $cohort;
-
-        return $this;
-    }
 
     /**
      * Get undocumented variable
@@ -185,7 +163,7 @@ class P6Cohort
      * Get undocumented variable
      *
      * @return  string
-     */ 
+     */
     public function getUuid()
     {
         return $this->uuid;
@@ -197,10 +175,34 @@ class P6Cohort
      * @param  string  $uuid  Undocumented variable
      *
      * @return  self
-     */ 
+     */
     public function setUuid(string $uuid)
     {
         $this->uuid = $uuid;
+
+        return $this;
+    }
+
+    /**
+     * Get undocumented variable
+     *
+     * @return  string
+     */
+    public function getCohortName()
+    {
+        return $this->cohortName;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  string  $cohortName  Undocumented variable
+     *
+     * @return  self
+     */
+    public function setCohortName(string $cohortName)
+    {
+        $this->cohortName = $cohortName;
 
         return $this;
     }

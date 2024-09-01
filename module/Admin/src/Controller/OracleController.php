@@ -13,8 +13,11 @@ use Application\Entity\P6Cohort;
 use Application\Entity\P6FreeCohort;
 use Application\Entity\Programs;
 use Application\Service\ZoomService;
+use Authentication\Entity\User;
+use Authentication\Service\UserService;
 use Doctrine\ORM\EntityManager;
 use General\Entity\RoomType;
+use General\Service\PostMarkService;
 use Internship\Entity\P6Room;
 use Laminas\InputFilter\InputFilter;
 use Laminas\Mvc\Controller\AbstractActionController;
@@ -41,6 +44,13 @@ class OracleController extends AbstractActionController
      */
     private ZoomService $zoomService;
 
+    /**
+     * Undocumented variable
+     *
+     * @var PostMarkService
+     */
+    private PostMarkService $postmarkService;
+
     public function onDispatch(MvcEvent $e)
     {
         $response = parent::onDispatch($e);
@@ -48,6 +58,12 @@ class OracleController extends AbstractActionController
     }
 
     public function freeMasterClassCohortAction()
+    {
+        $viewModel = new ViewModel();
+        return $viewModel;
+    }
+
+    public function oracleP6Action()
     {
         $viewModel = new ViewModel();
         return $viewModel;
@@ -540,12 +556,18 @@ class OracleController extends AbstractActionController
 
     // public function get
 
+    /**
+     * Assigns a user to oracle cohort
+     *
+     * @return void
+     */
     public function assignToCohortAction()
     {
         $viewModel = new JsonModel();
         $request = $this->getRequest();
         $response = $this->getResponse();
         $em = $this->entityManager;
+
         if ($request->isPost()) {
             $post = $request->getPost()->toArray();
             $inputFilter = new InputFilter();
@@ -597,23 +619,33 @@ class OracleController extends AbstractActionController
                 ]
             ]);
 
+
+
             $inputFilter->setData($post);
             if ($inputFilter->isValid()) {
                 try {
                     $values = $inputFilter->getValues();
                     $activeUserProgramEntity = $em->find(ActiveUserProgram::class, $values["activeUserProgram"]);
-
+                    $cohortEntity = $em->find(P6Cohort::class, $values["cohort"]);
+                    $activeUserProgramEntity->setStatus($em->find(ActiveUserProgramStatus::class, 150))->setUpdatedOn(new \Datetime());
                     $activeP6OracleEntity = new ActiveP6Cohort();
                     $activeP6OracleEntity->setCreatedOn(new \Datetime())
                         ->setUser($activeUserProgramEntity->getUser())
-                        ->setUuid(Uuid::uuid4())
+                        ->setUuid(Uuid::uuid4()->toString())
                         ->setIsActive(TRUE)
                         ->setStatus($em->find(ActiveP6CohortStatus::class, 10))
-                        ->setP6Cohort($em->find(P6Cohort::class, $values["cohort"]))
+                        ->setP6Cohort($cohortEntity)
                         ->setActiveUserProgram($activeUserProgramEntity);
 
+                    $em->persist($activeUserProgramEntity);
                     $em->persist($activeP6OracleEntity);
                     $em->flush();
+
+                    $mailData["to"] = $activeUserProgramEntity->getUser()->getEmail();
+                    $mailData["name"] = $activeUserProgramEntity->getUser()->getFullname();
+                    $mailData["cohort"] = $cohortEntity->getCohortName();
+                    $mailData["program"] = $activeUserProgramEntity->getProgram()->getTitle();
+                    $this->postmarkService->assignedUserToCohort($mailData);
 
                     $response->setStatusCode(201);
                 } catch (\Throwable $th) {
@@ -630,6 +662,44 @@ class OracleController extends AbstractActionController
             }
         }
         return $viewModel;
+    }
+
+    public function getAssignedCohortAction()
+    {
+        $jsonModel = new JsonModel();
+        $cohort = $this->params()->fromQuery("ch", NULL);
+        $response = $this->getResponse();
+        try {
+            if ($cohort == NULL) {
+                throw new \Exception("Absent Identifier");
+            }
+
+            $em = $this->entityManager;
+            $query = $em->getRepository(ActiveP6Cohort::class)->createQueryBuilder("a")
+                ->select(["a", "p", "u", "ass", "aup"])
+                ->leftJoin("a.p6Cohort", "p")
+                ->leftJoin("a.user", "u")
+                ->leftJoin("a.status", "ass")
+                ->leftJoin("a.activeUserProgram", "aup")
+                ->where("p.id = :cohort")
+                ->setParameters([
+                    "cohort" => $cohort
+                ])
+                ->getQuery()
+                ->getArrayResult();
+
+            $jsonModel->setVariables([
+                "data" => $query
+            ]);
+            $response->setStatusCode(200);
+        } catch (\Throwable $th) {
+            $response->setStatusCode(400);
+            $jsonModel->setVariables([
+                "message" => $th->getMessage()
+            ]);
+        }
+
+        return $jsonModel;
     }
 
     public function registeredUsersAction()
@@ -884,6 +954,113 @@ class OracleController extends AbstractActionController
 
 
     /**
+     * used to assign an interuser to oracle p6 cohort
+     *
+     * @return void
+     */
+    public function assignInteracUserAction()
+    {
+        $viewModel = new ViewModel();
+        $em = $this->entityManager;
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        if ($request->isPost()) {
+            $post = $request->getPost()->toArray();
+            try {
+                $keyword = $post["keyword"];
+                // $query = $this->params()->fromQuery();
+                // $keyword = $query["keyword"];
+                $qb = $em->createQueryBuilder();
+                $data = $qb->select([
+                    "partial tag.{id, uuid, email, fullname, uid}",
+                    "partial r.{id, name}"
+                ])->from(User::class, "tag")
+                    ->leftJoin("tag.role", "r")
+                    ->where($qb->expr()->orX(
+                        $qb->expr()->like('tag.email', ':title'),
+                        $qb->expr()->like('tag.username', ':title'),
+                        $qb->expr()->like('tag.fullname', ':title')
+                    ))
+                    // ->andWhere("r.id = :role")
+                    ->andWhere($qb->expr()->orX(
+                        $qb->expr()->like('r.id', ':role1'),
+                        $qb->expr()->like('r.id', ':role2')
+                        // $qb->expr()->like('tag.fullname', ':title')
+                    ))
+                    ->setParameters([
+                        'title' => '%' . $keyword . '%',
+                        "role1" => UserService::USER_ROLE_CUSTOMER,
+                        "role2" => UserService::USER_ROLE_ORACLE_P6
+                    ])->getQuery()->getArrayResult();
+                $viewModel->setVariables([
+                    "success" => true,
+                    "data" => $data
+                ]);
+                return $viewModel;
+            } catch (\Throwable $th) {
+                $viewModel->setVariables([
+                    "success" => false,
+                    "message" => $th->getMessage()
+                ]);
+                $response->setStatusCode(400);
+                return $viewModel;
+            }
+        }
+        $viewModel->setVariables([
+            "success" => false,
+            "data" => NULL
+        ]);
+        return $viewModel;
+    }
+
+    /**
+     * Used to effect the assignment of interac payment for 
+     * oracle p6 too the program and cohort
+     *
+     * @return void
+     */
+    public function effectAssignInteracUserAction()
+    {
+        $jsonModel = new JsonModel();
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        if ($request->isPost()) {
+            $post = $request->getPost()->toArray();
+
+            //payment made
+
+            //Assign to cohort
+            try {
+                //code...
+            } catch (\Throwable $th) {
+                $jsonModel->setVariables([
+                    "message" => $th->getMessage(),
+                    "success" => false,
+                ]);
+            }
+        }
+        return $jsonModel;
+    }
+
+    /**
+     * Used to search for  users 
+     *
+     * @return void
+     */
+    public function searchUserAction()
+    {
+        $jsonModel = new JsonModel();
+
+        return $jsonModel;
+    }
+
+
+
+
+
+
+
+    /**
      * Set undocumented variable
      *
      * @param  EntityManager  $entityManager  Undocumented variable
@@ -907,6 +1084,20 @@ class OracleController extends AbstractActionController
     public function setZoomService(ZoomService $zoomService)
     {
         $this->zoomService = $zoomService;
+
+        return $this;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  PostMarkService  $postmarkService  Undocumented variable
+     *
+     * @return  self
+     */
+    public function setPostmarkService(PostMarkService $postmarkService)
+    {
+        $this->postmarkService = $postmarkService;
 
         return $this;
     }

@@ -92,11 +92,13 @@ class CoursesController extends AbstractActionController
             $service  = $em->getRepository(Programs::class)->findOneBy([
                 "uuid" => $uuid
             ]);
+           
             $isAssignedToCohort = FALSE;
             $data = [];
 
             // get p6 room data 
             if ($service->getId() == 40) {
+                var_dump("got here");
                 // arange oracle  data 
                 // get 
 
@@ -106,7 +108,9 @@ class CoursesController extends AbstractActionController
                 // findOneBy([
                 //     "user" => $identity->getId(),
                 // ]);
-                $data = $this->courseService->getP6RoomList($service->getId());
+                // $data = $this->courseService->getP6RoomList($service->getId());
+                // var_dump("HDDDDD");
+            } elseif ($service->getId() == 50) {
             } else if ($service->getId() == 4) {
                 // Business Analysis Masterclass
                 $isAssignedToCohort = $em->getRepository(ActiveBusinessMasterclassCohort::class)->findOneBy([
@@ -122,8 +126,9 @@ class CoursesController extends AbstractActionController
         } catch (\Throwable $th) {
             //throw $th;
             $this->flashMessenger()->addErrorMessage($th->getMessage());
+            var_dump($th->getMessage());
             $url = $this->getRequest()->getHeader('Referer')->getUri();
-            return $this->redirect()->toUrl($url);
+            // return $this->redirect()->toUrl($url);
         }
         return $viewModel;
     }

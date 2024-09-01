@@ -1,0 +1,209 @@
+<?php
+
+?>
+
+
+<div id="onjobApp" class="row row-sm mg-t-20">
+    <div class="col-lg-9">
+        <?= $this->partial("programs/partial/registered-user-partial"); ?>
+
+        <div class="row row-sm mg-t-20">
+            <div class="col-lg-4">
+                <div class="card card-info">
+                    <div class="card-body pd-40">
+                        <div class="d-flex justify-content-center mg-b-30">
+                            <img src="../img/icon1.svg" class="wd-100" alt="">
+                        </div>
+                        <h5 class="tx-inverse mg-b-20">Process Cohort</h5>
+                        <label>Select Cohort</label>
+                        <select v-model="processingCohort" @change="onChangeProcessCohort($event)" class="form-control">
+                            <option v-if="cohort.length" v-for="cor in cohort" :value="cor.uuid">{{cor.cohortName}}</option>
+                        </select>
+                        <p></p>
+                        <button @click="clickProcessCohort()" class="btn btn-primary btn-block">Getting Started</button>
+                    </div><!-- card -->
+                </div><!-- card -->
+            </div><!-- col-4 -->
+            <div class="col-lg-4 mg-t-20 mg-lg-t-0">
+                <div class="card card-info">
+                    <div class="card-body pd-40">
+                        <div class="d-flex justify-content-center mg-b-30">
+                            <img src="../img/icon2.svg" class="wd-100" alt="">
+                        </div>
+                        <h5 class="tx-inverse mg-b-20">Master Class Registered Users</h5>
+                        <!-- <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia. Even the all-powerful Pointing has no control about the blind texts.</p> -->
+                        <a href="<?= $this->url(
+                                        "admin-general",
+                                        ["controller" => "programs", "action" => "user"],
+                                        [
+                                            'query' => ['ext' => 4]
+                                        ]
+                                    ) ?>" class="btn btn-primary btn-block">View Registered Users</a>
+                    </div><!-- card-body -->
+                </div><!-- card -->
+            </div><!-- col-4 -->
+
+        </div><!-- row -->
+    </div><!-- col-8 -->
+    <div class="col-lg-3 mg-t-20 mg-lg-t-0">
+
+        <div class="manager-left">
+            <a href="" class="btn btn-contact-new">Add New</a>
+            <nav class="nav">
+                <a href="" class="nav-link active">
+                    <span>Menu</span>
+                </a>
+                <a href="<?= $this->url("admin-general", ["controller" => "programs", "action" => "free-master-class-cohort"]) ?>" class="nav-link">
+                    <span>Create Cohort</span>
+
+                </a>
+
+                <a href="<?= $this->url(
+                                "admin-general",
+                                ["controller" => "programs", "action" => "user"],
+                                [
+                                    'query' => ['ext' => 4]
+                                ]
+                            ) ?>" class="nav-link">
+                    <span>Registered User</span>
+
+                </a>
+                <!--  <a href="" class="nav-link">
+                    <span>Co-workers</span>
+
+                </a>
+                <a href="" class="nav-link">
+                    <span>Favorites</span> 
+
+                </a> -->
+            </nav>
+
+        </div><!-- manager-left -->
+
+    </div><!-- col-4 -->
+</div><!-- row -->
+
+<script>
+    const onjobApp = Vue.createApp({
+        data() {
+            return {
+                registeredUser: [],
+                selectedUserProgram: "",
+                cohort: [],
+                activeChort: "",
+                programId: 40,
+
+                //
+                processingCohort: "",
+
+            }
+        },
+        mounted() {
+            this.getUsers();
+            this.getCohort();
+        },
+
+        methods: {
+            selectRegisteredUser(id) {
+                this.selectedUserProgram = id;
+                // alert(this.selectUser)
+            },
+            getCohort() {
+                axios.get("/admins/oracle/get-cohort").then((result) => {
+                    if (result.status == 200) {
+                        // console.log(result.data.data);
+                        this.cohort = result.data.data;
+                    }
+                }).catch((err) => {
+
+                });
+            },
+
+            onChangeProcessCohort(event) {
+                // console.log(event.target.value);
+                this.processingCohort = event.target.value;
+                // alert(active);
+            },
+
+            clickProcessCohort() {
+                if (this.processingCohort == "") {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Select a Cohort",
+                        text: "A cohort needs to be selected"
+                    });
+                } else {
+                    window.location.href = `/admins/oracle/content-room/${this.processingCohort}`;
+                }
+            },
+
+            // isChangeCohort(event) {
+            //     console.log(event.target);
+            //     // this.activeChort = event.target.value;
+            //     // alert(this.activeChort);
+            // },
+            assign() {
+                // alert(this.activeChort);
+                if (this.activeChort == "") {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Required Field",
+                        text: "A Required Field is empty "
+                    });
+                } else {
+
+                    let formData = new FormData();
+                    formData.append("cohort", this.activeChort);
+                    formData.append("activeUserProgram", this.selectedUserProgram);
+                    // formData.append("program", this.programId);
+                    axios.post("/admins/oracle/assign-to-cohort", formData).then((result) => {
+                        if (result.status == 201) {
+
+                            Swal.fire({
+                                icon: "success",
+                                title: "Assigned",
+                                text: "Assigned a Candidate "
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    window.location.reload();
+                                }
+                            }).catch((err) => {
+                                this.$toast.open({
+                                    message: err.response.data.messages,
+                                    type: "error",
+                                    duration: 20000,
+                                    dismissible: true
+                                })
+                            });
+                            window.location.reload();
+                        }
+
+                    }).catch((err) => {
+
+                    });
+
+                }
+            },
+            formatPHPDate(date) {
+                // myDate = date.replace(/-/g, "/");
+                return new Date(date);
+
+            },
+            getUsers() {
+                // let formData = new FormData();
+                axios.get("/admins/programs/get-registered-user", {
+                    params: {
+                        ext: this.programId
+                    }
+                }).then((result) => {
+                    if (result.status == 200) {
+                        this.registeredUser = result.data.data;
+                    }
+                }).catch((err) => {
+
+                });
+            }
+        },
+    });
+    onjobApp.mount("#onjobApp");
+</script>

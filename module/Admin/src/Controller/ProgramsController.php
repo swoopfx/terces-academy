@@ -4,6 +4,7 @@ namespace Admin\Controller;
 
 use Application\Entity\ActiveBusinessMasterclassCohort;
 use Application\Entity\ActiveUserProgram;
+use Application\Entity\ActiveZoomClassId;
 use Application\Entity\CertificationsCohort;
 use Application\Entity\InternshipCohort;
 use Application\Entity\MasterClassClasses;
@@ -55,11 +56,16 @@ class ProgramsController extends AbstractActionController
 
             $zoomClassQuery = $em->getRepository(ZoomMeetingResponse::class)
                 ->createQueryBuilder("a")
-                ->select(["a"])->where("a.program = :program");
+                ->select(["a", "p", "c"])->leftJoin("a.program", "p")->where("a.program = :program");
             if ($program == 4) {
+                $zoomClassQuery->leftJoin("a.freeBusinessMasterClassCohort", "c");
                 $zoomClassQuery->andWhere("a.freeBusinessMasterClassCohort = :cohort");
             } elseif ($program == 10) {
+                $zoomClassQuery->leftJoin("a.businessAnalysisCohort", "c");
                 $zoomClassQuery->andWhere("a.businessAnalysisCohort = :cohort");
+            } elseif ($program == 40) {
+                $zoomClassQuery->leftJoin("a.oracleP6Cohort", "c");
+                $zoomClassQuery->andWhere("a.oracleP6Cohort = :cohort");
             }
 
             $data = $zoomClassQuery->setParameters([
@@ -491,7 +497,7 @@ class ProgramsController extends AbstractActionController
             if ($inputFilter->isValid()) {
                 $user = $this->identity();
                 try {
-                   
+
                     $data = $inputFilter->getValues();
                     $programEntity = $em->find(Programs::class, $post["program"]);
                     $eventDate = \DateTime::createFromFormat("Y-m-d\TH:i", $data["eventDate"]);
@@ -502,6 +508,7 @@ class ProgramsController extends AbstractActionController
                     $zoom_data["user_name"] = $user->getFullname();
                     $zoom_data["program"] = $post["program"];
                     $zoom_data["cohort"] = $post["cohort"];
+                    $zoom_data["classRoomId"] = $post["classRoomId"];
 
                     // var_dump($zoom_data);
                     // exit();
@@ -571,8 +578,9 @@ class ProgramsController extends AbstractActionController
         $ext = $this->params()->fromQuery("ext", NULL);
         $max = $this->params()->fromQuery("max", NULL);
         $query = $em->getRepository(ActiveUserProgram::class)
-            ->createQueryBuilder("a")->select(["a", "u", "p", "s", "p6", "cc", "mc"])
+            ->createQueryBuilder("a")->select(["a", "u", "p", "s", "p6", "cc", "mc", "us"])
             ->leftJoin("a.user", "u")
+            ->leftJoin("u.state", "us")
             ->leftJoin("a.program", "p")
             ->leftJoin("a.status", "s")
             ->leftJoin("a.oracleCohort", "p6")
@@ -594,6 +602,33 @@ class ProgramsController extends AbstractActionController
         $jsonModel->setVariables([
             "data" => $data
         ]);
+        return $jsonModel;
+    }
+
+    public function getActiveZoomClassAction()
+    {
+        $jsonModel = new JsonModel();
+        $em = $this->entityManager;
+        $query = $this->params()->fromQuery();
+        try {
+            if ($query["program"] == NULL || $query["cohort"] == NULL) {
+                throw new \Exception("Absent Identifier");
+            }
+            $data = $em->getRepository(ActiveZoomClassId::class)->createQueryBuilder("a")
+                ->select(["a", "p"])->leftJoin("a.program", "p")
+                ->where("p.id = :programId")
+                ->andWhere("a.cohort = :cohort")->setParameters([
+                    "programId" => $query["program"],
+                    "cohort" => $query["cohort"]
+                ])->getQuery()->getArrayResult();
+
+            $jsonModel->setVariables([
+                "data" => $data
+            ]);
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
+
         return $jsonModel;
     }
 

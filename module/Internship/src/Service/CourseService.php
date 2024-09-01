@@ -16,7 +16,7 @@ class CourseService
         $em = $this->entityManager;
         $data = $em->getRepository(P6Room::class)
             ->createQueryBuilder("r")
-            ->select("r.activeDate, r.isLink, rt.id as roomtypeId, rt.type as roomType, cohort")
+            ->select("r.id, r.activeDate, r.isLink, rt.id as roomtypeId, rt.type as roomType, cohort")
             ->innerJoin("r.roomType", "rt")
             ->innerJoin("r.p6cohort", "cohort")->where("cohort.id = :cohort")
             ->setParameters([
@@ -24,6 +24,11 @@ class CourseService
             ])->groupBy("rt")->getQuery()
             ->getResult();
         return $data;
+    }
+
+
+    public function getActiveZoomForP6() {
+        
     }
 
     /**
