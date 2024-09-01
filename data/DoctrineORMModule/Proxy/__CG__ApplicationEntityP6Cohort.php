@@ -67,10 +67,10 @@ class P6Cohort extends \Application\Entity\P6Cohort implements \Doctrine\ORM\Pro
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', '' . "\0" . 'Application\\Entity\\P6Cohort' . "\0" . 'id', '' . "\0" . 'Application\\Entity\\P6Cohort' . "\0" . 'cohort', '' . "\0" . 'Application\\Entity\\P6Cohort' . "\0" . 'isActive', '' . "\0" . 'Application\\Entity\\P6Cohort' . "\0" . 'uuid', '' . "\0" . 'Application\\Entity\\P6Cohort' . "\0" . 'startDate', '' . "\0" . 'Application\\Entity\\P6Cohort' . "\0" . 'createdOn'];
+            return ['__isInitialized__', '' . "\0" . 'Application\\Entity\\P6Cohort' . "\0" . 'id', '' . "\0" . 'Application\\Entity\\P6Cohort' . "\0" . 'cohortName', '' . "\0" . 'Application\\Entity\\P6Cohort' . "\0" . 'isActive', '' . "\0" . 'Application\\Entity\\P6Cohort' . "\0" . 'uuid', '' . "\0" . 'Application\\Entity\\P6Cohort' . "\0" . 'startDate', '' . "\0" . 'Application\\Entity\\P6Cohort' . "\0" . 'createdOn'];
         }
 
-        return ['__isInitialized__', '' . "\0" . 'Application\\Entity\\P6Cohort' . "\0" . 'id', '' . "\0" . 'Application\\Entity\\P6Cohort' . "\0" . 'cohort', '' . "\0" . 'Application\\Entity\\P6Cohort' . "\0" . 'isActive', '' . "\0" . 'Application\\Entity\\P6Cohort' . "\0" . 'uuid', '' . "\0" . 'Application\\Entity\\P6Cohort' . "\0" . 'startDate', '' . "\0" . 'Application\\Entity\\P6Cohort' . "\0" . 'createdOn'];
+        return ['__isInitialized__', '' . "\0" . 'Application\\Entity\\P6Cohort' . "\0" . 'id', '' . "\0" . 'Application\\Entity\\P6Cohort' . "\0" . 'cohortName', '' . "\0" . 'Application\\Entity\\P6Cohort' . "\0" . 'isActive', '' . "\0" . 'Application\\Entity\\P6Cohort' . "\0" . 'uuid', '' . "\0" . 'Application\\Entity\\P6Cohort' . "\0" . 'startDate', '' . "\0" . 'Application\\Entity\\P6Cohort' . "\0" . 'createdOn'];
     }
 
     /**
@@ -206,28 +206,6 @@ class P6Cohort extends \Application\Entity\P6Cohort implements \Doctrine\ORM\Pro
     /**
      * {@inheritDoc}
      */
-    public function getCohort()
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getCohort', []);
-
-        return parent::getCohort();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setCohort(string $cohort)
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setCohort', [$cohort]);
-
-        return parent::setCohort($cohort);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public function getCreatedOn()
     {
 
@@ -311,6 +289,28 @@ class P6Cohort extends \Application\Entity\P6Cohort implements \Doctrine\ORM\Pro
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'setUuid', [$uuid]);
 
         return parent::setUuid($uuid);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getCohortName()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getCohortName', []);
+
+        return parent::getCohortName();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setCohortName(string $cohortName)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setCohortName', [$cohortName]);
+
+        return parent::setCohortName($cohortName);
     }
 
 }

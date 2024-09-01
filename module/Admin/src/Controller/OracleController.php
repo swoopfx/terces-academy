@@ -13,6 +13,8 @@ use Application\Entity\P6Cohort;
 use Application\Entity\P6FreeCohort;
 use Application\Entity\Programs;
 use Application\Service\ZoomService;
+use Authentication\Entity\User;
+use Authentication\Service\UserService;
 use Doctrine\ORM\EntityManager;
 use General\Entity\RoomType;
 use General\Service\PostMarkService;
@@ -693,7 +695,7 @@ class OracleController extends AbstractActionController
         } catch (\Throwable $th) {
             $response->setStatusCode(400);
             $jsonModel->setVariables([
-                "message"=>$th->getMessage()
+                "message" => $th->getMessage()
             ]);
         }
 
@@ -949,6 +951,113 @@ class OracleController extends AbstractActionController
         }
         return $jsonModel;
     }
+
+
+    /**
+     * used to assign an interuser to oracle p6 cohort
+     *
+     * @return void
+     */
+    public function assignInteracUserAction()
+    {
+        $viewModel = new ViewModel();
+        $em = $this->entityManager;
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        if ($request->isPost()) {
+            $post = $request->getPost()->toArray();
+            try {
+                $keyword = $post["keyword"];
+                // $query = $this->params()->fromQuery();
+                // $keyword = $query["keyword"];
+                $qb = $em->createQueryBuilder();
+                $data = $qb->select([
+                    "partial tag.{id, uuid, email, fullname, uid}",
+                    "partial r.{id, name}"
+                ])->from(User::class, "tag")
+                    ->leftJoin("tag.role", "r")
+                    ->where($qb->expr()->orX(
+                        $qb->expr()->like('tag.email', ':title'),
+                        $qb->expr()->like('tag.username', ':title'),
+                        $qb->expr()->like('tag.fullname', ':title')
+                    ))
+                    // ->andWhere("r.id = :role")
+                    ->andWhere($qb->expr()->orX(
+                        $qb->expr()->like('r.id', ':role1'),
+                        $qb->expr()->like('r.id', ':role2')
+                        // $qb->expr()->like('tag.fullname', ':title')
+                    ))
+                    ->setParameters([
+                        'title' => '%' . $keyword . '%',
+                        "role1" => UserService::USER_ROLE_CUSTOMER,
+                        "role2" => UserService::USER_ROLE_ORACLE_P6
+                    ])->getQuery()->getArrayResult();
+                $viewModel->setVariables([
+                    "success" => true,
+                    "data" => $data
+                ]);
+                return $viewModel;
+            } catch (\Throwable $th) {
+                $viewModel->setVariables([
+                    "success" => false,
+                    "message" => $th->getMessage()
+                ]);
+                $response->setStatusCode(400);
+                return $viewModel;
+            }
+        }
+        $viewModel->setVariables([
+            "success" => false,
+            "data" => NULL
+        ]);
+        return $viewModel;
+    }
+
+    /**
+     * Used to effect the assignment of interac payment for 
+     * oracle p6 too the program and cohort
+     *
+     * @return void
+     */
+    public function effectAssignInteracUserAction()
+    {
+        $jsonModel = new JsonModel();
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        if ($request->isPost()) {
+            $post = $request->getPost()->toArray();
+
+            //payment made
+
+            //Assign to cohort
+            try {
+                //code...
+            } catch (\Throwable $th) {
+                $jsonModel->setVariables([
+                    "message" => $th->getMessage(),
+                    "success" => false,
+                ]);
+            }
+        }
+        return $jsonModel;
+    }
+
+    /**
+     * Used to search for  users 
+     *
+     * @return void
+     */
+    public function searchUserAction()
+    {
+        $jsonModel = new JsonModel();
+
+        return $jsonModel;
+    }
+
+
+
+
+
 
 
     /**
