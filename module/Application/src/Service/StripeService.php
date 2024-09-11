@@ -21,6 +21,7 @@ use General\Service\GeneralService;
 use Ramsey\Uuid\Uuid;
 use Application\Service\ZoomService;
 use General\Service\PostMarkService;
+use Laminas\Db\Sql\Ddl\Column\Datetime;
 
 class StripeService
 {
@@ -295,7 +296,18 @@ class StripeService
         $mail["link3"] = "https://youtu.be/Fx4KJlkW7VE?list=PLFjKjgEPogLWhQGv2nDbYE5YzwUp-p_tg";
         $mail["link4"] = "https://youtu.be/q-b3HgpSCqo?list=PLFjKjgEPogLWhQGv2nDbYE5YzwUp-p_tg";
 
-
+        if ($programEntity->getId() == 20) {
+            // Certificate program
+            $mail["link1"] = "https://youtu.be/GvOUocNkRBo?list=PLFjKjgEPogLWhQGv2nDbYE5YzwUp-p_tg";
+            $mail["link2"] = "https://youtu.be/iUVWTfQ_KmM?list=PLFjKjgEPogLWhQGv2nDbYE5YzwUp-p_tg";
+            $mail["link3"] = "https://youtu.be/Fx4KJlkW7VE?list=PLFjKjgEPogLWhQGv2nDbYE5YzwUp-p_tg";
+            $mail["link4"] = "https://youtu.be/q-b3HgpSCqo?list=PLFjKjgEPogLWhQGv2nDbYE5YzwUp-p_tg";
+        } else {
+            $mail["link1"] = "https://youtu.be/GvOUocNkRBo?list=PLFjKjgEPogLWhQGv2nDbYE5YzwUp-p_tg";
+            $mail["link2"] = "https://youtu.be/iUVWTfQ_KmM?list=PLFjKjgEPogLWhQGv2nDbYE5YzwUp-p_tg";
+            $mail["link3"] = "https://youtu.be/Fx4KJlkW7VE?list=PLFjKjgEPogLWhQGv2nDbYE5YzwUp-p_tg";
+            $mail["link4"] = "https://youtu.be/q-b3HgpSCqo?list=PLFjKjgEPogLWhQGv2nDbYE5YzwUp-p_tg";
+        }
         $this->postmarkService->acquisitionSuccessEmail($mail);
         $this->postmarkService->newOnTheJobTrainingRegister($mail);
 
@@ -486,50 +498,73 @@ class StripeService
         $transactionRef = TransactionService::transactionUid();
         $em = $this->generalService->getEntityManager();
         $sess = new Container("internship_payment");
-        $id = $sess->cohort;
+        // $id = $sess->cohort;
         $isPartPayment = $sess->isPartPayment;
 
+        $programId = $sess->programId;
+        /**
+         * @var Programs
+         */
+        $programEntity = $em->find(Programs::class, $programId);
 
         /**
          * @var InternshipCohort
          */
-        $cohortEntity = $em->find(InternshipCohort::class, $id);
+        // $cohortEntity = $em->find(InternshipCohort::class, $id);
 
         $uuidt = Uuid::uuid4();
 
+
+
         $internshipEntity = new InternshipRegister();
         $internshipEntity->setCreatedOn(new \Datetime())
-            ->setCohort($cohortEntity)
+            // ->setCohort($cohortEntity)
             ->setIsPayment(TRUE)->setUser($auth);
 
         $amountPayable = GeneralService::GENERAL_INTERNSHIP_PRICE;
+        if ($programId != NULL) {
+            $activeUserProgramEntity  = new ActiveUserProgram();
+            $activeUserProgramEntity->setUser($auth)
+                ->setProgram($programEntity)
+                ->setCreatedOn(new \Datetime())->setIsActive(True)
+                ->setUuid(Uuid::uuid4()->toString())
+                ->setStatus($em->find(ActiveUserProgramStatus::class, GeneralService::ACTIVE_USER_PROGRAM_STATUS_ACQUIRED))
+                ->setIsInstallement(FALSE);
+
+            $em->persist($activeUserProgramEntity);
+        } else {
+            throw new \Exception("Absent Program Identifier");
+        }
 
         if ($isPartPayment) {
+            $activeUserProgramEntity->setIsInstallement(TRUE);
+            $em->persist($activeUserProgramEntity);
             $nextPaymentValue = GeneralService::GENERAL_INTERNSHIP_PRICE / 2;
             $internshipEntity->setIsPartialpayment(TRUE)->setIsFullpayment(FALSE);
-            $startDateEntity = $cohortEntity->getStartDate();
+            // $startDateEntity = $cohortEntity->getStartDate();
 
-            $clonedStartDate  = clone $startDateEntity;
-            $clonedStartDate->modify(GeneralService::INTERNSHIP_INSTALLMENT);
-            $internshipEntity->setNextPaymentDate($clonedStartDate)->setNextPaymentValue(strval($nextPaymentValue))
-                ->getIsFullpayment(FALSE);
+            // $clonedStartDate  = clone $startDateEntity;
+            // $clonedStartDate->modify(GeneralService::INTERNSHIP_INSTALLMENT);
+            $internshipEntity->getIsFullpayment(FALSE);
+            // ->setNextPaymentDate($clonedStartDate)->setNextPaymentValue(strval($nextPaymentValue))
+
         } else {
             $internshipEntity->setIsFullpayment(TRUE)->setIsPartialpayment(FALSE);
         }
         $transactionEntity = new Transaction();
         $transactionEntity->setAmount($amountPayable)
-            // ->setProgram($programEntity)
+            ->setProgram($programEntity)
             ->setServicee("Payment for on the job training")
             ->setCreatedOn(new \Datetime())
-            ->setTransactionId($transactionRef)
-            ->setUuid($uuidt)
+            ->setTransactionId(TransactionService::transactionUid())
+            ->setUuid(Uuid::uuid4()->toString())
             ->setIsActive(TRUE)
             ->setStatus($em->find(TransactionStatus::class, TransactionService::TRANSACTION_STATUS_COMPLETED))
             ->setUser($auth);
 
-        if ($data != NULL) {
-            $transactionEntity->setPaystackData($data);
-        }
+        // if ($data != NULL) {
+        //     $transactionEntity->setPaystackData($data);
+        // }
 
         $em->persist($transactionEntity);
         $em->persist($internshipEntity);
@@ -550,14 +585,20 @@ class StripeService
         $this->postmarkService->acquisitionSuccessEmail($mail);
 
         // $mailCustomer[]
-        $mailCustomer["to"] = $auth->getEmail();
-        $mailCustomer["name"] = $auth->getFullname();
-        $mailCustomer["product_name"] = "Payment for on the job training";
-        $mailCustomer["customer_name"] = $auth->getFullname();
-        $mailCustomer["sch_time"] = "00 000";
-        $mailCustomer["sch_date"] = $cohortEntity->getStartDate()->format('Y-m-d H:i:s');
-        $this->postmarkService->customerCareerTalkNotification($mailCustomer);
-        $this->postmarkService->adminCareerTalkNotification($mailCustomer);
+        $mail["to"] = $auth->getEmail();
+        $mail["product_name"] = "Payment for on the job training";
+        $mail["customer_name"] = $auth->getFullname();
+        $mail["tx_ref"] = $transactionEntity->getUuid();
+        $mail["date"] = $date->format('Y-m-d');
+        $mail["amount"] = $transactionEntity->getAmount();
+        $mail["link1"] = "https://youtu.be/GvOUocNkRBo?list=PLFjKjgEPogLWhQGv2nDbYE5YzwUp-p_tg";
+        $mail["link2"] = "https://youtu.be/iUVWTfQ_KmM?list=PLFjKjgEPogLWhQGv2nDbYE5YzwUp-p_tg";
+        $mail["link3"] = "https://youtu.be/Fx4KJlkW7VE?list=PLFjKjgEPogLWhQGv2nDbYE5YzwUp-p_tg";
+        $mail["link4"] = "https://youtu.be/q-b3HgpSCqo?list=PLFjKjgEPogLWhQGv2nDbYE5YzwUp-p_tg";
+
+
+        // $this->postmarkService->acquisitionSuccessEmail($mail);
+        $this->postmarkService->newOnTheJobTrainingRegister($mail);
 
 
         $em->persist($transactionEntity);

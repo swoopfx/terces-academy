@@ -639,24 +639,26 @@ class AppController extends  AbstractActionController
         $query = $this->params()->fromQuery();
         // $intentSession = new Container("intent_session");
         $sess = new Container("internship_payment");
+        $sess->isPartPayment = FALSE;
         $id = $sess->cohort;
-        if ($id != NULL) {
-            try {
-                // $data = $this->paystackService->intiatializeTransaction();\
+        // if ($id != NULL) {
+        try {
+            // $data = $this->paystackService->intiatializeTransaction();\
 
-                $data = $this->stripeService->finalInternshhip();
-                return $this->redirect()->toRoute("app", ["action" => "stripe-success"]);
-            } catch (\Throwable $th) {
-                $response->setStatusCode(400);
-                $viewModel->setVariables([
-                    // "trace" => $th->getTraceAsString(),
-                    "message" => $th->getMessage()
-                ]);
-                // return $this->redirect()->toRoute("app", ["action" => "stripe-error"]);
-            }
-        } else {
-            return $this->redirect()->toRoute("app", ["action" => "stripe-error"]);
+            $data = $this->stripeService->finalInternshhip();
+            return $this->redirect()->toRoute("app", ["action" => "stripe-success"]);
+        } catch (\Throwable $th) {
+            $response->setStatusCode(400);
+            $viewModel->setVariables([
+                // "trace" => $th->getTraceAsString(),
+                "message" => $th->getMessage()
+            ]);
+            // return $this->redirect()->toRoute("app", ["action" => "stripe-error"]);
         }
+        // } 
+        // else {
+        //     return $this->redirect()->toRoute("app", ["action" => "stripe-error"]);
+        // }
         // return $this->redirect()->toRoute("app", ["action" => "stripe-error"]);
         return $viewModel;
     }
