@@ -80,7 +80,7 @@ class ActiveUserProgram
 
     /**
      * Undocumented variable
-     * @ORM\Column(type="boolean", options={"default":0})
+     * @ORM\Column(type="boolean", options={"default":0}, nullable=true)
      * @var bool
      */
     private $isInstallement;

@@ -322,6 +322,15 @@ class ZoomService
                                 "program" => $data["program"]
                             ])->getQuery()->getScalarResult();
 
+                        $activeZoomClassEntity = new ActiveZoomClassId();
+                        $activeZoomClassEntity->setCreatedOn(new \Datetime())
+                            ->setCohort($data["cohort"])
+                            ->setProgram($em->find(Programs::class, $data["program"]))
+                            ->setZoomResponse($zoomEntity)
+                            ->setClassRoomid($data["classRoomId"]);
+
+                        $em->persist($activeZoomClassEntity);
+
                         $emails = array_map('current',  $activeBusinessMasterClassCohort);
 
                         if (count($emails) > 50) {

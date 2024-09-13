@@ -5,7 +5,7 @@ use General\Service\GeneralService;
 
 <!-- Page Section - Start
         ================================================== -->
-<section class="page_banner">
+<section id="bana" class="page_banner">
     <div class="container">
         <div class="content_wrapper">
             <div class="row align-items-center">
@@ -75,65 +75,158 @@ use General\Service\GeneralService;
                             </ul>
                         </div>
 
-                        <?php
+                        <?php $courseCount = 0;  ?>
+
+                        <?php foreach ($data->getCourses() as $key => $course) :
+
+                        ?>
+
+                            <div class="accordion_wrap mb-3">
+                                <h3 class="details_info_title mb-2">Section <?= $key + 1 ?>. <?= $course->getTitle() ?>
+                                    <?php if (count($course->getCourseResource())) : ?>
+                                        <a data-toggle="modal" data-target="#modalCR<?= $course->getId() ?>" @click="getCResourse('<?= $course->getId() ?>')" href="javascript:;"> <i class="fas fa-paperclip"></i></a>
+                                    <?php endif; ?>
+                                </h3>
 
 
+                                <div id="modalCR<?= $course->getId() ?>" class="modal fade">
+                                    <div class="modal-dialog modal-dialog-vertical-center" role="document">
+                                        <div class="modal-content bd-0 tx-14">
+                                            <div class="modal-header">
+                                                <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">
+                                                    Resources </h6>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body pd-25">
 
-                        if (count($data->getCourses())) : ?>
-                            <div class="section_heading">
-                                <h2 class="heading_text">
-                                    Course Content
-                                </h2>
+                                                <div class="card card-body">
+                                                    <ul v-if="courseResouces.length" class="info_list unordered_list_block">
+                                                        <li v-for="res in courseResouces">
+                                                            <a :href="res.resourceFile.imageUrl">
+                                                                <i class="fas fa-paperclip"></i>
+                                                                <span>{{res.resourceTitle}}</span>
+                                                            </a>
+                                                        </li>
+
+                                                    </ul>
+                                                </div>
+
+
+                                            </div>
+                                            <div class="modal-footer">
+
+                                            </div>
+                                        </div>
+                                    </div><!-- modal-dialog -->
+                                </div><!-- modal -->
+
+                                <div class="accordion style_2" id="corse_details_accordion_<?= ($key + 1) . str_replace(" ", "_", $course->getTitle()) ?>">
+                                    <?php
+                                    if (count($course->getCourseContent())) :
+                                        foreach ($course->getCourseContent() as $ckey => $content) :
+                                            $courseCount++;
+                                    ?>
+
+                                            <div class="accordion-item">
+                                                <div class="checkbox_item accordion_item_checked">
+                                                    <input type="checkbox">
+                                                </div>
+                                                <div class="accordion-button collapsed" role="button" data-bs-toggle="collapse" data-bs-target="#collapse_3_<?= ($ckey + 1) . str_replace(" ", "_", $course->getTitle()) ?>" aria-expanded="false">
+                                                    Lesson <?= ($courseCount) . ":  ";
+                                                            echo  $content->getTitle() ?>
+                                                </div>
+                                                <div id="collapse_3_<?= ($ckey + 1) . str_replace(" ", "_", $course->getTitle()) ?>" class="accordion-collapse collapse" data-bs-parent="#corse_details_accordion_<?= ($key + 1) . str_replace(" ", "_", $course->getTitle()) ?>">
+                                                    <div class="accordion-body">
+                                                        <p class="mb-3">
+                                                            <?= $content->getDescription(); ?>
+                                                        </p>
+                                                        <div class="intro_video mb-3">
+                                                            <div class="video_wrap">
+                                                                <img src="<?= $content->getBanner()->getImageUrl() ?>" alt="Terces – Online Learning Platform">
+
+                                                                <?php if ($this->isSubscribed($data->getId(), $courseCount)) : ?>
+                                                                    <a class="video_play_btn popup_video" href="<?= $content->getVideo() ?>">
+                                                                        <span class="icon"><i class="fas fa-play"></i></span>
+                                                                    </a>
+                                                                <?php else : ?>
+                                                                    <a class="video_play_btn popup_video" href="<?= $content->getSnippetVideo() ?>">
+                                                                        <span class="icon"><i class="fas fa-play"></i></span>
+                                                                    </a>
+                                                                <?php endif; ?>
+                                                            </div>
+                                                        </div>
+                                                        <?php if (count($content->getResources()) > 0) : ?>
+                                                            <a data-toggle="modal" data-target="#modalR<?= $content->getId() ?>" @click="getResourse('<?= $content->getId() ?>')" class="btn border_dark btn_small" href="#!">
+                                                                <span>
+                                                                    <small><img src="assets/images/icon/icon_clip.svg" alt="Terces – Online Learning Platform">
+                                                                        Resources</small>
+                                                                    <small><img src="assets/images/icon/icon_clip_white.svg" alt="Terces – Online Learning Platform">
+                                                                        Resources</small>
+                                                                </span>
+                                                            </a>
+
+                                                            <div id="modalR<?= $content->getId() ?>" class="modal fade">
+                                                                <div class="modal-dialog modal-dialog-vertical-center" role="document">
+                                                                    <div class="modal-content bd-0 tx-14">
+                                                                        <div class="modal-header">
+                                                                            <h6 class="tx-14 mg-b-0 tx-uppercase tx-inverse tx-bold">
+                                                                                Resources </h6>
+                                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                <span aria-hidden="true">&times;</span>
+                                                                            </button>
+                                                                        </div>
+                                                                        <div class="modal-body pd-25">
+
+                                                                            <div class="card card-body">
+                                                                                <ul v-if="aResources.length" class="info_list unordered_list_block">
+                                                                                    <li v-for="res in aResources">
+                                                                                        <a :href="res.resourceFile.imageUrl">
+                                                                                            <i class="fas fa-paperclip"></i>
+                                                                                            <span>{{res.resourceTitle}}</span>
+                                                                                        </a>
+                                                                                    </li>
+
+                                                                                </ul>
+                                                                            </div>
+
+
+                                                                        </div>
+                                                                        <div class="modal-footer">
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div><!-- modal-dialog -->
+                                                            </div><!-- modal -->
+                                                        <?php endif; ?>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                    <?php endforeach;
+                                    endif;
+                                    ?>
+                                </div>
                             </div>
 
 
-                            <?php foreach ($data->getCourses() as $key => $course) : ?>
-                                <div class="accordion_wrap mb-5">
-                                    <h3 class="details_info_title mb-3">Section <?= $key + 1 ?>. <?= $course->getTitle() ?></h3>
-                                    <div class="accordion style_2" id="corse_details_accordion_<?= $key + 1 ?>">
-                                        <?php
-                                        if (count($course->getCourseContent())) :
-                                            foreach ($course->getCourseContent() as $ckey => $content) :
-                                        ?>
-                                                <div class="accordion-item">
-                                                    <div class="checkbox_item accordion_item_checked">
-                                                        <input type="checkbox">
-                                                    </div>
-                                                    <div class="accordion-button collapsed" role="button" data-bs-toggle="collapse" data-bs-target="#collapse_3_<?= $ckey + 1 ?>" aria-expanded="false">
-                                                        Lesson <?php echo ($ckey + 1) . ":  ";
-                                                                echo  $content->getTitle() ?>
-                                                    </div>
-                                                    <div id="collapse_3_<?= $ckey + 1 ?>" class="accordion-collapse collapse" data-bs-parent="#corse_details_accordion_<?= $key + 1 ?>">
-                                                        <div class="accordion-body">
-                                                            <p class="mb-3">
-                                                                <?= $content->getDescription(); ?>
-                                                            </p>
-                                                            <div class="intro_video mb-3">
-                                                                <div class="video_wrap">
-                                                                    <img src="<?= $content->getBanner()->getImageUrl() ?>" alt="Collab – Online Learning Platform">
-                                                                    <a class="video_play_btn popup_video" href="https://www.youtube.com/watch?v=7e90gBu4pas">
-                                                                        <span class="icon"><i class="fas fa-play"></i></span>
-                                                                    </a>
-                                                                </div>
-                                                            </div>
-                                                            <a class="btn border_dark btn_small" href="#!">
-                                                                <span>
-                                                                    <small><img src="assets/images/icon/icon_clip.svg" alt="Collab – Online Learning Platform"> Resources</small>
-                                                                    <small><img src="assets/images/icon/icon_clip_white.svg" alt="Collab – Online Learning Platform"> Resources</small>
-                                                                </span>
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                            <div class="row mb-4">
+                                <?php if ($course->getQuiz() != NULL) : ?>
+                                    <div class="col">
 
-                                        <?php endforeach;
-                                        endif;
-                                        ?>
+                                        <button @click="getQuiz('<?= $course->getId() ?>')" data-toggle="modal" data-target="#modalQ<?= $course->getId() ?>" type="submit" class="btn btn_dark">
+                                            <span>
+                                                <small>Quiz</small>
+                                                <small>Quiz</small>
+                                            </span>
+                                        </button>
                                     </div>
-                                </div>
+                                <?php endif; ?>
+                            </div>
 
-                        <?php endforeach;
-                        endif; ?>
+                            <?php echo $this->partial("partial_quiz", ["course" => $course]) ?>
+                        <?php endforeach; ?>
 
                     </div>
                 </div>
@@ -205,3 +298,159 @@ use General\Service\GeneralService;
         </div>
     </div>
 </section>
+
+<script>
+    const bana = Vue.createApp({
+        data() {
+            return {
+                aResources: [],
+                courseResouces: [],
+                isInteracPayment: false,
+                // ll: "Pleee",
+                quizList: [],
+                quizCountInit: 0,
+                questionCount: 0,
+                // activeQuizPage:0
+                isSendingInterac: false,
+                interac_amount: "",
+                interac_email: "",
+
+                coupon: "",
+                programid: 60,
+            }
+        },
+
+        mounted() {
+            this.generateBuyNowUrl();
+        },
+
+        methods: {
+
+            generateBuyNowUrl() {
+                let vvv = '<?= $data->getUuid() ?>';
+                let vrr = this.coupon;
+                if (vrr != "") {
+                    return `/buy-course/${vvv}?poc=${vrr}`;
+                } else {
+                    return `/buy-course/${vvv}`;
+                }
+
+
+                // alert(this.$refs.puuuid.value);
+            },
+
+            toggleinterac() {
+                this.isInteracPayment = !this.isInteracPayment;
+            },
+
+            checkAnswer() {
+
+            },
+
+            quizNextPage() {
+
+                this.quizCountInit++;
+            },
+            quizPreviousPage() {
+                this.quizCountInit--;
+            },
+            getResourse(courseContentId = "") {
+
+                // this.isFetchingResources = true;
+                // this.activeCourseContent = courseContentId;
+                axios.get(`/admin/get-content-resources/${courseContentId}`).then((result) => {
+                    if (result.status == 200) {
+                        // this.isFetchingResources = false;
+                        this.aResources = result.data.data;
+                    }
+                }).catch((err) => {
+                    Swal.fire({
+                        icon: "error",
+                        title: "An error occured",
+                        text: err.response.data.message,
+                    });
+                });
+            },
+
+            getCResourse(courseContentId = "") {
+
+                // this.isFetchingResources = true;
+                // this.activeCourseContent = courseContentId;
+                axios.get(`/admin/get-course-resources/${courseContentId}`).then((result) => {
+                    if (result.status == 200) {
+                        // this.isFetchingResources = false;
+                        this.courseResouces = result.data.data;
+                    }
+                }).catch((err) => {
+                    Swal.fire({
+                        icon: "error",
+                        title: "An error occured",
+                        text: err.response.data.message,
+                    });
+                });
+            },
+
+
+            getQuiz(courseid) {
+
+                axios.get(`/get-quiz/${courseid}`).then((result) => {
+                    if (result.status == 200) {
+                        this.quizList = result.data.data;
+                        this.questionCount = this.quizList[0].questions.length;
+                    }
+
+                }).catch((err) => {
+                    Swal.fire({
+                        icon: "error",
+                        title: "An error occured",
+                        text: err.response.data.message,
+                    });
+                });
+            },
+
+            submitQuiz(courseid) {
+
+            },
+
+            confirmInteracPayment() {
+                this.isSendingInterac = true;
+                if (this.interac_amount == "" || this.interac_email == "") {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Empty Field",
+                        text: "A required field is empty"
+                    });
+                } else {
+                    let formData = new FormData();
+                    formData.append("email", this.interac_email);
+                    formData.append("amount", this.interac_amount);
+                    formData.append("program", this.$refs.programId.value);
+                    axios.post("/app/send-interac", formData).then((result) => {
+                        if (result.status == 201) {
+                            Swal.fire({
+                                icon: "success",
+                                title: "Payment Sent",
+                                text: "A payment confirmation request has been sent to administrator. We should have processed your payment in about 2 working days"
+                            }).then(result => {
+
+                                if (result.isConfirmed) {
+                                    window.location.reload()
+                                }
+                            });
+                            this.isSendingInterac = false;
+                        }
+
+                    }).catch((err) => {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Ooops",
+                            text: "Somthing went wrong"
+                        });
+                        this.isSendingInterac = false;
+                    });
+                }
+            },
+        },
+    });
+    bana.mount("#bana")
+</script>

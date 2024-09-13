@@ -13,8 +13,11 @@ class PostMarkServiceFactory implements FactoryInterface
 
     public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
     {
+        $config = $container->get("config");
+        $postmark_token = $config["postmark_token"];
         $xserv = new PostMarkService();
-        $postmarkClient = new PostmarkClient("35fcd24c-72e2-4bbf-8a04-1b961d421450");
+
+        $postmarkClient = new PostmarkClient($postmark_token);
         $xserv->setPostmarkClient($postmarkClient);
         return $xserv;
     }

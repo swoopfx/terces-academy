@@ -191,7 +191,7 @@
                 selectedClassroom: "",
                 allCohort: false,
                 zoomClass: [],
-
+                assignedUsers:[],
 
                 formSelectedEventDatetime: "",
                 formSelectedDUration: "",
@@ -199,6 +199,7 @@
 
                 //formData 
                 seed: '<?= $seed ?>',
+                activeZoomClass: [],
 
                 assignedStatus: false,
                 isSubmittingResos: false,
@@ -214,6 +215,8 @@
             this.getRoomType();
             this.getAssignedStatus();
             this.getZoomClass();
+            this.getAssignedUsers();
+            this.getActiveZoomClass();
         },
 
         methods: {
@@ -291,6 +294,33 @@
 
                     });
                 }
+            },
+
+            isSomeZoomClass(classList) {
+                if (this.activeZoomClass.some(cou => cou.classRoomId == classList.id)) {
+                    return true;
+                } else {
+                    return false;
+                }
+                // return true;
+            },
+
+            getActiveZoomClass() {
+                axios.get("/admins/programs/get-active-zoom-class", {
+                    params: {
+                        cohort: this.cohortId,
+                        program: this.programType
+
+
+                    }
+                }).then((result) => {
+                    if (result.status == 200) {
+                        this.activeZoomClass = result.data.data;
+                    }
+
+                }).catch((err) => {
+
+                });
             },
 
             getZoomClass() {
@@ -473,6 +503,25 @@
             },
             createResos() {
 
+            },
+
+            getAssignedUsers() {
+                axios.get("/admins/oracle/get-assigned-cohort", {
+                    params: {
+                        ch: this.cohortId
+                    }
+                }).then((result) => {
+                    if (result.status == 200) {
+                        this.assignedUsers = result.data.data;
+                    }
+                }).catch((err) => {
+                    this.$toast.open({
+                        message: err.response.data.messages,
+                        type: "error",
+                        duration: 20000,
+                        dismissible: true
+                    })
+                });
             }
         },
 

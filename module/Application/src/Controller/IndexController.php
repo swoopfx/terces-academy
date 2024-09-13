@@ -302,6 +302,18 @@ class IndexController extends AbstractActionController
         return $viewModel;
     }
 
+    // public function onjoAction()
+    // {
+    //     $viewModel = new ViewModel();
+    //     $em = $this->entityManager;
+    //     $data = $em->find(Programs::class, 10);
+    //     // $data = $em->getRepository(Programs::)
+    //     $viewModel->setVariables([
+    //         "data" => $data
+    //     ]);
+    //     return $viewModel;
+    // }
+
 
     public function businessCertificateProgramAction()
     {
@@ -743,8 +755,14 @@ class IndexController extends AbstractActionController
     public function internshipAction()
     {
         $viewModel = new ViewModel();
+        $em = $this->entityManager;
+        $data = $em->find(Programs::class, 60);
+        // $data = $em->getRepository(Programs::)
+        // $viewModel->setVariables([
+        //     "data" => $data
+        // ]);
         $viewModel->setVariables([
-            "data" => $data = '',
+            "data" => $data,
             "public_key" => $this->config["stripe"]["publishable_key"],
             'url' => $this->config["uurl"],
 
@@ -810,13 +828,16 @@ class IndexController extends AbstractActionController
         $response = $this->getResponse();
         $auth = $this->identity();
         $em = $this->entityManager;
-
+        $params = $this->params()->fromQuery();
         $data = [];
         // if ($request->isPost()) {
         //     $post = $request->getPost();
         try {
             if (!$this->identity()) {
                 throw new \Exception("You need to be logged in");
+            }
+            if($params["xprgm"] == NULL){
+                throw new \Exception("Identifier required");
             }
 
             // if ($post["cohort"] == NULL) {
@@ -832,7 +853,8 @@ class IndexController extends AbstractActionController
 
             //     throw new \Exception("You cannot register to this cohort please select another date");
             // }
-            // $sess = new Container("internship_payment");
+            $sess = new Container("internship_payment");
+            $sess->programId = $params["xprgm"];
             // $sess->cohort = $cohortEntity->getId();
             // $response->setStatusCode(202);
             // return $jsonModel;
@@ -1016,7 +1038,7 @@ class IndexController extends AbstractActionController
             ->createQueryBuilder("c")
             ->select("c")
             ->leftJoin("c.beingFor", "p")
-           
+
             ->where("c.isUsed = :uus")
             ->andWhere("p.id = :pid")
             ->setParameters([
