@@ -66,6 +66,9 @@ class ProgramsController extends AbstractActionController
             } elseif ($program == 40) {
                 $zoomClassQuery->leftJoin("a.oracleP6Cohort", "c");
                 $zoomClassQuery->andWhere("a.oracleP6Cohort = :cohort");
+            }elseif($program == 50){
+                $zoomClassQuery->leftJoin("a.freeOracleCohort", "c");
+                $zoomClassQuery->andWhere("a.freeOracleCohort = :cohort");
             }
 
             $data = $zoomClassQuery->setParameters([
