@@ -14,9 +14,16 @@ use Admin\Controller\Factory\ProgramsControllerFactory;
 use Admin\Controller\InternshipController;
 use Admin\Controller\OracleController;
 use Admin\Controller\ProgramsController;
+use Admin\Service\AdminService;
+use Admin\Service\Factory\AdminServiceFactory;
 use Laminas\Router\Http\Segment;
 
 return [
+    "service_manager"=>[
+        "factories"=>[
+            AdminService::class=>AdminServiceFactory::class
+        ]
+    ],
     "view_manager" => [
         'template_path_stack' => [
             __DIR__ . '/../view',

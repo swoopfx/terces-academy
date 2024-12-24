@@ -1,0 +1,149 @@
+<?php echo $this->headtitle("Search For Users");
+// var_dump($data);
+?>
+
+
+<div id="searchUser" class="section-wrapper mg-t-20">
+    <label class="section-title">Sudcribed Users</label>
+    <p class="mg-b-20 mg-sm-b-40">Users and and programs they subscibe to</p>
+    <form action="" method="post">
+        <div class="row mt-3">
+
+            <div class="col-12 col-sm-8">
+
+                <input name="keyword" class="multisteps-form__input form-control" type="text" placeholder="Emails, Name, Phone" />
+            </div>
+            <div class="col-12 col-sm-4 mt-3 mt-sm-0">
+
+                <input value="Search" class="multisteps-form__input form-control" type="submit" />
+            </div>
+
+        </div>
+    </form>
+    <br>
+    <br>
+    <div class="table-responsive">
+        <?php
+
+        if ($data != NULL) :
+
+            foreach ($data as $key => $da) : ?>
+                <table class="table table-bordered table-colored table-purple">
+                    <thead>
+
+                        <tr>
+                            <th class="wd-10p">ID</th>
+                            <th class="wd-35p">Name</th>
+                            <th class="wd-35p">Role</th>
+                            <!-- <th class="wd-20p">Salary</th> -->
+                            <th class="wd-10p">Action</th>
+                        </tr>
+
+                    </thead>
+                    <tbody>
+
+
+
+                        <tr>
+                            <th scope="row"><?= $da["id"] ?></th>
+                            <?php $id = $da["id"] ?>
+                            <td><strong>Fullname : </strong><?= $da["fullname"] ?> <br>
+                                <strong>Email : </strong> <?= $da["email"] ?>
+
+
+                            </td>
+                            <td><?= $da["role"]["name"] ?></td>
+                            <!--<td><?= $this->dateformat($da["registrationDate"], IntlDateFormatter::MEDIUM, IntlDateFormatter::NONE) ?>
+                            </td> -->
+                            <td>
+                                <div class="row">
+                                    <button @click="selfsudyProcess(<?= $da['id'] ?>)" class="btn btn-sm btn-primary btn-block">Assign Self Study</button>
+                                    <button class="btn btn-sm btn-danger btn-block">Assign Certification</button>
+                                    <button @click="onjobProcess(<?= $da['id'] ?>)" class="btn btn-sm btn-success btn-block">Assign On Job Training</button>
+                                </div>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+        <?php endforeach;
+        endif; ?>
+    </div><!-- table-responsive -->
+
+</div><!-- section-wrapper -->
+
+<script>
+    const searchUser = Vue.createApp({
+        data() {
+            return {
+                user: "",
+                isSubmitting:false,
+
+            }
+        },
+
+        methods: {
+            onjobProcess(user) {
+                let formData = new FormData();
+                formData.append("user", user);
+                if (user == "") {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Required Field',
+                        text: "User Not Selected ${user}"
+                    });
+                } else {
+                 
+                    axios.post("/admin/process-userfor-jobtraining", formData).then((result) => {
+                        if (result.status == 200) {
+                            this.cohort = result.data.data;
+                        }
+                    }).catch((err) => {
+
+                    });
+                }
+
+            },
+
+            certificationProcess(user) {
+                let formData = new FormData();
+                formData.append("user", user);
+                if (this.user == "") {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Required Field',
+                        text: "User Not Selected"
+                    });
+                } else {
+                    axios.post("", formData).then((result) => {
+                        if (result.status == 200) {
+                            this.cohort = result.data.data;
+                        }
+                    }).catch((err) => {
+
+                    });
+                }
+            },
+            selfsudyProcess(user) {
+                let formData = new FormData();
+                formData.append("user", user);
+                if (user == "") {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Required Field',
+                        text: "User Not Selected"
+                    });
+                } else {
+                    axios.post("/admin/process-user-for-self-study", formData).then((result) => {
+                        if (result.status == 200) {
+                            this.cohort = result.data.data;
+                        }
+                    }).catch((err) => {
+
+                    });
+                }
+            }
+        },
+    });
+    searchUser.mount("#searchUser");
+</script>

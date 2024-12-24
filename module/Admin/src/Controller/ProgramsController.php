@@ -516,7 +516,9 @@ class ProgramsController extends AbstractActionController
                     // var_dump($zoom_data);
                     // exit();
 
-                    $this->zoomService->createMeeting($zoom_data);
+                    // $this->zoomService->createMeeting($zoom_data);
+                    $this->zoomService->createWebinar($zoom_data);
+                   
 
                     $response->setStatusCode(201);
                     $jsonModel->setVariables([

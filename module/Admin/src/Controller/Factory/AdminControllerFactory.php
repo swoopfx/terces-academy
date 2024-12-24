@@ -2,6 +2,7 @@
 
 namespace Admin\Controller\Factory;
 
+use Admin\Service\AdminService;
 use Admin\Controller\AdminController;
 use General\Service\GeneralService;
 use General\Service\PostMarkService;
@@ -22,6 +23,7 @@ class  AdminControllerFactory implements FactoryInterface
         $ctr->setGeneralService($generalService)
             ->setEntityManager($generalService->getEntityManager())
             ->setPostmarkService($postmarkService)
+            ->setAdminService($container->get(AdminService::class))
             ->setUploadService($uploadService);
         return $ctr;
     }

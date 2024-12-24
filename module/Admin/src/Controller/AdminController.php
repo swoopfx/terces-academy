@@ -4,6 +4,7 @@ namespace Admin\Controller;
 
 use Application\Entity\ActiveUserProgram;
 use Application\Entity\ActiveUserProgramStatus;
+use Admin\Service\AdminService;
 use Application\Entity\CourseContent;
 use Application\Entity\CourseResource;
 use Application\Entity\Courses;
@@ -60,6 +61,13 @@ class AdminController extends AbstractActionController
     private $uploadService;
 
     private PostMarkService $postmarkService;
+
+    /**
+     * Undocumented variable
+     *
+     * @var AdminService
+     */
+    private AdminService $adminService;
 
     public function onDispatch(MvcEvent $e)
     {
@@ -280,7 +288,9 @@ class AdminController extends AbstractActionController
             $pageCount = ($this->params()->fromQuery("page_count", 40) > 100 ? 100 : $this->params()->fromQuery("page_count", 40));
             $orderBy = $this->params()->fromQuery("order_by", "id");
             $query = $this->entityManager->createQueryBuilder()->select([
-                "i", "u", "p"
+                "i",
+                "u",
+                "p"
             ])->from(InteracPayment::class, "i")
                 ->leftJoin("i.user", "u")
                 ->leftJoin("i.program", "p")
@@ -474,7 +484,9 @@ class AdminController extends AbstractActionController
             $orderBy = $this->params()->fromQuery("order_by", "id");
 
             $query = $this->entityManager->createQueryBuilder()->select([
-                "c", "r", "s"
+                "c",
+                "r",
+                "s"
             ])->from(User::class, "c")
                 ->leftJoin("c.role", "r")
                 ->leftJoin("c.state", "s")
@@ -661,7 +673,10 @@ class AdminController extends AbstractActionController
             $pageCount = ($this->params()->fromQuery("page_count", 40) > 100 ? 100 : $this->params()->fromQuery("page_count", 40));
             $orderBy = $this->params()->fromQuery("order_by", "order");
             $query = $this->entityManager->createQueryBuilder()->select([
-                "c", "p", "b", "v"
+                "c",
+                "p",
+                "b",
+                "v"
             ])->from(Courses::class, "c")
                 ->leftJoin("c.programs", "p")
                 ->leftJoin("c.banner", "b")
@@ -704,9 +719,7 @@ class AdminController extends AbstractActionController
         return $viewModel;
     }
 
-    public function viewTrainingAction()
-    {
-    }
+    public function viewTrainingAction() {}
 
     public function addCourseAction()
     {
@@ -1098,9 +1111,7 @@ class AdminController extends AbstractActionController
         return $jsonModel;
     }
 
-    public function editCourseAction()
-    {
-    }
+    public function editCourseAction() {}
 
     public function removeCourseAction()
     {
@@ -1398,9 +1409,7 @@ class AdminController extends AbstractActionController
         return $jsonmodel;
     }
 
-    public function editCourseContentAction()
-    {
-    }
+    public function editCourseContentAction() {}
 
     public function removeCourseContentAction()
     {
@@ -1490,7 +1499,8 @@ class AdminController extends AbstractActionController
             $response->setStatusCode(400);
             $jsonModel->setVariables([
                 "success" => false,
-                "message" => $th->getMessage()
+                "message" => $th->getMessage(),
+
             ]);
             return $jsonModel;
         }
@@ -1758,6 +1768,120 @@ class AdminController extends AbstractActionController
         return $jsonModel;
     }
 
+    public function searchUserAction()
+    {
+        $viewModel = new ViewModel();
+        $request = $this->getRequest();
+        $response = $this->getResponse();
+        $em = $this->entityManager;
+        if ($request->isPost()) {
+            // $json = $request->getContent();
+            // $post = json_decode($json, true);
+
+            $post = $request->getPost();
+            try {
+                $qb = $em->createQueryBuilder();
+                $keyword = $post["keyword"];
+                // $em->createQuery('SELECT t FROM Authentication\Entity\User t (WHERE t.email AND WHERE  LIKE :title'));
+                $data = $qb->select(["partial tag.{id, uuid, email, fullname, uid}", "partial r.{id, name}"])
+                    ->from(User::class, 'tag')
+                    ->leftJoin("tag.role", "r")
+                    ->where($qb->expr()->orX(
+                        $qb->expr()->like('tag.email', ':title'),
+                        $qb->expr()->like('tag.username', ':title'),
+                        $qb->expr()->like('tag.fullname', ':title')
+                    ))
+                    // ->andWhere("r.id = :role")
+                    ->setParameters([
+                        'title' => '%' . $keyword . '%',
+                        // "role" => AuthenticationService::USER_ROLE_CUSTOMER
+                    ])->getQuery()->getArrayResult();
+
+                $viewModel->setVariables([
+                    "success" => true,
+                    "data" => $data
+                ]);
+                return $viewModel;
+            } catch (\Throwable $th) {
+                $viewModel->setVariables([
+                    "success" => false,
+                    "message" => $th->getMessage(),
+                    "data" => NULL
+                ]);
+                $response->setStatusCode(400);
+                return $viewModel;
+            }
+        }
+        $viewModel->setVariable("data", NULL);
+        return $viewModel;
+    }
+
+    public function processUserForSelfStudyAction()
+    {
+        $jsonModel = new JsonModel();
+        $request = $this->getRequest();
+        $adminService = $this->adminService;
+        $response = $this->getResponse();
+        if ($request->isPost()) {
+            $post = $request->getPost()->toArray();
+            if (isset($post["user"])) {
+                $data["user"] = $post["user"];
+                $data["program"] = 10;
+                try{
+
+                    $adminService->createActiveUserProgram($data);
+                    $jsonModel->setVariables([
+                        "success" => true
+                    ]);
+                    $response->setStatusCode(201);
+                } catch (\Throwable $th) {
+                    $jsonModel->setVariables([
+                        "success" => false,
+                        "message" => $th->getMessage(),
+                        "data" => NULL
+                    ]);
+                }
+            }
+        }
+        return $jsonModel;
+    }
+
+    public function processUserCertificationAction()
+    {
+        $jsonModel = new JsonModel();
+        return $jsonModel;
+    }
+
+    public function processUserforJobtrainingAction()
+    {
+        $jsonModel = new JsonModel();
+        $request = $this->getRequest();
+        $adminService = $this->adminService;
+        $response = $this->getResponse();
+        if ($request->isPost()) {
+            $post = $request->getPost()->toArray();
+            if (isset($post["user"])) {
+                $data["user"] = $post["user"];
+                $data["program"] = 30;
+                try{
+
+                    $adminService->createActiveUserProgram($data);
+                    $jsonModel->setVariables([
+                        "success" => true
+                    ]);
+                    $response->setStatusCode(201);
+                } catch (\Throwable $th) {
+                    $jsonModel->setVariables([
+                        "success" => false,
+                        "message" => $th->getMessage(),
+                        "data" => NULL
+                    ]);
+                }
+            }
+        }
+        return $jsonModel;
+    }
+
 
 
 
@@ -1842,6 +1966,20 @@ class AdminController extends AbstractActionController
     public function setPostmarkService($postmarkService)
     {
         $this->postmarkService = $postmarkService;
+
+        return $this;
+    }
+
+    /**
+     * Set undocumented variable
+     *
+     * @param  AdminService  $adminService  Undocumented variable
+     *
+     * @return  self
+     */ 
+    public function setAdminService(AdminService $adminService)
+    {
+        $this->adminService = $adminService;
 
         return $this;
     }

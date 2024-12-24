@@ -7,10 +7,13 @@ use Application\Entity\ActiveP6CohortStatus;
 use Application\Entity\ActiveUserProgram;
 use Application\Entity\ActiveUserProgramStatus;
 use Application\Entity\P6Cohort;
+use Application\Entity\Programs;
 use Doctrine\ORM\EntityManager;
 use General\Service\PostMarkService;
 use Postmark\Models\PostmarkServer;
 use Ramsey\Uuid\Uuid;
+use Authentication\Entity\User;
+use General\Service\GeneralService;
 
 class AdminService
 {
@@ -30,10 +33,27 @@ class AdminService
      */
     private PostMarkService $postmarkService;
 
+    public function createActiveUserProgram($data)
+    {
+        $entityManager = $this->entityManager;
+        $activeUserProgramEntity = new ActiveUserProgram();
+        $activeUserProgramEntity->setCreatedOn(new \Datetime())
+            ->setProgram($entityManager->find(Programs::class, $data["program"]))
+            ->setUser($entityManager->find(User::class, $data["user"]))
+            ->setCreatedOn(new \Datetime())
+            ->setIsActive(TRUE)
+            ->setIsInstallement(FALSE)
+            ->setStatus($entityManager->find(ActiveUserProgramStatus::class, GeneralService::ACTIVE_USER_PROGRAM_STATUS_ACQUIRED))
+            ->setUuid(Uuid::uuid4());
 
-    private function interacPaymentMade(){
-        
+        $entityManager->persist($activeUserProgramEntity);
+        $entityManager->flush();
+
+        // Send Emails
     }
+
+
+    private function interacPaymentMade() {}
 
     /**
      * Undocumented function
@@ -94,7 +114,7 @@ class AdminService
      * @param  PostMarkService  $postmarkService  Undocumented variable
      *
      * @return  self
-     */ 
+     */
     public function setPostmarkService(PostMarkService $postmarkService)
     {
         $this->postmarkService = $postmarkService;
